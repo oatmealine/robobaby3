@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { removeInvites } from "src/lib/message";
+import { removeInvites } from "../lib/message";
 
 module.exports = {
   name: "messageUpdate",
