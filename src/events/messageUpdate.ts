@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { removeInvites } from "src/lib/message";
 
 module.exports = {
-  name: "messageCreate",
+  name: "messageUpdate",
   once: false,
 
   async execute(message: Message) {
