@@ -1,5 +1,4 @@
 import { GuildMember, Interaction } from "discord.js";
-const fs = require("node:fs");
 
 module.exports = {
   name: "interactionCreate",
