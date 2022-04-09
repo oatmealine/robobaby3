@@ -20,9 +20,9 @@ module.exports = {
     if (role) {
       member.roles.add(role).catch((e) => console.log(e));
 
-      const embed = new MessageEmbed().setColor(role.color).setDescription(`**${member.displayName}** became **${role.name}**`);
+      const embed = new MessageEmbed().setColor(role.color).setDescription(`**${member.displayName}** became a **${role}**`);
       interaction.reply({ embeds: [embed] });
-      LogEvent(`**${member}** became **${role.name}**`);
+      LogEvent(`**${member}** became a **${role}**`);
     }
   },
 };
