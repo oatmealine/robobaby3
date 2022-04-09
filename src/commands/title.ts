@@ -30,8 +30,8 @@ module.exports = {
     member.roles.add(role).catch((e) => console.log(e));
 
     // response
-    const embed = new MessageEmbed().setColor(role.color).setDescription(`**${member.displayName}** became a **${role}**`);
-    interaction.reply({ embeds: [embed] });
+    const embed = new MessageEmbed().setColor(role.color).setDescription(`You are now a certified **${role}**`);
+    interaction.reply({ embeds: [embed], ephemeral: true });
     LogEvent(`**${member}** became a **${role}**`);
   },
 };
