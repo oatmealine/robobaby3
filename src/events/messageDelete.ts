@@ -8,6 +8,6 @@ module.exports = {
   async execute(message: Message) {
     if (message.author.bot) return;
 
-    LogEvent(`Message from ${message.author} deleted in ${message.channel}:\n${message.content}`);
+    LogEvent(`Message from ${message.author} deleted in ${message.channel}:\n>>> ${message.content}`);
   },
 };
