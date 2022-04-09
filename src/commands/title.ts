@@ -12,17 +12,26 @@ module.exports = {
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const role: Role | undefined = member.guild.roles.cache.find((r) => r.name === interaction.options.getString("choice"));
+    if (!role) return;
 
+    // check has role
+    if (member.roles.cache.has(role.id)) {
+      interaction.reply({ content: `\`You are already a ${role.name}\``, ephemeral: true });
+      return;
+    }
+
+    // remove other roles
     roles.forEach((col) => {
       const r = member.roles.cache.find((r) => r.name === col);
       if (r) member.roles.remove(r);
     });
-    if (role) {
-      member.roles.add(role).catch((e) => console.log(e));
 
-      const embed = new MessageEmbed().setColor(role.color).setDescription(`**${member.displayName}** became a **${role}**`);
-      interaction.reply({ embeds: [embed] });
-      LogEvent(`**${member}** became a **${role}**`);
-    }
+    // add role
+    member.roles.add(role).catch((e) => console.log(e));
+
+    // response
+    const embed = new MessageEmbed().setColor(role.color).setDescription(`**${member.displayName}** became a **${role}**`);
+    interaction.reply({ embeds: [embed] });
+    LogEvent(`**${member}** became a **${role}**`);
   },
 };
