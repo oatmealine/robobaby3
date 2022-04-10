@@ -18,8 +18,9 @@ export async function respondToMessage(message: Message) {
 
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
+  if (input.length < 2) input = "what do you think of this?";
 
-  let output: string = "";
+  let output: string = "i'm robo-baby";
   await cleverbot(input)
     .then((res: string) => {
       res = res.toLowerCase();
@@ -30,5 +31,6 @@ export async function respondToMessage(message: Message) {
 
   message.channel.sendTyping();
   await new Promise((r) => setTimeout(r, Math.random() * 1000 + output.length * 50));
+
   message.reply(output);
 }
