@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import { delay } from "./util";
 
 export interface PhraseReactor {
   phrases: string[];
@@ -14,7 +15,7 @@ export const reacts = [
 export async function reactToMessage(message: Message) {
   if (message.channel.id == process.env.SPAM_CHANNEL) return;
 
-  await new Promise((r) => setTimeout(r, Math.random() * 4000 + 1000));
+  await delay(Math.random() * 4000 + 1000);
   reacts.forEach((pr: PhraseReactor) => {
     if (Math.random() > pr.chance) return;
 
