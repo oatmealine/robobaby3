@@ -50,47 +50,62 @@ export async function respondToMessage(message: Message) {
   message.reply(output);
 }
 
-export async function createThreads(message: Message) {
-  // promotion
-  if (message.channel.id == process.env.PROMO_CHANNEL) {
-    if (message.embeds.length > 0) {
-      const embed = message.embeds[0];
-      if (!embed.title) return;
-
-      if (embed.url?.includes("steamcommunity.com/workshop/filedetails/") || embed.url?.includes("steamcommunity.com/sharedfiles/filedetails/")) {
-        message.startThread({ name: embed.title.replace("Steam Workshop::", ""), autoArchiveDuration: "MAX", reason: "Steam Workshop thread" }).catch(console.log);
-      } else if (embed.url?.includes("moddingofisaac.com/mod/")) {
-        message.startThread({ name: embed.title.replace(" - Modding of Isaac", ""), autoArchiveDuration: "MAX", reason: "Modding of Isaac thread" }).catch(console.log);
-      }
-    } else {
-      await message
-        .reply("Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**.")
-        .then((reply: Message) => {
-          return delay(10000).then(() => {
-            message.delete();
-            reply.delete();
-          });
-        })
-        .catch(console.log);
-    }
-  }
-
+export async function createThreads(msg: Message) {
   // recruit
-  if (message.channel.id == process.env.RECRUIT_CHANNEL) {
-    if (message.mentions.users.size == 0 && message.mentions.roles.size == 0 && message.content.length > 0) {
-      let name: string = message.content;
-      name = name.replace(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g, "");
-      message.startThread({ name: name, autoArchiveDuration: "MAX" }).catch(console.log);
+  if (msg.channel.id == process.env.RECRUIT_CHANNEL) {
+    if (msg.mentions.users.size == 0 && msg.mentions.roles.size == 0 && msg.content.length > 0) {
+      let title: string = msg.content;
+      title = title.replace(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g, "");
+      msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
+      console.log(`${msg.author} started recruit thread ${title}`);
     } else {
-      await message
+      await msg
         .reply("Please include a simple description and no mentions (links optional).")
         .then((reply: Message) => {
           return delay(10000).then(() => {
-            message.delete();
+            msg.delete();
             reply.delete();
           });
         })
         .catch(console.log);
     }
   }
+
+  // promotion
+  await delay(3000);
+  msg.channel.messages
+    .fetch(msg.id)
+    .then(async (message) => {
+      console.log(message);
+      if (message.channel.id == process.env.PROMO_CHANNEL) {
+        if (message.embeds.length > 0) {
+          const embed = message.embeds[0];
+          if (!embed.title) return;
+
+          let title = "Error",
+            reason = "Error";
+
+          if (embed.url?.includes("steamcommunity.com/workshop/filedetails/") || embed.url?.includes("steamcommunity.com/sharedfiles/filedetails/")) {
+            title = embed.title.replace("Steam Workshop::", "");
+            reason = "Steam Workshop thread";
+          } else if (embed.url?.includes("moddingofisaac.com/mod/")) {
+            title = embed.title.replace(" - Modding of Isaac", "");
+            reason = "Modding of Isaac thread";
+          }
+          message.startThread({ name: title, autoArchiveDuration: "MAX", reason: reason }).catch(console.log);
+          console.log(`${message.author} started promotion thread ${title}`);
+        } else {
+          await message
+            .reply("Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**.")
+            .then((reply: Message) => {
+              return delay(10000).then(() => {
+                message.delete();
+                reply.delete();
+              });
+            })
+            .catch(console.log);
+        }
+      }
+    })
+    .catch(console.log);
 }
