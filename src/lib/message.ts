@@ -3,6 +3,7 @@ import { LogEvent } from "./log";
 require("dotenv").config();
 
 const cleverbot = require("cleverbot-free");
+let lastResponse = 0;
 
 export const removeInvites = (message: Message) => {
   if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return;
@@ -14,12 +15,19 @@ export const removeInvites = (message: Message) => {
 };
 
 export async function respondToMessage(message: Message) {
-  if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
+  if (message.channel.id != process.env.SPAM_CHANNEL || !message.cleanContent.toLowerCase().includes("robo")) return;
 
+  // cooldown
+  if (message.createdTimestamp - lastResponse < 2500) return;
+  lastResponse = message.createdTimestamp;
+
+  // format input
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
   if (input.length < 2) input = "what do you think of this?";
+  input = input.trim();
 
+  // query cleverbot
   let output: string = "i'm robo-baby";
   await cleverbot(input)
     .then((res: string) => {
@@ -29,8 +37,10 @@ export async function respondToMessage(message: Message) {
     })
     .catch(console.log);
 
+  // start typing
   message.channel.sendTyping();
-  await new Promise((r) => setTimeout(r, Math.random() * 1000 + output.length * 50));
+  await new Promise((r) => setTimeout(r, Math.random() * 500 + 500 + output.length * 40));
 
+  // respond
   message.reply(output);
 }
