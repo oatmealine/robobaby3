@@ -9,7 +9,6 @@ module.exports = {
     const embed = new MessageEmbed().setColor("#475acf").setDescription(`**Your request has been sent for review.**\nIf you were an \`Angel\`, \`Demon\`, or \`Golden God\` on the old server, you will be granted the role.`);
     interaction.reply({ embeds: [embed], ephemeral: true });
 
-    const modRole: Role | undefined = member.guild.roles.cache.find((r) => r.name === "Moderator");
-    if (modRole) ReportEvent(`${modRole}, ${member} requested the Golden God role`);
+    ReportEvent(member.guild, `${member} requested the Golden God role`);
   },
 };

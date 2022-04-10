@@ -9,7 +9,6 @@ module.exports = {
     const embed = new MessageEmbed().setColor("#475acf").setDescription(`**The moderators have been alerted.**\nThanks for your report.`);
     interaction.reply({ embeds: [embed], ephemeral: true });
 
-    const modRole: Role | undefined = member.guild.roles.cache.find((r) => r.name === "Moderator");
-    if (modRole) ReportEvent(`${modRole}, ${member} used \`/report\` in ${interaction.channel}`);
+    ReportEvent(member.guild, `${member} used \`/report\` in ${interaction.channel}`);
   },
 };
