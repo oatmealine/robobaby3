@@ -1,5 +1,4 @@
 import { Message, MessageEmbed, Permissions, Util } from "discord.js";
-import { REPL_MODE_SLOPPY } from "repl";
 import { LogEvent } from "./log";
 import { delay } from "./util";
 require("dotenv").config();
@@ -21,8 +20,6 @@ export const removeInvites = (message: Message) => {
 
 export async function respondToMessage(message: Message) {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
-
-  console.log(context);
 
   // format input
   let input: string = message.content;
