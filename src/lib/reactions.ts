@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { delay } from "./util";
 
-export interface PhraseReactor {
+interface PhraseReactor {
   phrases: string[];
   reaction: string[];
   chance: number;
@@ -10,6 +10,7 @@ export interface PhraseReactor {
 export const reacts = [
   { phrases: ["robo", "baby", "robobaby"], reaction: ["😉", "😍", "😘", "😜", "😝", "😎", "😏", "😒", "😓", "😔", "😖", "😞", "😣", "😢", "😭", "😨", "😩", "😫", "😬", "😰", "😱", "😲", "😳", "😴", "😵", "😶"], chance: 0.5 },
   { phrases: ["butt"], reaction: ["🍑"], chance: 1 },
+  { phrases: ["gay", "homo"], reaction: ["🏳️‍🌈"], chance: 0.5 },
 ];
 
 export async function reactToMessage(message: Message) {
