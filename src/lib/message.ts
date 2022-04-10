@@ -16,10 +16,14 @@ export const removeInvites = (message: Message) => {
 export async function respondToMessage(message: Message) {
   await new Promise((r) => setTimeout(r, Math.random() * 5000 + 1000));
   message.channel.sendTyping();
-  cleverbot(message.cleanContent).then((response: string) => {
-    response = response.toLowerCase();
-    if (response.endsWith(".")) response = response.slice(0, -1);
+  try {
+    cleverbot(message.cleanContent).then((response: string) => {
+      response = response.toLowerCase();
+      if (response.endsWith(".")) response = response.slice(0, -1);
 
-    message.reply(response);
-  });
+      message.reply(response);
+    });
+  } catch (e) {
+    message.reply("i'm robo baby");
+  }
 }
