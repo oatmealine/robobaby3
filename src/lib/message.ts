@@ -8,6 +8,7 @@ const cleverbot = require("cleverbot-free");
 
 const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand", "🙂", "😏", "🤨"];
 let lastResponse = 0;
+let context: string[] = [];
 
 export const removeInvites = (message: Message) => {
   if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return;
@@ -21,6 +22,8 @@ export const removeInvites = (message: Message) => {
 export async function respondToMessage(message: Message) {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
 
+  console.log(context);
+
   // format input
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
@@ -30,7 +33,7 @@ export async function respondToMessage(message: Message) {
   // query cleverbot
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   if (message.createdTimestamp - lastResponse > 2000) {
-    await cleverbot(input)
+    await cleverbot(input, context)
       .then((res: string) => {
         output = res;
       })
@@ -41,6 +44,11 @@ export async function respondToMessage(message: Message) {
   // format output
   output = output.toLowerCase();
   if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
+
+  // add context
+  context.push(input);
+  context.push(output);
+  context = context.slice(-4);
 
   // start typing
   message.channel.sendTyping();
