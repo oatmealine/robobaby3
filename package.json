@@ -4,7 +4,8 @@
   "description": "Robotic baby",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/bot.js",
+    "start": "tsc && node deploy-commands.js && node dist/bot.js",
+    "dev": "tsc && node dist/bot.js",
     "deploy-commands": "tsc && node deploy-commands.js",
     "delete-commands": "tsc && node delete-commands.js",
     "build": "tsc"
