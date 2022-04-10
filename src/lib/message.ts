@@ -19,10 +19,6 @@ export const removeInvites = (message: Message) => {
 export async function respondToMessage(message: Message) {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.cleanContent.toLowerCase().includes("robo")) return;
 
-  // cooldown
-  if (message.createdTimestamp - lastResponse < 2500) return;
-  lastResponse = message.createdTimestamp;
-
   // format input
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
@@ -31,11 +27,14 @@ export async function respondToMessage(message: Message) {
 
   // query cleverbot
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-  await cleverbot(input)
-    .then((res: string) => {
-      output = res;
-    })
-    .catch(console.log);
+  if (message.createdTimestamp - lastResponse > 2000) {
+    await cleverbot(input)
+      .then((res: string) => {
+        output = res;
+      })
+      .catch(console.log);
+    lastResponse = message.createdTimestamp;
+  }
 
   // format output
   output = output.toLowerCase();
