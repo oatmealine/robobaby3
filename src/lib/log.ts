@@ -9,3 +9,11 @@ export const LogEvent = (message: string) => {
     channel.send(message);
   }
 };
+
+export const ReportEvent = (message: string) => {
+  console.log(message);
+  const channel = client.channels.cache.get(process.env.MOD_CHANNEL || "") as TextChannel;
+  if (channel) {
+    channel.send(message);
+  }
+};

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed, Role } from "discord.js";
-import { LogEvent } from "../lib/log";
+import { ReportEvent } from "../lib/log";
 
 module.exports = {
   data: new SlashCommandBuilder().setName("goldengod").setDescription("Request the Golden God role for dedicated members of the old server."),
@@ -10,6 +10,6 @@ module.exports = {
     interaction.reply({ embeds: [embed], ephemeral: true });
 
     const modRole: Role | undefined = member.guild.roles.cache.find((r) => r.name === "Moderator");
-    if (modRole) LogEvent(`${modRole}, ${member} requested the Golden God role`);
+    if (modRole) ReportEvent(`${modRole}, ${member} requested the Golden God role`);
   },
 };
