@@ -14,6 +14,8 @@ export const removeInvites = (message: Message) => {
 };
 
 export async function respondToMessage(message: Message) {
+  if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
+
   await new Promise((r) => setTimeout(r, Math.random() * 5000 + 1000));
   message.channel.sendTyping();
   cleverbot(message.cleanContent)
