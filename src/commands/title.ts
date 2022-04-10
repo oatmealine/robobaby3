@@ -12,14 +12,6 @@ module.exports = {
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const choice = interaction.options.getString("choice");
-    const role: Role | undefined = member.guild.roles.cache.find((r) => r.name === choice);
-    if (!role) return;
-
-    // check has role
-    if (member.roles.cache.has(role.id)) {
-      interaction.reply({ content: `\`You are already a ${role.name}\``, ephemeral: true });
-      return;
-    }
 
     // remove roles
     roles.forEach((col) => {
@@ -33,6 +25,9 @@ module.exports = {
       interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
+
+    const role: Role | undefined = member.guild.roles.cache.find((r) => r.name === choice);
+    if (!role) return;
 
     // add role
     member.roles.add(role).catch((e) => console.log(e));
