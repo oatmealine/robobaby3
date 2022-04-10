@@ -16,14 +16,19 @@ export const removeInvites = (message: Message) => {
 export async function respondToMessage(message: Message) {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
 
-  await new Promise((r) => setTimeout(r, Math.random() * 5000 + 1000));
-  message.channel.sendTyping();
-  cleverbot(message.cleanContent)
+  let input: string = message.content;
+  input = input.replace(/<@!?[0-9]+>/g, "");
+
+  let output: string = "";
+  await cleverbot(input)
     .then((res: string) => {
       res = res.toLowerCase();
       if (res.endsWith(".")) res = res.slice(0, -1);
-
-      message.reply(res);
+      output = res;
     })
     .catch(console.log);
+
+  message.channel.sendTyping();
+  await new Promise((r) => setTimeout(r, Math.random() * 1000 + output.length * 50));
+  message.reply(output);
 }
