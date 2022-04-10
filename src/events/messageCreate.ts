@@ -11,16 +11,17 @@ module.exports = {
 
     removeInvites(message);
 
+    // respond if mentioned
+    if (message.channel.id == process.env.SPAM_CHANNEL && message.mentions.users.has(message.client.user?.id || "")) {
+      respondToMessage(message);
+    }
+
     // react to messages
+    await new Promise((r) => setTimeout(r, Math.random() * 4000 + 1000));
     reacts.forEach(({ phrases, reaction }) => {
       if (phrases.some((el) => message.content.toLowerCase().includes(el))) {
         message.react(reaction[Math.floor(Math.random() * reaction.length)]);
       }
     });
-
-    // respond if mentioned
-    if (message.channel.id == process.env.SPAM_CHANNEL && message.mentions.users.has(message.client.user?.id || "")) {
-      respondToMessage(message);
-    }
   },
 };
