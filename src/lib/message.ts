@@ -3,6 +3,8 @@ import { LogEvent } from "./log";
 require("dotenv").config();
 
 const cleverbot = require("cleverbot-free");
+
+const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand", "🙂", "😏", "🤨"];
 let lastResponse = 0;
 
 export const removeInvites = (message: Message) => {
@@ -28,14 +30,16 @@ export async function respondToMessage(message: Message) {
   input = input.trim();
 
   // query cleverbot
-  let output: string = "i'm robo-baby";
+  let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   await cleverbot(input)
     .then((res: string) => {
-      res = res.toLowerCase();
-      if (res.endsWith(".")) res = res.slice(0, -1);
       output = res;
     })
     .catch(console.log);
+
+  // format output
+  output = output.toLowerCase();
+  if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
 
   // start typing
   message.channel.sendTyping();
