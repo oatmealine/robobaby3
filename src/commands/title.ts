@@ -36,5 +36,6 @@ module.exports = {
     const embed = new MessageEmbed().setColor(role.color).setDescription(`You are now a certified **${role}**`);
     interaction.reply({ embeds: [embed], ephemeral: true });
     LogEvent(`**${member}** became a **${role}**`);
+    console.log(`${member.user.tag} became a ${role.name}`);
   },
 };

@@ -15,6 +15,7 @@ export const removeInvites = (message: Message) => {
   if (message.content.includes("discord.gg")) {
     message.delete();
     LogEvent(`Invite link from ${message.author} deleted in ${message.channel}:\n${message.content}`);
+    console.log(`Invite link from ${message.author.tag} deleted in ${message.channel}:\n${message.content}`);
   }
 };
 

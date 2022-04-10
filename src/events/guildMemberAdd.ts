@@ -7,5 +7,6 @@ module.exports = {
 
   async execute(member: GuildMember) {
     LogEvent(`${member} joined`);
+    console.log(`${member.user.tag} joined`);
   },
 };

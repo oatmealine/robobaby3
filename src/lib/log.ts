@@ -3,8 +3,6 @@ import { client } from "../bot";
 require("dotenv").config();
 
 export const LogEvent = (message: string) => {
-  console.log(message);
-
   const channel = client.channels.cache.get(process.env.LOG_CHANNEL || "") as TextChannel;
   if (channel) {
     channel.send(message);
@@ -12,8 +10,6 @@ export const LogEvent = (message: string) => {
 };
 
 export const ReportEvent = (guild: Guild, message: string) => {
-  console.log(message);
-
   const channel: TextChannel = client.channels.cache.get(process.env.MOD_CHANNEL || "") as TextChannel;
   const modRole: Role = guild.roles.cache.find((r) => r.name === "Moderator") as Role;
 

@@ -6,9 +6,10 @@ module.exports = {
   data: new SlashCommandBuilder().setName("report").setDescription("Quietly summon a moderator to deal with a problem."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const embed = new MessageEmbed().setColor("#475acf").setDescription(`**The moderators have been alerted.**\nThanks for your report.`);
+    const embed = new MessageEmbed().setColor("#475acf").setTitle("**The moderators have been alerted.**").setDescription(`Thanks for your report.`);
     interaction.reply({ embeds: [embed], ephemeral: true });
 
     ReportEvent(member.guild, `${member} used \`/report\` in ${interaction.channel}`);
+    console.log(`${member.user.tag} used /report in ${interaction.channel}.`);
   },
 };
