@@ -8,10 +8,11 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("title")
     .setDescription("Set your modding title.")
-    .addStringOption((option) => option.setName("choice").setDescription("Your desired role.").setRequired(true).addChoice("Coder", "Coder").addChoice("Spriter", "Spriter").addChoice("Musician", "Musician")),
+    .addStringOption((option) => option.setName("choice").setDescription("Your desired role.").setRequired(true).addChoice("Coder", "Coder").addChoice("Spriter", "Spriter").addChoice("Musician", "Musician").addChoice("Clear", "Clear")),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const role: Role | undefined = member.guild.roles.cache.find((r) => r.name === interaction.options.getString("choice"));
+    const choice = interaction.options.getString("choice");
+    const role: Role | undefined = member.guild.roles.cache.find((r) => r.name === choice);
     if (!role) return;
 
     // check has role
@@ -20,11 +21,18 @@ module.exports = {
       return;
     }
 
-    // remove other roles
+    // remove roles
     roles.forEach((col) => {
       const r = member.roles.cache.find((r) => r.name === col);
       if (r) member.roles.remove(r);
     });
+
+    // end if clearing
+    if (choice === "Clear") {
+      const embed = new MessageEmbed().setColor("#475acf").setDescription(`You are now a peasant 🙂`);
+      interaction.reply({ embeds: [embed], ephemeral: true });
+      return;
+    }
 
     // add role
     member.roles.add(role).catch((e) => console.log(e));
