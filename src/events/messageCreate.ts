@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
-import { PhraseReactor, reacts, reactToMessage } from "../lib/reacts";
-import { removeInvites, respondToMessage } from "../lib/message";
+import { reactToMessage } from "../lib/reacts";
+import { createThreads, removeInvites, respondToMessage } from "../lib/message";
 
 module.exports = {
   name: "messageCreate",
@@ -12,5 +12,6 @@ module.exports = {
     removeInvites(message);
     reactToMessage(message);
     respondToMessage(message);
+    createThreads(message);
   },
 };
