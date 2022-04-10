@@ -16,16 +16,14 @@ export const removeInvites = (message: Message) => {
 export async function respondToMessage(message: Message) {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
 
-  await new Promise((r) => setTimeout(r, Math.random() * 2000 + 1000));
+  await new Promise((r) => setTimeout(r, Math.random() * 5000 + 1000));
   message.channel.sendTyping();
+  cleverbot(message.cleanContent)
+    .then((res: string) => {
+      res = res.toLowerCase();
+      if (res.endsWith(".")) res = res.slice(0, -1);
 
-  const output = cleverbot(message.cleanContent).then(handleCleverbotResponse).catch(console.log);
-  await new Promise((r) => setTimeout(r, Math.random() * 1000 + output.length * 40));
-  message.reply(output);
-}
-
-async function handleCleverbotResponse(res: string) {
-  res = res.toLowerCase();
-  if (res.endsWith(".")) res = res.slice(0, -1);
-  return res;
+      message.reply(res);
+    })
+    .catch(console.log);
 }
