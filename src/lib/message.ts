@@ -18,7 +18,7 @@ export const removeInvites = (message: Message) => {
   }
 };
 
-export async function respondToMessage(message: Message) {
+export async function roboChat(message: Message) {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
 
   // format input
