@@ -9,6 +9,7 @@ interface PhraseResponder {
 export const responses = [
   { phrase: "crab dancing to chiptune", response: "https://youtu.be/j_d_4CnuqZQ" },
   { phrase: "who is robo", response: "https://youtu.be/QY4AAos0daI" },
+  { phrase: "godmode chant", response: "It's a mod for pro 😁\nI love god\nI love godmode 😮\nIt's nice mode" },
 ];
 
 export async function respondToMessage(message: Message) {
