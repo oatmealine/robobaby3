@@ -12,8 +12,6 @@ export const responses = [
 ];
 
 export async function respondToMessage(message: Message) {
-  if (message.channel.id == process.env.SPAM_CHANNEL) return;
-
   await delay(Math.random() * 2000 + 1000);
   message.channel.sendTyping();
   await delay(Math.random() * 500 + 500);
