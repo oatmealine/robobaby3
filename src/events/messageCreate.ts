@@ -1,8 +1,9 @@
 import { Message } from "discord.js";
 import { reactToMessage } from "../lib/reactions";
-import { removeInvites, roboChat } from "../lib/message";
+import { removeInvites } from "../lib/message";
 import { respondToMessage } from "../lib/responses";
 import { createThreads } from "../lib/threadCreator";
+import { roboChat } from "../lib/roboChat";
 
 module.exports = {
   name: "messageCreate",
