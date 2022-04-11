@@ -35,8 +35,7 @@ export async function roboChat(message: Message) {
   if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
 
   // update context
-  context.push(input);
-  context.push(output);
+  context = [...context, input, output];
   context = context.slice(-4);
   db.set(contextKey, context);
 

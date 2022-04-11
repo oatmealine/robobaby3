@@ -83,11 +83,15 @@ async function managePromo(msg: Message) {
 }
 
 async function manageResources(msg: Message) {
+  if (msg.embeds.length == 0 && !msg.content.includes("```") && !(msg.content.includes("https://") || msg.content.includes("http://"))) return;
+
   let title = msg.cleanContent;
   title = title.replace(/```(.|\n)*?```/g, "");
   title = title.replace(/\n/g, " ");
   title = title.replace(/\s+/g, " ");
   title = removeUrls(title);
+  title.trim();
+  if (title.length == 0) title = `${msg.author.username}'s resource`;
 
   msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
   console.log(`${msg.author} started resources thread ${title}`);
