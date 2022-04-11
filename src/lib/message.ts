@@ -4,10 +4,10 @@ import { delay } from "./util";
 require("dotenv").config();
 
 const cleverbot = require("cleverbot-free");
+const db = require("quick.db");
 
 const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand", "🙂", "😏", "🤨"];
 let lastResponse = 0;
-let context: string[] = [];
 
 export const removeInvites = (message: Message) => {
   if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return;
@@ -28,6 +28,9 @@ export async function roboChat(message: Message) {
   input = input.trim();
 
   // query cleverbot
+  const contextKey = `robochat.${message.author.id}.context`;
+  let context = db.get(contextKey) || [];
+
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   if (message.createdTimestamp - lastResponse > 2000) {
     await cleverbot(input, context)
@@ -46,6 +49,7 @@ export async function roboChat(message: Message) {
   context.push(input);
   context.push(output);
   context = context.slice(-4);
+  db.set(contextKey, context);
 
   // start typing
   message.channel.sendTyping();
