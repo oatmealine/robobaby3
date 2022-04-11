@@ -1,5 +1,4 @@
 import { Message, MessageEmbed, Permissions, Util } from "discord.js";
-import { LogEvent } from "./log";
 import { delay } from "./util";
 require("dotenv").config();
 
@@ -57,73 +56,4 @@ export async function roboChat(message: Message) {
 
   // respond
   message.reply(output);
-}
-
-export async function createThreads(msg: Message) {
-  switch (msg.channel.id) {
-    // recruit
-    case process.env.RECRUIT_CHANNEL:
-      if (msg.mentions.users.size == 0 && msg.mentions.roles.size == 0 && msg.content.length > 0) {
-        let title: string = msg.content;
-        title = title.replace(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g, "");
-        msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
-        console.log(`${msg.author} started recruit thread ${title}`);
-      } else {
-        await msg
-          .reply("Please include a simple description and no mentions (links optional).")
-          .then((reply: Message) => {
-            return delay(10000).then(() => {
-              msg.delete();
-              reply.delete();
-            });
-          })
-          .catch(console.log);
-      }
-      break;
-
-    // promo
-    case process.env.PROMO_CHANNEL:
-      const embed = new MessageEmbed().setTitle("Scanning...").setDescription("Please wait...");
-      msg
-        .reply({ embeds: [embed] })
-        .then(async (reply: Message) => {
-          await delay(3000);
-          reply.delete();
-        })
-        .catch(console.log);
-
-      await delay(3000);
-      msg.channel.messages
-        .fetch(msg.id)
-        .then(async (message) => {
-          if (message.embeds.length > 0) {
-            const embed = message.embeds[0];
-            if (!embed.title) return;
-
-            let title = "Error",
-              reason = "Error";
-
-            if (embed.url?.includes("steamcommunity.com/workshop/filedetails/") || embed.url?.includes("steamcommunity.com/sharedfiles/filedetails/")) {
-              title = embed.title.replace("Steam Workshop::", "");
-              reason = "Steam Workshop thread";
-            } else if (embed.url?.includes("moddingofisaac.com/mod/")) {
-              title = embed.title.replace(" - Modding of Isaac", "");
-              reason = "Modding of Isaac thread";
-            }
-            message.startThread({ name: title, autoArchiveDuration: "MAX", reason: reason }).catch(console.log);
-            console.log(`${message.author} started promotion thread ${title}`);
-          } else {
-            await message
-              .reply("Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**.")
-              .then((reply: Message) => {
-                return delay(10000).then(() => {
-                  message.delete();
-                  reply.delete();
-                });
-              })
-              .catch(console.log);
-          }
-        })
-        .catch(console.log);
-  }
 }
