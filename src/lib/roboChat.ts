@@ -13,7 +13,7 @@ export async function roboChat(message: Message) {
   // format input
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
-  if (input.length < 2) input = "what do you think of this?";
+  if (input.length < 2) input = "🙂";
   input = input.trim();
 
   // query cleverbot
@@ -41,9 +41,9 @@ export async function roboChat(message: Message) {
   db.set(contextKey, context);
 
   // start typing
-  await delay(Math.random() * 1000 + 1000);
+  await delay(Math.random() * 500 + 500);
   message.channel.sendTyping();
-  await delay(Math.random() * 500 + 500 + output.length * 40);
+  await delay(Math.random() * 500 + output.length * 30);
 
   // respond
   message.reply(output);
