@@ -12,6 +12,8 @@ export const responses = [
 ];
 
 export async function respondToMessage(message: Message) {
+  if (message.channel.id !== process.env.SPAM_CHANNEL) return;
+
   responses.forEach(async (pr: PhraseResponder) => {
     if (message.content.includes(pr.phrase)) {
       await delay(Math.random() * 2000 + 1000);
