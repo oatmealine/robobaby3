@@ -1,3 +1,5 @@
+import { Guild } from "discord.js";
+
 export function delay(duration: number) {
   return new Promise(function (resolve) {
     setTimeout(resolve.bind(null, null), duration);
@@ -6,4 +8,11 @@ export function delay(duration: number) {
 
 export function removeUrls(text: string) {
   return text.replace(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g, "");
+}
+
+const emojis = ["🙂", "😏", "🤨", "😂", "🥲", "☹️", "🤨", "😒"];
+export function getRandomEmoji(guild: Guild | null) {
+  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+  if (!guild) return randomEmoji;
+  return Math.random() < 0.3 ? randomEmoji : guild.emojis.cache.random();
 }

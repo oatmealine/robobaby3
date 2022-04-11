@@ -1,10 +1,10 @@
 import { Message } from "discord.js";
-import { delay } from "./util";
+import { delay, getRandomEmoji } from "./util";
 
 const cleverbot = require("cleverbot-free");
 const db = require("quick.db");
 
-const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand", "🙂", "😏", "🤨"];
+const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand"];
 let lastResponse = 0;
 
 export async function roboChat(message: Message) {
@@ -34,12 +34,6 @@ export async function roboChat(message: Message) {
   output = output.toLowerCase();
   if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
 
-  // add emojis sometimes
-  if (Math.random() < 0.1) {
-    const emoji = message.guild?.emojis.cache.random();
-    output = `${output} ${emoji}`;
-  }
-
   // update context
   context.push(input);
   context.push(output);
@@ -53,4 +47,13 @@ export async function roboChat(message: Message) {
 
   // respond
   message.reply(output);
+
+  // add emojis sometimes
+  if (Math.random() < 0.1) {
+    const emoji = getRandomEmoji(message.guild);
+    await delay(Math.random() * 250 + 250);
+    message.channel.sendTyping();
+    await delay(Math.random() * 250 + 250);
+    message.channel.send(`${emoji}`);
+  }
 }
