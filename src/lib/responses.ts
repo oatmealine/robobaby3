@@ -12,13 +12,13 @@ export const responses = [
 ];
 
 export async function respondToMessage(message: Message) {
-  await delay(Math.random() * 2000 + 1000);
-  message.channel.sendTyping();
-  await delay(Math.random() * 500 + 500);
-
-  responses.forEach((pr: PhraseResponder) => {
+  responses.forEach(async (pr: PhraseResponder) => {
     if (message.content.includes(pr.phrase)) {
+      await delay(Math.random() * 2000 + 1000);
+      message.channel.sendTyping();
+      await delay(Math.random() * 750 + 750);
       message.reply(pr.response);
+      return;
     }
   });
 }
