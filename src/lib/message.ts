@@ -1,7 +1,7 @@
 import { Message, Permissions } from "discord.js";
 require("dotenv").config();
 
-export const removeInvites = (message: Message) => {
+export const removeInvites = (message: Message): void => {
   if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return;
 
   if (message.content.includes("discord.gg")) {

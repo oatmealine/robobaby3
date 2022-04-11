@@ -7,7 +7,7 @@ const db = require("quick.db");
 const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand"];
 let lastResponse = 0;
 
-export async function roboChat(message: Message) {
+export async function roboChat(message: Message): Promise<void> {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
 
   // format input

@@ -13,7 +13,7 @@ export const reacts = [
   { phrases: ["gay", "homo"], reaction: ["🏳️‍🌈"], chance: 0.5 },
 ];
 
-export async function reactToMessage(message: Message) {
+export async function reactToMessage(message: Message): Promise<void> {
   if (message.channel.id == process.env.SPAM_CHANNEL) return;
 
   await delay(Math.random() * 4000 + 1000);

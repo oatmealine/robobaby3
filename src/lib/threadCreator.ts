@@ -2,7 +2,7 @@ import { TimestampStyles } from "@discordjs/builders";
 import { Message, MessageEmbed } from "discord.js";
 import { delay, removeUrls } from "./util";
 
-export async function createThreads(msg: Message) {
+export async function createThreads(msg: Message): Promise<void> {
   switch (msg.channel.id) {
     case process.env.RECRUIT_CHANNEL:
       manageRecruit(msg);
@@ -18,7 +18,7 @@ export async function createThreads(msg: Message) {
   }
 }
 
-async function manageRecruit(msg: Message) {
+async function manageRecruit(msg: Message): Promise<void> {
   let title: string = msg.cleanContent;
   title = removeUrls(title);
 
@@ -37,7 +37,7 @@ async function manageRecruit(msg: Message) {
   }
 }
 
-async function managePromo(msg: Message) {
+async function managePromo(msg: Message): Promise<void> {
   const embed = new MessageEmbed().setTitle("Scanning...").setDescription("Hang on a sec...");
   msg
     .reply({ embeds: [embed] })
@@ -82,7 +82,7 @@ async function managePromo(msg: Message) {
     .catch(console.log);
 }
 
-async function manageResources(msg: Message) {
+async function manageResources(msg: Message): Promise<void> {
   if (msg.embeds.length == 0 && !msg.content.includes("```") && !(msg.content.includes("https://") || msg.content.includes("http://"))) return;
 
   let title = msg.cleanContent;

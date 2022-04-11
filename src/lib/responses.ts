@@ -12,7 +12,7 @@ export const responses = [
   { phrase: "godmode chant", response: "It's a mod for pro 😁\nI love god\nI love godmode 😮\nIt's nice mode" },
 ];
 
-export async function respondToMessage(message: Message) {
+export async function respondToMessage(message: Message): Promise<void> {
   if (message.channel.id !== process.env.SPAM_CHANNEL) return;
 
   responses.forEach(async (pr: PhraseResponder) => {
