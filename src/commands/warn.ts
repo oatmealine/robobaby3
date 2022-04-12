@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { LogEvent } from "../lib/log";
 
 const db = require("quick.db");
 
@@ -60,5 +61,7 @@ module.exports = {
       .setColor("#475acf");
     target.send({ embeds: [embed] });
     db.set(`punish.${target.id}`, warnings);
+
+    LogEvent(`${member.displayName} warned ${target.displayName} for \`${reason}\` (${warnings}/5)`);
   },
 };
