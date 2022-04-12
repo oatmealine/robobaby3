@@ -31,7 +31,7 @@ module.exports = {
     const warnings = (db.get(`punish.${target.id}`) || 0) + 1;
     switch (warnings) {
       case 1:
-        target.timeout(1000 * 60 * 10, "Warning #1");
+        target.timeout(1000 * 60, "Warning #1");
         break;
       case 2:
         target.timeout(1000 * 60 * 60, "Warning #2");
@@ -62,6 +62,6 @@ module.exports = {
     target.send({ embeds: [embed] });
     db.set(`punish.${target.id}`, warnings);
 
-    LogEvent(`${member.displayName} warned ${target.displayName} for \`${reason}\` (${warnings}/5)`);
+    LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/5)`);
   },
 };
