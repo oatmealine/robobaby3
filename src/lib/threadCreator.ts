@@ -21,20 +21,11 @@ export async function createThreads(msg: Message): Promise<void> {
 async function manageRecruit(msg: Message): Promise<void> {
   let title: string = msg.cleanContent;
   title = removeUrls(title);
+  title = title.split("\n")[0];
+  if (title.length == 0 || title.length > 100) title = `${msg.author.username}'s recruitment thread`;
 
-  if (title.length > 0) {
-    msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
-    console.log(`${msg.author} started recruit thread ${title}`);
-  } else {
-    await msg
-      .reply("Please include a simple description (links optional).")
-      .then(async (reply: Message) => {
-        await delay(10000);
-        msg.delete();
-        reply.delete();
-      })
-      .catch(console.log);
-  }
+  msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
+  console.log(`${msg.author} started recruit thread ${title}`);
 }
 
 async function managePromo(msg: Message): Promise<void> {
@@ -86,12 +77,12 @@ async function manageResources(msg: Message): Promise<void> {
   if (msg.embeds.length == 0 && !msg.content.includes("```") && !(msg.content.includes("https://") || msg.content.includes("http://"))) return;
 
   let title = msg.cleanContent;
+  title = title.split("\n")[0];
   title = title.replace(/```(.|\n)*?```/g, "");
-  title = title.replace(/\n/g, " ");
   title = title.replace(/\s+/g, " ");
   title = removeUrls(title);
   title.trim();
-  if (title.length == 0) title = `${msg.author.username}'s resource`;
+  if (title.length == 0 || title.length > 100) title = `${msg.author.username}'s resource`;
 
   msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
   console.log(`${msg.author} started resources thread ${title}`);
