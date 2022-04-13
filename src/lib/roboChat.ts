@@ -33,10 +33,11 @@ export async function roboChat(message: Message): Promise<void> {
   // format output
   output = output.toLowerCase();
   if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
+  if (output.includes("cleverbot")) output.replace("cleverbot", "robo-baby");
 
   // duplication punctuation
   ["?", "!"].forEach((punctuation) => {
-    while (Math.random() < 0.4 && output.endsWith(punctuation)) {
+    while (Math.random() < 0.33 && output.endsWith(punctuation)) {
       output += punctuation;
     }
   });
