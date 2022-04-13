@@ -14,7 +14,7 @@ export async function roboChat(message: Message): Promise<void> {
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
   if (input.length < 2) input = "🙂";
-  input = input.trim();
+  input = "You: " + input.trim();
 
   // query cleverbot
   const contextKey = `robochat.${message.author.id}.context`;
@@ -35,8 +35,9 @@ export async function roboChat(message: Message): Promise<void> {
   if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
 
   // update context
-  context = [...context, input, output];
+  context = [...context, input, "Me: " + output];
   context = context.slice(-4);
+  console.log(context);
   db.set(contextKey, context);
 
   // start typing
