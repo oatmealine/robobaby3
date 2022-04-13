@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 
 import db from "quick.db";
-import pluralize from "pluralize";
+const pluralize = require("pluralize");
 
 const pills = [
   "🔋 48 Hour Energy",
