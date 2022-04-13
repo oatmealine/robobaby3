@@ -4,6 +4,7 @@ import { removeInvites } from "../lib/message";
 import { respondToMessage } from "../lib/responses";
 import { createThreads } from "../lib/threadCreator";
 import { roboChat } from "../lib/roboChat";
+import { checkWatchlist } from "../lib/watchlist";
 
 module.exports = {
   name: "messageCreate",
@@ -17,5 +18,6 @@ module.exports = {
     respondToMessage(message);
     roboChat(message);
     createThreads(message);
+    checkWatchlist(message);
   },
 };

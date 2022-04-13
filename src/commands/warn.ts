@@ -7,7 +7,7 @@ const db = require("quick.db");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("warn")
-    .setDescription("Apply a punishment and a warning to a member.")
+    .setDescription("[MODERATOR] Apply a punishment and a warning to a member.")
     .setDefaultPermission(false)
     .addUserOption((option) => option.setName("target").setDescription("The member to punish.").setRequired(true))
     .addStringOption((option) => option.setName("reason").setDescription("The reason for the punishment.").setRequired(true)),

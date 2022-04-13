@@ -1,6 +1,7 @@
 import { REST } from "@discordjs/rest";
-import { ApplicationCommand, ApplicationCommandPermissionData, ApplicationCommandPermissionsManager, Client, Collection, GuildApplicationCommandPermissionData } from "discord.js";
+import { ApplicationCommand, ApplicationCommandPermissionData, Client, Collection } from "discord.js";
 import path from "path";
+import { loadWatchlist } from "../lib/watchlist";
 const { Routes } = require("discord-api-types/v9");
 const fs = require("node:fs");
 require("dotenv").config();
@@ -35,6 +36,8 @@ module.exports = {
         if (perms) client.application?.commands.permissions.set({ guild: process.env.GUILD_ID as string, command: guildCommand.id, permissions: [perms] });
       });
     });
+
+    loadWatchlist();
 
     console.log("INITIALIZED");
   },
