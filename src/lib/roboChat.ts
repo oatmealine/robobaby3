@@ -34,14 +34,20 @@ export async function roboChat(message: Message): Promise<void> {
   output = output.toLowerCase();
   if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
 
+  // duplication punctuation
+  ["?", "!"].forEach((punctuation) => {
+    while (Math.random() < 0.4 && output.endsWith(punctuation)) {
+      output += punctuation;
+    }
+  });
+
   // update context
   context = [...context, input, "Me: " + output];
   context = context.slice(-4);
-  console.log(context);
   db.set(contextKey, context);
 
   // start typing
-  await delay(Math.random() * 500 + 500);
+  await delay(Math.random() * 750 + 750);
   message.channel.sendTyping();
   await delay(Math.random() * 500 + output.length * 30);
 
