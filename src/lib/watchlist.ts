@@ -25,7 +25,6 @@ export function addToWatchlist(id: string): boolean {
   watchlist.push(id);
   db.set("watchlist.list", watchlist);
 
-  console.log(watchlist);
   return true;
 }
 
@@ -34,7 +33,6 @@ export function removeFromWatchlist(id: string): boolean {
   watchlist.splice(watchlist.indexOf(id), 1);
   db.set("watchlist.list", watchlist);
 
-  console.log(watchlist);
   return true;
 }
 
@@ -42,5 +40,5 @@ export function checkWatchlist(message: Message) {
   if (!watchlist.includes(message.author.id)) return;
   if (!message.guild) return;
 
-  ReportEvent(message.guild, `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`);
+  ReportEvent(message.guild, `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`, false);
 }

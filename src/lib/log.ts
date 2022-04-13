@@ -9,11 +9,12 @@ export const LogEvent = (message: string): void => {
   }
 };
 
-export const ReportEvent = (guild: Guild, message: string): void => {
+export const ReportEvent = (guild: Guild, message: string, ping: boolean = true): void => {
   const channel: TextChannel = client.channels.cache.get(process.env.MOD_CHANNEL || "") as TextChannel;
   const modRole: Role = guild.roles.cache.find((r) => r.name === "Moderator") as Role;
 
   if (channel && modRole) {
-    channel.send(`${modRole}, ${message}`);
+    if (ping) message = `${modRole}, ${message}`;
+    channel.send(`${message}`);
   }
 };

@@ -31,13 +31,13 @@ module.exports = {
     // list
     if (subcommand == "list") {
       if (!interaction.guild) return;
-      const list: Array<GuildMember> = await getWatchlist(interaction.guild);
+      const list = await getWatchlist(interaction.guild);
       const embed = new MessageEmbed().setTitle("Watchlist").setDescription(list.length ? list.join("\n") : "No users in the watchlist.");
       interaction.reply({ embeds: [embed] });
       return;
     }
 
-    const user = interaction.options.getUser("target");
+    const user = await interaction.options.getUser("target")?.fetch(true);
     if (!user) {
       interaction.reply({ content: `There was an error finding the user. Please try again.`, ephemeral: true });
       return;
@@ -49,16 +49,16 @@ module.exports = {
     }
 
     const embed = new MessageEmbed();
-    let res = false;
+    let success = false;
     switch (subcommand) {
       case "add":
-        res = await addToWatchlist(target.id);
-        if (res) embed.setAuthor({ name: `${target.displayName} added to watchlist`, iconURL: target.user.displayAvatarURL() });
+        success = await addToWatchlist(target.id);
+        if (success) embed.setAuthor({ name: `${target.displayName} added to watchlist`, iconURL: target.user.displayAvatarURL() });
         else embed.setAuthor({ name: `${target.displayName} already in watchlist`, iconURL: target.user.displayAvatarURL() });
         break;
       case "remove":
-        res = await removeFromWatchlist(target.id);
-        if (res) embed.setAuthor({ name: `${target.displayName} removed from watchlist`, iconURL: target.user.displayAvatarURL() });
+        success = await removeFromWatchlist(target.id);
+        if (success) embed.setAuthor({ name: `${target.displayName} removed from watchlist`, iconURL: target.user.displayAvatarURL() });
         else embed.setAuthor({ name: `${target.displayName} is not in watchlist`, iconURL: target.user.displayAvatarURL() });
         break;
     }
