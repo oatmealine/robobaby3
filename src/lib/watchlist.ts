@@ -1,8 +1,9 @@
 import { Guild, GuildMember, Message } from "discord.js";
 import { ReportEvent } from "./log";
-require("dotenv").config();
 
-const db = require("quick.db");
+import db from "quick.db";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 let watchlist: Array<string> = [];
 
@@ -12,7 +13,7 @@ export async function loadWatchlist() {
 }
 
 export async function getWatchlist(guild: Guild) {
-  let list: Array<GuildMember> = [];
+  const list: Array<GuildMember> = [];
   await watchlist.forEach((id) => {
     const user = guild.members.cache.get(id);
     if (user) list.push(user);
@@ -41,5 +42,9 @@ export function checkWatchlist(message: Message) {
   if (message.channel.id == process.env.SPAM_CHANNEL) return;
   if (!message.guild) return;
 
-  ReportEvent(message.guild, `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`, false);
+  ReportEvent(
+    message.guild,
+    `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`,
+    false
+  );
 }

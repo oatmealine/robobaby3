@@ -2,14 +2,24 @@ import { Message } from "discord.js";
 import { sendMessage } from "./message";
 import { delay, getRandomEmoji } from "./util";
 
-const cleverbot = require("cleverbot-free");
-const db = require("quick.db");
+import cleverbot from "cleverbot-free";
+import db from "quick.db";
 
-const defaultResponses = ["i'm robo-baby", "no", "what?", "can you repeat that?", "i don't understand"];
+const defaultResponses = [
+  "i'm robo-baby",
+  "no",
+  "what?",
+  "can you repeat that?",
+  "i don't understand",
+];
 let lastResponse = 0;
 
 export async function roboChat(message: Message): Promise<void> {
-  if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
+  if (
+    message.channel.id != process.env.SPAM_CHANNEL ||
+    !message.mentions.users.has(message.client.user?.id || "")
+  )
+    return;
 
   // format input
   let input: string = message.content;
@@ -21,7 +31,8 @@ export async function roboChat(message: Message): Promise<void> {
   const contextKey = `robochat.${message.author.id}.context`;
   let context = db.get(contextKey) || [];
 
-  let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+  let output: string =
+    defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   if (message.createdTimestamp - lastResponse > 2000) {
     await cleverbot(input, context)
       .then((res: string) => {
@@ -33,7 +44,8 @@ export async function roboChat(message: Message): Promise<void> {
 
   // format output
   output = output.toLowerCase();
-  if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
+  if (output.endsWith(".") && !output.endsWith("..."))
+    output = output.slice(0, -1);
   if (output.includes("cleverbot")) output.replace("cleverbot", "robo-baby");
 
   // duplication punctuation

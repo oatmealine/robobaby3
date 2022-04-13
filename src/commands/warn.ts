@@ -2,15 +2,25 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 import { LogEvent } from "../lib/log";
 
-const db = require("quick.db");
+import db from "quick.db";
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("warn")
     .setDescription("[MODERATOR] Apply a punishment and a warning to a member.")
     .setDefaultPermission(false)
-    .addUserOption((option) => option.setName("target").setDescription("The member to punish.").setRequired(true))
-    .addStringOption((option) => option.setName("reason").setDescription("The reason for the punishment.").setRequired(true)),
+    .addUserOption((option) =>
+      option
+        .setName("target")
+        .setDescription("The member to punish.")
+        .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("reason")
+        .setDescription("The reason for the punishment.")
+        .setRequired(true)
+    ),
 
   permissions: { type: "ROLE", id: process.env.MOD_ROLE, permission: true },
 
@@ -18,13 +28,19 @@ module.exports = {
     const user = interaction.options.getUser("target");
     const reason = interaction.options.getString("reason");
     if (!user) {
-      interaction.reply({ content: `There was an error finding the user. Please try again.`, ephemeral: true });
+      interaction.reply({
+        content: "There was an error finding the user. Please try again.",
+        ephemeral: true,
+      });
       return;
     }
 
     const target = interaction.guild?.members.cache.get(user.id);
     if (!target || target.roles.cache.has(process.env.MOD_ROLE as string)) {
-      interaction.reply({ content: `You don't have permission to warn ${target}.`, ephemeral: true });
+      interaction.reply({
+        content: `You don't have permission to warn ${target}.`,
+        ephemeral: true,
+      });
       return;
     }
 
@@ -49,15 +65,23 @@ module.exports = {
     }
 
     let embed = new MessageEmbed()
-      .setAuthor({ name: `${target.displayName} received a warning`, iconURL: target.user.displayAvatarURL() })
+      .setAuthor({
+        name: `${target.displayName} received a warning`,
+        iconURL: target.user.displayAvatarURL(),
+      })
       .setTitle(`Reason: \`${reason}\``)
       .setColor("#475acf");
     interaction.reply({ embeds: [embed] });
 
     embed = new MessageEmbed()
-      .setAuthor({ name: `${member.displayName} gave you a warning`, iconURL: member.user.displayAvatarURL() })
+      .setAuthor({
+        name: `${member.displayName} gave you a warning`,
+        iconURL: member.user.displayAvatarURL(),
+      })
       .setTitle(`Reason: \`${reason}\``)
-      .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
+      .setDescription(
+        `**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`
+      )
       .setColor("#475acf");
     target.send({ embeds: [embed] });
     db.set(`punish.${target.id}`, warnings);

@@ -1,4 +1,3 @@
-import { TimestampStyles } from "@discordjs/builders";
 import { Message, MessageEmbed } from "discord.js";
 import { delay, removeUrls } from "./util";
 
@@ -22,14 +21,19 @@ async function manageRecruit(msg: Message): Promise<void> {
   let title: string = msg.cleanContent;
   title = removeUrls(title);
   title = title.split("\n")[0];
-  if (title.length == 0 || title.length > 100) title = `${msg.author.username}'s recruitment thread`;
+  if (title.length == 0 || title.length > 100)
+    title = `${msg.author.username}'s recruitment thread`;
 
-  msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
+  msg
+    .startThread({ name: title, autoArchiveDuration: "MAX" })
+    .catch(console.log);
   console.log(`${msg.author} started recruit thread ${title}`);
 }
 
 async function managePromo(msg: Message): Promise<void> {
-  const embed = new MessageEmbed().setTitle("Scanning...").setDescription("Hang on a sec...");
+  const embed = new MessageEmbed()
+    .setTitle("Scanning...")
+    .setDescription("Hang on a sec...");
   msg
     .reply({ embeds: [embed] })
     .then(async (reply: Message) => {
@@ -49,18 +53,29 @@ async function managePromo(msg: Message): Promise<void> {
         let title = "Error",
           reason = "Error";
 
-        if (embed.url?.includes("steamcommunity.com/workshop/filedetails/") || embed.url?.includes("steamcommunity.com/sharedfiles/filedetails/")) {
+        if (
+          embed.url?.includes("steamcommunity.com/workshop/filedetails/") ||
+          embed.url?.includes("steamcommunity.com/sharedfiles/filedetails/")
+        ) {
           title = embed.title.replace("Steam Workshop::", "");
           reason = "Steam Workshop thread";
         } else if (embed.url?.includes("moddingofisaac.com/mod/")) {
           title = embed.title.replace(" - Modding of Isaac", "");
           reason = "Modding of Isaac thread";
         }
-        message.startThread({ name: title, autoArchiveDuration: "MAX", reason: reason }).catch(console.log);
+        message
+          .startThread({
+            name: title,
+            autoArchiveDuration: "MAX",
+            reason: reason,
+          })
+          .catch(console.log);
         console.log(`${message.author} started promotion thread ${title}`);
       } else {
         await message
-          .reply("Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**.")
+          .reply(
+            "Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**."
+          )
           .then((reply: Message) => {
             return delay(10000).then(() => {
               message.delete();
@@ -74,7 +89,12 @@ async function managePromo(msg: Message): Promise<void> {
 }
 
 async function manageResources(msg: Message): Promise<void> {
-  if (msg.embeds.length == 0 && !msg.content.includes("```") && !(msg.content.includes("https://") || msg.content.includes("http://"))) return;
+  if (
+    msg.embeds.length == 0 &&
+    !msg.content.includes("```") &&
+    !(msg.content.includes("https://") || msg.content.includes("http://"))
+  )
+    return;
 
   let title = msg.cleanContent;
   title = title.split("\n")[0];
@@ -82,8 +102,11 @@ async function manageResources(msg: Message): Promise<void> {
   title = title.replace(/\s+/g, " ");
   title = removeUrls(title);
   title.trim();
-  if (title.length == 0 || title.length > 100) title = `${msg.author.username}'s resource`;
+  if (title.length == 0 || title.length > 100)
+    title = `${msg.author.username}'s resource`;
 
-  msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
+  msg
+    .startThread({ name: title, autoArchiveDuration: "MAX" })
+    .catch(console.log);
   console.log(`${msg.author} started resources thread ${title}`);
 }

@@ -1,7 +1,9 @@
 import { Message } from "discord.js";
 import { sendMessage } from "./message";
 import { delay } from "./util";
-require("dotenv").config();
+
+import * as dotenv from "dotenv";
+dotenv.config();
 
 interface PhraseResponder {
   phrases: Array<string>;
@@ -10,10 +12,22 @@ interface PhraseResponder {
 }
 
 export const responses = [
-  { phrases: ["crab dancing to chiptune"], response: "https://youtu.be/j_d_4CnuqZQ" },
+  {
+    phrases: ["crab dancing to chiptune"],
+    response: "https://youtu.be/j_d_4CnuqZQ",
+  },
   { phrases: ["who is robo"], response: "https://youtu.be/QY4AAos0daI" },
-  { phrases: ["godmode chant"], response: "It's a mod for pro 😁\nI love god\nI love godmode 😮\nIt's nice mode" },
-  { phrases: ["move server", "server move", "old server"], response: `There was no longer an active administrator account on the old server. Now that we have one, you can expect new **features**, **new moderators**, and **Robo-Baby 3.0**.`, removeAfter: 12000 },
+  {
+    phrases: ["godmode chant"],
+    response:
+      "It's a mod for pro 😁\nI love god\nI love godmode 😮\nIt's nice mode",
+  },
+  {
+    phrases: ["move server", "server move", "old server"],
+    response:
+      "There was no longer an active administrator account on the old server. Now that we have one, you can expect new **features**, **new moderators**, and **Robo-Baby 3.0**.",
+    removeAfter: 12000,
+  },
 ];
 
 export async function respondToMessage(message: Message): Promise<void> {

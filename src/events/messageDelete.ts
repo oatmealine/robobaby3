@@ -8,7 +8,11 @@ module.exports = {
   async execute(message: Message) {
     if (message.author.bot) return;
 
-    LogEvent(`Message from ${message.author} deleted in ${message.channel}:\n>>> ${message.content}`);
-    console.log(`Message from ${message.author.tag} deleted in ${message.channel}:\n${message.content}`);
+    LogEvent(
+      `Message from ${message.author} deleted in ${message.channel}:\n>>> ${message.content}`
+    );
+    console.log(
+      `Message from ${message.author.tag} deleted in ${message.channel}:\n${message.content}`
+    );
   },
 };
