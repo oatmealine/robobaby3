@@ -37,7 +37,7 @@ module.exports = {
       return;
     }
 
-    const user = await interaction.options.getUser("target")?.fetch(true);
+    const user = interaction.options.getUser("user");
     if (!user) {
       interaction.reply({ content: `There was an error finding the user. Please try again.`, ephemeral: true });
       return;
