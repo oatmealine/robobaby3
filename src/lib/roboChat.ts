@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import { sendMessage } from "./message";
 import { delay, getRandomEmoji } from "./util";
 
 const cleverbot = require("cleverbot-free");
@@ -47,13 +48,8 @@ export async function roboChat(message: Message): Promise<void> {
   context = context.slice(-4);
   db.set(contextKey, context);
 
-  // start typing
-  await delay(Math.random() * 750 + 750);
-  message.channel.sendTyping();
-  await delay(Math.random() * 500 + output.length * 30);
-
   // respond
-  message.reply(output);
+  sendMessage(message, output, 1500);
 
   // add emojis sometimes
   if (Math.random() < 0.1) {

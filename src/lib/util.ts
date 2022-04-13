@@ -1,4 +1,4 @@
-import { Emoji, Guild, GuildEmoji } from "discord.js";
+import { Guild, GuildEmoji } from "discord.js";
 
 export function delay(duration: number) {
   return new Promise(function (resolve) {
