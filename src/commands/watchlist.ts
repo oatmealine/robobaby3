@@ -21,6 +21,11 @@ module.exports = {
             .setDescription("The member to add.")
             .setRequired(true)
         )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("Reason for watching this user.")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -31,6 +36,11 @@ module.exports = {
             .setName("user")
             .setDescription("The member to remove.")
             .setRequired(true)
+        )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("Reason for watching this user.")
         )
     )
     .addSubcommand((subcommand) =>
@@ -104,6 +114,10 @@ module.exports = {
           });
         break;
     }
+
+    const reason = interaction.options.getString("reason");
+    if (reason) embed.setDescription(`**Reason:** ${reason}`);
+
     interaction.reply({ embeds: [embed] });
   },
 };
