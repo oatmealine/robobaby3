@@ -36,7 +36,14 @@ module.exports = {
     }
 
     const target = interaction.guild?.members.cache.get(user.id);
-    if (!target || target.roles.cache.has(process.env.MOD_ROLE as string)) {
+    if (!target) {
+      interaction.reply({
+        content: `Couldn't find user ${target}.`,
+        ephemeral: true,
+      });
+      return;
+    }
+    if (target.roles.cache.has(process.env.MOD_ROLE as string)) {
       interaction.reply({
         content: `You don't have permission to warn ${target}.`,
         ephemeral: true,
