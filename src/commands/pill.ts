@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 
 import db from "quick.db";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pluralize = require("pluralize");
 
 const pills = [

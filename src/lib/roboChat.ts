@@ -2,8 +2,12 @@ import { Message } from "discord.js";
 import { sendMessage } from "./message";
 import { delay, getRandomEmoji } from "./util";
 
-import cleverbot from "cleverbot-free";
 import db from "quick.db";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const cb = require("cleverbot");
+const cleverbot = new cb({
+  key: process.env.CLEVERBOT_KEY,
+});
 
 const defaultResponses = [
   "i'm robo-baby",
@@ -12,7 +16,6 @@ const defaultResponses = [
   "can you repeat that?",
   "i don't understand",
 ];
-let lastResponse = 0;
 
 export async function roboChat(message: Message): Promise<void> {
   if (
@@ -25,22 +28,19 @@ export async function roboChat(message: Message): Promise<void> {
   let input: string = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
   if (input.length < 2) input = "🙂";
-  input = "You: " + input.trim();
+  input = input.trim();
 
-  // query cleverbot
   const contextKey = `robochat.${message.author.id}.context`;
-  let context = db.get(contextKey) || [];
-
+  let context = db.get(contextKey) || "";
   let output: string =
     defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-  if (message.createdTimestamp - lastResponse > 2000) {
-    await cleverbot(input, context)
-      .then((res: string) => {
-        output = res;
-      })
-      .catch(console.log);
-    lastResponse = message.createdTimestamp;
-  }
+  await cleverbot
+    .query(input, { cs: context })
+    .then((res: any) => {
+      output = res.output;
+      context = res.cs;
+    })
+    .catch(console.log);
 
   // format output
   output = output.toLowerCase();
@@ -56,19 +56,13 @@ export async function roboChat(message: Message): Promise<void> {
   });
 
   // update context
-  context = [...context, input, "Me: " + output];
-  context = context.slice(-4);
   db.set(contextKey, context);
-
-  // respond
-  sendMessage(message, output, 1500);
 
   // add emojis sometimes
   if (Math.random() < 0.1) {
-    const emoji = getRandomEmoji(message.guild);
-    await delay(Math.random() * 250 + 250);
-    message.channel.sendTyping();
-    await delay(Math.random() * 250 + 250);
-    message.channel.send(`${emoji}`);
+    output = `${output} ${getRandomEmoji(message.guild)}`;
   }
+
+  // respond
+  await sendMessage(message, output, 1500);
 }

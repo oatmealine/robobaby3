@@ -1,5 +1,4 @@
 {
-  "files": ["**/*.ts", "**/*.tsx"],
   "env": {
     "browser": true,
     "es2021": true
