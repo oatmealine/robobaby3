@@ -8,7 +8,7 @@ export async function sendMessage(
   location: TextChannel | Message | User,
   content: string,
   maxThinkDuration = 0
-): Promise<Message | null> {
+): Promise<Message> {
   await delay((Math.random() * maxThinkDuration) / 2 + maxThinkDuration / 2);
 
   if (location instanceof TextChannel) location.sendTyping();
@@ -17,21 +17,12 @@ export async function sendMessage(
   await delay(Math.random() * 500 + content.length * 15);
 
   if (location instanceof Message) {
-    location
-      .reply(content)
-      .then((msg: Message) => {
-        return msg;
-      })
-      .catch(console.log);
+    const msg = await location.reply(content);
+    return msg;
   } else {
-    location
-      .send(content)
-      .then((msg: Message) => {
-        return msg;
-      })
-      .catch(console.log);
+    const msg = await location.send(content);
+    return msg;
   }
-  return null;
 }
 
 export const removeInvites = (message: Message): void => {
