@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { sendMessage } from "./message";
-import { delay, getRandomEmoji } from "./util";
+import { getRandomEmoji } from "./util";
 
 import db from "quick.db";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -13,8 +13,18 @@ const defaultResponses = [
   "i'm robo-baby",
   "no",
   "what?",
-  "can you repeat that?",
+  "?",
   "i don't understand",
+  "ok",
+  "okay",
+  "sure",
+  "nice",
+  "lol",
+  "wow",
+  "lmao",
+  "same",
+  "k",
+  "ty",
 ];
 
 export async function roboChat(message: Message): Promise<void> {
@@ -36,6 +46,7 @@ export async function roboChat(message: Message): Promise<void> {
     defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   await cleverbot
     .query(input, { cs: context })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .then((res: any) => {
       output = res.output;
       context = res.cs;
