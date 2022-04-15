@@ -33,7 +33,7 @@ export const responses = [
 export async function respondToMessage(message: Message): Promise<void> {
   responses.forEach(async (pr: PhraseResponder) => {
     pr.phrases.forEach(async (phrase: string) => {
-      if (message.content.toLowerCase().includes(phrase)) {
+      if (` ${message.content.toLowerCase()} `.includes(` ${phrase} `)) {
         sendMessage(message, pr.response, 1000)
           .then(async (msg) => {
             if (msg && pr.removeAfter) {
