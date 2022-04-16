@@ -27,10 +27,9 @@ module.exports = {
     interaction.reply({ embeds: [embed], ephemeral: true });
 
     // send to moderators
-    ReportEvent(
-      member.guild,
-      `${member} used \`/report\` in ${interaction.channel}\nReply to this message to reply to the user.`
-    )
+    ReportEvent(member.guild, {
+      content: `${member} used \`/report\` in ${interaction.channel}\nReply to this message to reply to the user.`,
+    })
       .then((msg) => {
         msg?.channel
           .awaitMessages({

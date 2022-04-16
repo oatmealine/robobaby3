@@ -1,4 +1,4 @@
-import { Guild, Message, Role, TextChannel } from "discord.js";
+import { Guild, Message, MessageOptions, Role, TextChannel } from "discord.js";
 import { client } from "../bot";
 
 import * as dotenv from "dotenv";
@@ -15,7 +15,7 @@ export const LogEvent = (message: string): void => {
 
 export async function ReportEvent(
   guild: Guild,
-  message: string,
+  message: MessageOptions,
   ping = true
 ): Promise<Message | null> {
   const channel: TextChannel = client.channels.cache.get(
@@ -26,8 +26,8 @@ export async function ReportEvent(
   ) as Role;
 
   if (channel && modRole) {
-    if (ping) message = `${modRole}, ${message}`;
-    return channel.send(`${message}`);
+    if (ping) message.content = `${modRole}, ${message.content}`;
+    return channel.send(message);
   }
   return null;
 }

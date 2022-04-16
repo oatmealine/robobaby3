@@ -44,7 +44,9 @@ export function checkWatchlist(message: Message) {
 
   ReportEvent(
     message.guild,
-    `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`,
+    {
+      content: `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`,
+    },
     false
   );
 }
