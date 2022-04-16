@@ -1,5 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 import db from "quick.db";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -90,7 +92,10 @@ module.exports = {
     const embed = new MessageEmbed()
       .setColor("#475acf")
       .setDescription(`You ate a pill:\n**${pill}**`);
-    interaction.reply({ embeds: [embed], ephemeral: true });
+    interaction.reply({
+      embeds: [embed],
+      ephemeral: interaction.channel?.id != process.env.SPAM_CHANNEL,
+    });
     console.log(`${member.user.tag} ate a ${pill} pill.`);
 
     db.set(timeKey, interaction.createdTimestamp);
