@@ -13,7 +13,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("goldengod")
     .setDescription(
-      "Request the Golden God role for dedicated members of the old server."
+      "🌟 Request the Golden God role, given to dedicated members of our old server."
     ),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {

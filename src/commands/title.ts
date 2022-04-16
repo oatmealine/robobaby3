@@ -12,7 +12,7 @@ const roles = ["Coder", "Spriter", "Musician", "Designer"];
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("title")
-    .setDescription("Set your modding title.")
+    .setDescription("👾 Set your modding title.")
     .addStringOption((option) =>
       option
         .setName("choice")

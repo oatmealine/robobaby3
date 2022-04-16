@@ -59,7 +59,9 @@ const pills = [
 const cooldown = 1000 * 60 * 3;
 
 module.exports = {
-  data: new SlashCommandBuilder().setName("pill").setDescription("Eat a pill."),
+  data: new SlashCommandBuilder()
+    .setName("pill")
+    .setDescription("💊 Eat a random pill."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const timeKey = `pill.${member.id}.time`;

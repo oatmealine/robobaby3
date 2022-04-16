@@ -6,6 +6,8 @@ import {
   MessageButton,
   MessageEmbed,
 } from "discord.js";
+import { title } from "process";
+import { LogEvent } from "../lib/log";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pluralize = require("pluralize");
@@ -13,7 +15,7 @@ const pluralize = require("pluralize");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("poll")
-    .setDescription("Create a poll.")
+    .setDescription("🗳️ Create a poll.")
     .addStringOption((option) =>
       option
         .setName("title")
@@ -34,6 +36,9 @@ module.exports = {
     ),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
+    const votes: any = {};
+    const voters: Array<string> = [];
+
     const options = (interaction.options.getString("options") as string)
       .split(",")
       .slice(0, 5)
@@ -52,6 +57,7 @@ module.exports = {
       Math.min(interaction.options.getNumber("duration") as number, 60)
     );
 
+    const row = new MessageActionRow();
     const embed = new MessageEmbed()
       .setAuthor({
         name: `${member.displayName} started a poll`,
@@ -62,7 +68,6 @@ module.exports = {
       .setFooter({
         text: `Poll ends in ${duration} ${pluralize("minute", duration)}`,
       });
-    const row = new MessageActionRow();
 
     let minLeft = duration;
     const ticker = setInterval(() => {
@@ -76,9 +81,6 @@ module.exports = {
     }, 60000);
 
     let buttons: Array<MessageButton> = [];
-
-    const votes: any = {};
-    const voters: Array<string> = [];
 
     for (let i = 0; i < options.length; i++) {
       if (!options[i]) break;
@@ -95,6 +97,8 @@ module.exports = {
     row.addComponents(buttons);
 
     await interaction.reply({ embeds: [embed], components: [row] });
+    LogEvent(`Poll started by ${member}: ${title}`);
+    console.log(`Poll started by ${member.displayName}: ${title}`);
 
     const filter = () => true;
     const collector = interaction.channel?.createMessageComponentCollector({
@@ -148,6 +152,9 @@ module.exports = {
         .setFooter({ text: "" });
       interaction.editReply({ embeds: [embed], components: [] });
       interaction.followUp("Poll has ended. Check it out!");
+
+      LogEvent(`Poll ended by ${member}: ${title}`);
+      console.log(`Poll ended by ${member.displayName}: ${title}`);
     });
   },
 };

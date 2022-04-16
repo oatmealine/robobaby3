@@ -14,7 +14,7 @@ const collectionFilter = (message: Message): boolean => {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("report")
-    .setDescription("Quietly summon a moderator to deal with a problem."),
+    .setDescription("🚨 Quietly summon a moderator to deal with a problem."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     // reply
