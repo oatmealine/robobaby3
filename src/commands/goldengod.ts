@@ -17,6 +17,18 @@ module.exports = {
     ),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
+    const role = member.guild.roles.cache.find(
+      (r) => r.name === "Golden God"
+    ) as Role;
+
+    if (member.roles.cache.has(role.id)) {
+      interaction.reply({
+        content: `You already have the ${role} role.`,
+        ephemeral: true,
+      });
+      return;
+    }
+
     const embed = new MessageEmbed()
       .setColor("#475acf")
       .setDescription(
@@ -40,21 +52,23 @@ module.exports = {
       components: [row],
     });
 
-    const collector = interaction.channel?.createMessageComponentCollector({
+    const collector = modReport?.channel?.createMessageComponentCollector({
       time: 1000 * 60 * 60 * 24,
       max: 1,
     });
 
     collector?.on("collect", async (i) => {
-      if (!i.memberPermissions?.has("MANAGE_ROLES")) return;
+      if (!i.memberPermissions?.has("MANAGE_ROLES")) {
+        i.reply({
+          content: "You do not have permission to manage roles.",
+          ephemeral: true,
+        });
+        return;
+      }
 
       const button = new MessageButton().setCustomId("nope").setDisabled(true);
 
       if (i.customId == "approve") {
-        const role = member.guild.roles.cache.find(
-          (r) => r.name === "Golden God"
-        ) as Role;
-
         if (role) {
           member.roles.add(role);
           button.setLabel(`${i.user.username} approved the request`);
