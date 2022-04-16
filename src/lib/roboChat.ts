@@ -1,8 +1,12 @@
 import { Message } from "discord.js";
 import { sendMessage } from "./message";
-import { getRandomEmoji } from "./util";
+import { delay, getRandomEmoji } from "./util";
 
 import db from "quick.db";
+
+import vision from "@google-cloud/vision";
+const visionClient = new vision.ImageAnnotatorClient();
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cb = require("cleverbot");
 const cleverbot = new cb({
@@ -35,11 +39,15 @@ export async function roboChat(message: Message): Promise<void> {
     return;
 
   // format input
-  let input: string = message.content;
+  let input = message.content;
   input = input.replace(/<@!?[0-9]+>/g, "");
   if (input.length < 2) input = "🙂";
   input = input.trim();
 
+  // replace images with text
+  input = await convertImagesToText(input, message);
+
+  // run cleverbot
   const contextKey = `robochat.${message.author.id}.context`;
   let context = db.get(contextKey) || "";
   let output: string =
@@ -61,7 +69,7 @@ export async function roboChat(message: Message): Promise<void> {
 
   // duplication punctuation
   ["?", "!"].forEach((punctuation) => {
-    while (Math.random() < 0.33 && output.endsWith(punctuation)) {
+    while (Math.random() < 0.2 && output.endsWith(punctuation)) {
       output += punctuation;
     }
   });
@@ -76,4 +84,28 @@ export async function roboChat(message: Message): Promise<void> {
 
   // respond
   await sendMessage(message, output, 1500);
+}
+
+async function convertImagesToText(text: string, message: Message) {
+  await delay(1000);
+  await message.channel.messages
+    .fetch(message.id)
+    .then(async (msg) => {
+      await Promise.all(
+        msg.embeds.map(async (embed) => {
+          if (embed.type == "image" && embed.url) {
+            const [result] = await visionClient.labelDetection(embed.url);
+            const labels: Array<string> = [];
+            result.labelAnnotations?.map((label) =>
+              labels.push(label.description || "")
+            );
+            text = text.replace(embed.url, labels.slice(0, 5).join(", "));
+          }
+        })
+      );
+    })
+    .catch(console.log);
+
+  console.log(`Converted images to text: ${text}`);
+  return text;
 }
