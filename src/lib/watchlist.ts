@@ -1,5 +1,4 @@
-import { Guild, GuildMember, Message } from "discord.js";
-import { ReportEvent } from "./log";
+import { Guild, GuildMember, Message, TextChannel } from "discord.js";
 
 import db from "quick.db";
 import * as dotenv from "dotenv";
@@ -42,11 +41,11 @@ export function checkWatchlist(message: Message) {
   if (message.channel.id == process.env.SPAM_CHANNEL) return;
   if (!message.guild) return;
 
-  ReportEvent(
-    message.guild,
-    {
-      content: `Watchlisted ${message.author} posted a message in ${message.channel}:\n>>> ${message.content}`,
-    },
-    false
-  );
+  const channel: TextChannel = message.client.channels.cache.get(
+    process.env.WATCHLIST_CHANNEL as string
+  ) as TextChannel;
+  if (channel)
+    channel.send(
+      `${message.author} posted in ${message.channel}:\n>>> ${message.content}`
+    );
 }
