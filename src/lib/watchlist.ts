@@ -1,13 +1,16 @@
 import { Guild, GuildMember, Message, TextChannel } from "discord.js";
 
-import db from "quick.db";
 import * as dotenv from "dotenv";
+import { redis } from "./redis";
 dotenv.config();
 
-let watchlist: Array<string> = [];
+const watchlist: Array<string> = [];
 
 export async function loadWatchlist() {
-  watchlist = (await db.get("watchlist.list")) || [];
+  const users = await redis.lRange("watchlist.users", 0, -1);
+  users.forEach((id) => {
+    watchlist.push(id);
+  });
   console.log(`Loaded ${watchlist.length} users in the watchlist.`);
 }
 
@@ -23,7 +26,7 @@ export async function getWatchlist(guild: Guild) {
 export function addToWatchlist(id: string): boolean {
   if (watchlist.includes(id)) return false;
   watchlist.push(id);
-  db.set("watchlist.list", watchlist);
+  redis.lPush("watchlist.users", id);
 
   return true;
 }
@@ -31,7 +34,7 @@ export function addToWatchlist(id: string): boolean {
 export function removeFromWatchlist(id: string): boolean {
   if (!watchlist.includes(id)) return false;
   watchlist.splice(watchlist.indexOf(id), 1);
-  db.set("watchlist.list", watchlist);
+  redis.lRem("watchlist.users", 0, id);
 
   return true;
 }
@@ -41,11 +44,6 @@ export function checkWatchlist(message: Message) {
   if (message.channel.id == process.env.SPAM_CHANNEL) return;
   if (!message.guild) return;
 
-  const channel: TextChannel = message.client.channels.cache.get(
-    process.env.WATCHLIST_CHANNEL as string
-  ) as TextChannel;
-  if (channel)
-    channel.send(
-      `${message.author} posted in ${message.channel}:\n>>> ${message.content}`
-    );
+  const channel: TextChannel = message.client.channels.cache.get(process.env.WATCHLIST_CHANNEL as string) as TextChannel;
+  if (channel) channel.send(`${message.author} posted in ${message.channel}:\n>>> ${message.content}`);
 }

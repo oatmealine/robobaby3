@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { redis } from "../lib/redis";
 import { LogEvent } from "../lib/log";
-
-import db from "quick.db";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -42,7 +41,7 @@ module.exports = {
       return;
     }
 
-    const warnings = (db.get(`punish.${target.id}`) || 0) + 1;
+    const warnings = parseInt((await redis.get(target.id)) || "0") + 1;
     const applyPunishment = interaction.options.getBoolean("punish");
     if (applyPunishment) {
       switch (warnings) {
@@ -60,7 +59,7 @@ module.exports = {
           break;
         case 5:
           target.ban({ days: 1, reason: "Warning #5" });
-          db.set(`punish.${target.id}`, 0);
+          redis.set(`punish.${target.id}`, 0);
           break;
       }
     }
@@ -83,7 +82,7 @@ module.exports = {
       .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
       .setColor("#475acf");
     target.send({ embeds: [embed] });
-    db.set(`punish.${target.id}`, warnings);
+    redis.set(`punish.${target.id}`, warnings);
 
     LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/5)`);
   },
