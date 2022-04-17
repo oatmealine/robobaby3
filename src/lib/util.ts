@@ -35,3 +35,13 @@ export function getRandomEmoji(guild: Guild | null): string | GuildEmoji {
     ? randomEmoji
     : guild.emojis.cache.random() || randomEmoji;
 }
+
+export function removeMarkdown(text: string): string {
+  text = text.replace(/`/g, "");
+  text = text.replace(/\*/g, "");
+  text = text.replace(/_/g, "");
+  text = text.replace(/_/g, "");
+  text = text.replace(/>/g, "");
+  text = text.replace(/|/g, "");
+  return text;
+}

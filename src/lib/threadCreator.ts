@@ -1,5 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
-import { delay, removeUrls } from "./util";
+import { delay, removeMarkdown, removeUrls } from "./util";
 
 export async function createThreads(msg: Message): Promise<void> {
   switch (msg.channel.id) {
@@ -19,8 +19,9 @@ export async function createThreads(msg: Message): Promise<void> {
 
 async function manageRecruit(msg: Message): Promise<void> {
   let title: string = msg.cleanContent;
-  title = removeUrls(title);
   title = title.split("\n")[0];
+  title = removeUrls(title);
+  title = removeMarkdown(title);
   if (title.length == 0 || title.length > 100)
     title = `${msg.author.username}'s recruitment thread`;
 
@@ -104,6 +105,7 @@ async function manageResources(msg: Message): Promise<void> {
   title.trim();
   if (title.length == 0 || title.length > 100)
     title = `${msg.author.username}'s resource`;
+  title = removeMarkdown(title);
 
   msg
     .startThread({ name: title, autoArchiveDuration: "MAX" })

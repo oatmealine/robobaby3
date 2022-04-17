@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { sendMessage } from "./message";
-import { delay, getRandomEmoji } from "./util";
+import { delay, getRandomEmoji, removeMarkdown } from "./util";
 
 import db from "quick.db";
 
@@ -43,6 +43,7 @@ export async function roboChat(message: Message): Promise<void> {
   input = input.replace(/<@!?[0-9]+>/g, "");
   if (input.length < 2) input = "🙂";
   input = input.trim();
+  input = removeMarkdown(input);
 
   // replace images with text
   input = await convertImagesToText(input, message);
@@ -99,13 +100,14 @@ async function convertImagesToText(text: string, message: Message) {
             result.labelAnnotations?.map((label) =>
               labels.push(label.description || "")
             );
-            text = text.replace(embed.url, labels.slice(0, 5).join(", "));
+            const description = labels.slice(0, 5).join(", ");
+            text = text.replace(embed.url, description);
+            console.log(`Converted ${embed.url} to "${description}"`);
           }
         })
       );
     })
     .catch(console.log);
 
-  console.log(`Converted images to text: ${text}`);
   return text;
 }
