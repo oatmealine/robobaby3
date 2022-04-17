@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Message, TextChannel } from "discord.js";
+import { Guild, GuildMember, Message, MessageEmbed, TextChannel } from "discord.js";
 
 import * as dotenv from "dotenv";
 import { redis } from "./redis";
@@ -45,5 +45,11 @@ export function checkWatchlist(message: Message) {
   if (!message.guild) return;
 
   const channel: TextChannel = message.client.channels.cache.get(process.env.WATCHLIST_CHANNEL as string) as TextChannel;
-  if (channel) channel.send(`${message.author} posted in ${message.channel}:\n>>> ${message.content}`);
+  if (channel) {
+    const embed = new MessageEmbed()
+      .setDescription(`${message.channel}: ${message.content}`)
+      .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() })
+      .setColor(message.member?.displayHexColor || "#000000");
+    channel.send({ embeds: [embed] });
+  }
 }
