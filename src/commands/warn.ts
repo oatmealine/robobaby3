@@ -7,20 +7,11 @@ import db from "quick.db";
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("warn")
-    .setDescription("[MODERATOR] Apply a punishment and a warning to a member.")
+    .setDescription("[MODERATOR] Apply a warning to a member.")
     .setDefaultPermission(false)
-    .addUserOption((option) =>
-      option
-        .setName("target")
-        .setDescription("The member to punish.")
-        .setRequired(true)
-    )
-    .addStringOption((option) =>
-      option
-        .setName("reason")
-        .setDescription("The reason for the punishment.")
-        .setRequired(true)
-    ),
+    .addUserOption((option) => option.setName("target").setDescription("The member to warn.").setRequired(true))
+    .addStringOption((option) => option.setName("reason").setDescription("The reason for the warning.").setRequired(true))
+    .addBooleanOption((option) => option.setName("punish").setDescription("Whether or not to apply the associated punishment.").setRequired(true)),
 
   permissions: { type: "ROLE", id: process.env.MOD_ROLE, permission: true },
 
@@ -52,23 +43,26 @@ module.exports = {
     }
 
     const warnings = (db.get(`punish.${target.id}`) || 0) + 1;
-    switch (warnings) {
-      case 1:
-        target.timeout(1000 * 60, "Warning #1");
-        break;
-      case 2:
-        target.timeout(1000 * 60 * 60, "Warning #2");
-        break;
-      case 3:
-        target.timeout(1000 * 60 * 60 * 24, "Warning #3");
-        break;
-      case 4:
-        target.timeout(1000 * 60 * 60 * 24 * 7, "Warning #4");
-        break;
-      case 5:
-        db.set(`punish.${target.id}`, 0);
-        target.ban({ days: 1, reason: "Warning #5" });
-        break;
+    const applyPunishment = interaction.options.getBoolean("punish");
+    if (applyPunishment) {
+      switch (warnings) {
+        case 1:
+          target.timeout(1000 * 60, "Warning #1");
+          break;
+        case 2:
+          target.timeout(1000 * 60 * 60, "Warning #2");
+          break;
+        case 3:
+          target.timeout(1000 * 60 * 60 * 24, "Warning #3");
+          break;
+        case 4:
+          target.timeout(1000 * 60 * 60 * 24 * 7, "Warning #4");
+          break;
+        case 5:
+          target.ban({ days: 1, reason: "Warning #5" });
+          db.set(`punish.${target.id}`, 0);
+          break;
+      }
     }
 
     let embed = new MessageEmbed()
@@ -86,9 +80,7 @@ module.exports = {
         iconURL: member.user.displayAvatarURL(),
       })
       .setTitle(`Reason: \`${reason}\``)
-      .setDescription(
-        `**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`
-      )
+      .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
       .setColor("#475acf");
     target.send({ embeds: [embed] });
     db.set(`punish.${target.id}`, warnings);
