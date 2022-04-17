@@ -49,6 +49,7 @@ export function checkWatchlist(message: Message) {
     const embed = new MessageEmbed()
       .setDescription(`${message.channel}: ${message.content}`)
       .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() })
+      .setTimestamp(message.createdTimestamp)
       .setColor(message.member?.displayHexColor || "#000000");
     channel.send({ embeds: [embed] });
   }
