@@ -1,11 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-  CommandInteraction,
-  GuildMember,
-  Message,
-  MessageEmbed,
-} from "discord.js";
-import { ReportEvent } from "../lib/log";
+import { CommandInteraction, GuildMember, Message, MessageEmbed } from "discord.js";
+import { LogEvent, ReportEvent } from "../lib/log";
 
 const collectionFilter = (message: Message): boolean => {
   return message.mentions.users.has(message.client.user?.id || "");
@@ -14,21 +9,23 @@ const collectionFilter = (message: Message): boolean => {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("report")
-    .setDescription("🚨 Quietly summon a moderator to deal with a problem."),
+    .setDescription("🚨 Quietly summon a moderator to deal with a problem.")
+    .addStringOption((option) => option.setName("reason").setDescription("[OPTIONAL] Reason for the report.").setRequired(false)),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     // reply
     const embed = new MessageEmbed()
       .setColor("#475acf")
       .setTitle("**The moderators have been alerted.**")
-      .setDescription(
-        "Thanks for your report. You may receive a message if the report is resolved."
-      );
+      .setDescription("Thanks for your report. You may receive a message if the report is resolved.");
     interaction.reply({ embeds: [embed], ephemeral: true });
 
     // send to moderators
+    const reason = interaction.options.getString("reason");
     ReportEvent(member.guild, {
-      content: `${member} used \`/report\` in ${interaction.channel}\nReply to this message to reply to the user.`,
+      content: `${member} used \`/report\` in ${interaction.channel}\n\`\`\`${
+        reason || "No reason provided."
+      }\`\`\`Reply to this message to reply to the user.`,
     })
       .then((msg) => {
         msg?.channel
@@ -40,12 +37,10 @@ module.exports = {
           .then((collected) => {
             // handle moderator response
             const replyMsg = collected.first();
-            if (replyMsg) {
+            if (replyMsg && replyMsg.reference?.messageId == msg.id) {
               const embed = new MessageEmbed()
                 .setTitle("Your report has been resolved!")
-                .setDescription(
-                  `The appropriate action has been taken by the moderation team.\n\n>>> **Message:** ${replyMsg.content}`
-                )
+                .setDescription(`The appropriate action has been taken by the moderation team.\n\n>>> **Message:** ${replyMsg.content}`)
                 .setAuthor({
                   name: replyMsg.member?.displayName as string,
                   iconURL: replyMsg.author.displayAvatarURL(),
@@ -58,6 +53,8 @@ module.exports = {
           .catch(console.log);
       })
       .catch(console.log);
+
+    LogEvent(`${member} used \`/report\` in ${interaction.channel}.`);
     console.log(`${member.user.tag} used /report in ${interaction.channel}.`);
   },
 };
