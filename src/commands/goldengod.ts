@@ -1,25 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-  CommandInteraction,
-  GuildMember,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
-  Role,
-} from "discord.js";
+import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, Role } from "discord.js";
 import { ReportEvent } from "../lib/log";
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("goldengod")
-    .setDescription(
-      "🌟 Request the Golden God role, given to dedicated members of our old server."
-    ),
+  data: new SlashCommandBuilder().setName("goldengod").setDescription("🌟 Request the Golden God role, given to dedicated members of our old server."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const role = member.guild.roles.cache.find(
-      (r) => r.name === "Golden God"
-    ) as Role;
+    const role = member.guild.roles.cache.find((r) => r.name === "Golden God") as Role;
 
     if (member.roles.cache.has(role.id)) {
       interaction.reply({
@@ -37,14 +24,8 @@ module.exports = {
     interaction.reply({ embeds: [embed], ephemeral: true });
 
     const row = new MessageActionRow().addComponents(
-      new MessageButton()
-        .setCustomId("approve")
-        .setLabel("Approve")
-        .setStyle("SUCCESS"),
-      new MessageButton()
-        .setCustomId("deny")
-        .setLabel("Deny")
-        .setStyle("DANGER")
+      new MessageButton().setCustomId("approve").setLabel("Approve").setStyle("SUCCESS"),
+      new MessageButton().setCustomId("deny").setLabel("Deny").setStyle("DANGER")
     );
 
     const modReport = await ReportEvent(member.guild, {
@@ -74,17 +55,13 @@ module.exports = {
           button.setLabel(`${i.user.username} approved the request`);
           button.setStyle("SUCCESS");
           i.reply({ content: "Approved!", ephemeral: true });
-          interaction.user.send(
-            "You have been granted the **Golden God** role!"
-          );
+          interaction.user.send("You have been granted the **Golden God** role!");
         }
       } else {
         button.setLabel(`${i.user.username} denied the request`);
         button.setStyle("DANGER");
         i.reply({ content: "Denied!", ephemeral: true });
-        interaction.user.send(
-          "Unfortunately, your request for **Golden God** has been denied."
-        );
+        interaction.user.send("Unfortunately, your request for **Golden God** has been denied.").catch(console.log);
       }
 
       const row = new MessageActionRow().addComponents(button);

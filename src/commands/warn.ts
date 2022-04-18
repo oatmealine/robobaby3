@@ -41,7 +41,7 @@ module.exports = {
       return;
     }
 
-    const warnings = parseInt((await redis.get(target.id)) || "0") + 1;
+    const warnings = parseInt((await redis.get(`punish.${target.id}`)) || "0") + 1;
     const applyPunishment = interaction.options.getBoolean("punish");
     if (applyPunishment) {
       switch (warnings) {

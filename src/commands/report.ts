@@ -46,7 +46,7 @@ module.exports = {
                   iconURL: replyMsg.author.displayAvatarURL(),
                 })
                 .setColor("#475acf");
-              member?.send({ embeds: [embed] });
+              member?.send({ embeds: [embed] }).catch(console.log);
               replyMsg.reply(`Message sent to ${member}`);
             }
           })
