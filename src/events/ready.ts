@@ -43,6 +43,7 @@ module.exports = {
       });
     });
 
+    redis.connect();
     redis.on("connect", () => {
       console.log("Connected to redis database");
       loadWatchlist();
