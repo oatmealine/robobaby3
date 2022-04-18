@@ -47,15 +47,13 @@ module.exports = {
       .connect()
       .then(() => {
         loadWatchlist();
+        console.log("Connected to redis database");
       })
       .catch(console.log);
 
-    redis.on("connect", () => {
-      console.log("Connected to redis database");
+    redis.on("error", (err) => {
+      if (err.includes("SocketCloseUnexpectedlyError")) return;
+      console.log("Redis error: ", err);
     });
-
-    redis.on("error", (err) => console.log("Redis error: ", err));
-
-    console.log("INITIALIZED");
   },
 };
