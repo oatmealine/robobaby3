@@ -17,6 +17,7 @@ module.exports = {
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const votes: any = {};
     const voters: Array<string> = [];
+    const title = interaction.options.getString("title") as string;
 
     const options = (interaction.options.getString("options") as string)
       .split(",")
@@ -39,7 +40,7 @@ module.exports = {
         name: `${member.displayName} started a poll`,
         iconURL: member.user.displayAvatarURL(),
       })
-      .setTitle(interaction.options.getString("title") as string)
+      .setTitle(title)
       .setColor("#475acf")
       .setFooter({
         text: `Poll ends in ${duration} ${pluralize("minute", duration)} from creation`,
