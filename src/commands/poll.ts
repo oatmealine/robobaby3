@@ -1,11 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-  CommandInteraction,
-  GuildMember,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
-} from "discord.js";
+import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { title } from "process";
 import { LogEvent } from "../lib/log";
 
@@ -16,24 +10,9 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("poll")
     .setDescription("🗳️ Create a poll.")
-    .addStringOption((option) =>
-      option
-        .setName("title")
-        .setDescription("The question you are asking.")
-        .setRequired(true)
-    )
-    .addStringOption((option) =>
-      option
-        .setName("options")
-        .setDescription("Each option in the poll, separated by commas (max: 5)")
-        .setRequired(true)
-    )
-    .addNumberOption((option) =>
-      option
-        .setName("duration")
-        .setDescription("Duration of the poll in minutes (max: 60)")
-        .setRequired(true)
-    ),
+    .addStringOption((option) => option.setName("title").setDescription("The question you are asking.").setRequired(true))
+    .addStringOption((option) => option.setName("options").setDescription("Each option in the poll, separated by commas (max: 5)").setRequired(true))
+    .addNumberOption((option) => option.setName("duration").setDescription("Duration of the poll in minutes (max: 60)").setRequired(true)),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const votes: any = {};
@@ -52,10 +31,7 @@ module.exports = {
       return;
     }
 
-    const duration = Math.max(
-      1,
-      Math.min(interaction.options.getNumber("duration") as number, 60)
-    );
+    const duration = Math.max(1, Math.min(interaction.options.getNumber("duration") as number, 60));
 
     const row = new MessageActionRow();
     const embed = new MessageEmbed()
@@ -66,32 +42,15 @@ module.exports = {
       .setTitle(interaction.options.getString("title") as string)
       .setColor("#475acf")
       .setFooter({
-        text: `Poll ends in ${duration} ${pluralize("minute", duration)}`,
+        text: `Poll ends in ${duration} ${pluralize("minute", duration)} from creation`,
       });
-
-    let minLeft = duration;
-    const ticker = setInterval(() => {
-      minLeft--;
-      if (minLeft <= 0) clearInterval(ticker);
-
-      embed.setFooter({
-        text: `Poll ends in ${minLeft} ${pluralize("minute", minLeft)}`,
-      });
-      interaction.editReply({ embeds: [embed] });
-    }, 60000);
 
     let buttons: Array<MessageButton> = [];
 
     for (let i = 0; i < options.length; i++) {
       if (!options[i]) break;
 
-      buttons = [
-        ...buttons,
-        new MessageButton()
-          .setCustomId(`${i}`)
-          .setLabel(`${options[i]}`)
-          .setStyle("SECONDARY"),
-      ];
+      buttons = [...buttons, new MessageButton().setCustomId(`${i}`).setLabel(`${options[i]}`).setStyle("SECONDARY")];
       votes[`${i}`] = [];
     }
     row.addComponents(buttons);
@@ -133,16 +92,9 @@ module.exports = {
         if (!votes[`${i}`]) return;
 
         const numVotes = votes[`${i}`].length;
-        embed.addField(
-          `${option}`,
-          `**${numVotes}** ${pluralize("vote", numVotes)}`,
-          true
-        );
+        embed.addField(`${option}`, `**${numVotes}** ${pluralize("vote", numVotes)}`, true);
       });
-      if (voters.length > 0)
-        embed.setDescription(
-          `**${pluralize("Winner", winners.length)}:** ${winners.join(" and ")}`
-        );
+      if (voters.length > 0) embed.setDescription(`**${pluralize("Winner", winners.length)}:** ${winners.join(" and ")}`);
       else embed.setDescription("No one voted 😔");
       embed
         .setAuthor({
