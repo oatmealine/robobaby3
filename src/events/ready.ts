@@ -52,7 +52,6 @@ module.exports = {
       .catch(console.log);
 
     redis.on("error", (err) => {
-      if (err.includes("SocketCloseUnexpectedlyError")) return;
       console.log("Redis error: ", err);
     });
   },
