@@ -43,10 +43,15 @@ module.exports = {
       });
     });
 
-    redis.connect();
+    redis
+      .connect()
+      .then(() => {
+        loadWatchlist();
+      })
+      .catch(console.log);
+
     redis.on("connect", () => {
       console.log("Connected to redis database");
-      loadWatchlist();
     });
 
     redis.on("error", (err) => console.log("Redis error: ", err));
