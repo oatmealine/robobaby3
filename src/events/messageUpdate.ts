@@ -28,6 +28,6 @@ module.exports = {
     const diffMsg = `\`\`\`diff\n${output}\`\`\``;
 
     LogEvent(`${newMessage.author}'s message edited in ${newMessage.channel}:${diffMsg}`);
-    console.log(`${newMessage.author.tag}'s message edited in ${newMessage.channel}:${output}`);
+    console.log(`${newMessage.author.tag}'s message edited in ${newMessage.channel}`);
   },
 };
