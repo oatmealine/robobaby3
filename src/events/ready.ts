@@ -9,6 +9,7 @@ import fs = require("node:fs");
 
 import * as dotenv from "dotenv";
 import { redis } from "../lib/redis";
+import { SocketClosedUnexpectedlyError } from "redis";
 dotenv.config();
 
 module.exports = {
@@ -52,8 +53,7 @@ module.exports = {
       .catch(console.log);
 
     redis.on("error", (err) => {
-      //if (err.includes("SocketClosedUnexpectedlyError")) return;
-      console.log(err);
+      if (!(err instanceof SocketClosedUnexpectedlyError)) console.log("Redis error", err);
     });
   },
 };
