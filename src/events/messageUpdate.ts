@@ -17,7 +17,7 @@ module.exports = {
 
     removeInvites(newMessage);
 
-    const diff = Diff.diffWords(oldMessage.content, newMessage.content);
+    const diff = Diff.diffWords(oldMessage.content.replace(/`/g, ""), newMessage.content.replace(/`/g, ""));
     let output = "";
     diff.forEach((part: any) => {
       output += "\n";
