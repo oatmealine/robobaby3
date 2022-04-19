@@ -13,9 +13,9 @@ module.exports = {
   once: false,
 
   async execute(oldMessage: Message, newMessage: Message) {
-    removeInvites(newMessage);
+    if (newMessage.author.bot || newMessage.member?.roles.cache.has(process.env.MOD_ROLE as string)) return;
 
-    if (newMessage.member?.roles.cache.has(process.env.MOD_ROLE as string)) return;
+    removeInvites(newMessage);
 
     const diff = Diff.diffWords(oldMessage.content, newMessage.content);
     let output = "";
