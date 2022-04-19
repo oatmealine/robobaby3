@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { REST } from "@discordjs/rest";
-import { ApplicationCommand, ApplicationCommandPermissionData, Client, Collection } from "discord.js";
+import { ApplicationCommand, ApplicationCommandPermissionData, Client, Collection, ReactionUserManager } from "discord.js";
 import path from "path";
 import { loadWatchlist } from "../lib/watchlist";
 import { Routes } from "discord-api-types/v9";
@@ -52,7 +52,8 @@ module.exports = {
       .catch(console.log);
 
     redis.on("error", (err) => {
-      console.log("Redis error: ", err);
+      //if (err.includes("SocketClosedUnexpectedlyError")) return;
+      console.log(err);
     });
   },
 };

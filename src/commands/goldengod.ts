@@ -31,7 +31,7 @@ module.exports = {
     const modReport = await ReportEvent(member.guild, {
       content: `${member} requested the Golden God role`,
       components: [row],
-    });
+    }).catch(console.log);
 
     const collector = modReport?.channel?.createMessageComponentCollector({
       time: 1000 * 60 * 60 * 24,
