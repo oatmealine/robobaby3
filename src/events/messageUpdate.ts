@@ -2,6 +2,9 @@ import { Message } from "discord.js";
 import { LogEvent } from "../lib/log";
 import { removeInvites } from "../lib/message";
 
+import * as dotenv from "dotenv";
+dotenv.config();
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Diff = require("diff");
 
@@ -11,6 +14,8 @@ module.exports = {
 
   async execute(oldMessage: Message, newMessage: Message) {
     removeInvites(newMessage);
+
+    if (newMessage.member?.roles.cache.has(process.env.MOD_ROLE as string)) return;
 
     const diff = Diff.diffWords(oldMessage.content, newMessage.content);
     let output = "";
