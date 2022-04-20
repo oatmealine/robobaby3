@@ -35,18 +35,10 @@ module.exports = {
 
     const collector = modReport?.channel?.createMessageComponentCollector({
       time: 1000 * 60 * 60 * 24,
-      max: 1,
+      filter: (i) => i.member.roles.cache.has(process.env.MOD_ROLE as string),
     });
 
     collector?.on("collect", async (i) => {
-      if (!i.memberPermissions?.has("MANAGE_ROLES")) {
-        i.reply({
-          content: "You do not have permission to manage roles.",
-          ephemeral: true,
-        });
-        return;
-      }
-
       const button = new MessageButton().setCustomId("nope").setDisabled(true);
 
       if (i.customId == "approve") {
