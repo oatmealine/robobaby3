@@ -31,14 +31,10 @@ export async function roboChat(message: Message): Promise<void> {
   const contextKey = `robochat.${message.author.id}.context`;
   const context = (await redis.get(contextKey)) || "";
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-  await cleverbot
-    .query(input, { cs: context })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .then((res: any) => {
-      output = res.output;
-      redis.set(contextKey, res.cs);
-    })
-    .catch(console.log);
+
+  const res = await cleverbot.query(input, { cs: context }).catch(console.log);
+  output = res.output;
+  redis.set(contextKey, res.cs);
 
   // format output
   output = output.toLowerCase();
