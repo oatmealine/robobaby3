@@ -81,7 +81,9 @@ module.exports = {
       .setTitle(`Reason: \`${reason}\``)
       .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
       .setColor("#475acf");
-    target.send({ embeds: [embed] }).catch(console.log);
+    target.send({ embeds: [embed] }).catch(() => {
+      interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true });
+    });
     redis.set(`punish.${target.id}`, warnings);
 
     LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/5)`);
