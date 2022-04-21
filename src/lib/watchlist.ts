@@ -1,50 +1,60 @@
-import { Guild, GuildMember, Message, MessageEmbed, TextChannel } from "discord.js";
+import { Guild, GuildMember, Message, MessageEmbed, TextChannel, ThreadChannel } from "discord.js";
+import { redis } from "./redis";
 
 import * as dotenv from "dotenv";
-import { redis } from "./redis";
 dotenv.config();
 
-const watchlist: Array<string> = [];
+const watchlist: any = {};
 
 export async function loadWatchlist() {
-  const users = await redis.lRange("watchlist.users", 0, -1);
-  users.forEach((id) => {
-    watchlist.push(id);
+  redis.keys("watchlist:*").then((keys) => {
+    for (const key of keys) {
+      redis.lRange(key, 0, -1).then((value) => {
+        watchlist[key.replace("watchlist:", "")] = value;
+      });
+    }
   });
+
   console.log(`Loaded ${watchlist.length} users in the watchlist.`);
 }
 
 export async function getWatchlist(guild: Guild) {
   const list: Array<GuildMember> = [];
-  await watchlist.forEach((id) => {
-    const user = guild.members.cache.get(id);
-    if (user) list.push(user);
-  });
+  const keys = Object.keys(watchlist);
+  for (const key of keys) {
+    const member = guild.members.cache.get(key.replace("watchlist:", ""));
+    if (member) list.push(member);
+  }
   return list;
 }
 
-export function addToWatchlist(id: string): boolean {
-  if (watchlist.includes(id)) return false;
-  watchlist.push(id);
-  redis.lPush("watchlist.users", id);
+export function addToWatchlist(guild: Guild, id: string): boolean {
+  const member = guild.members.cache.get(id);
+  const channel = getWatchlistChannel(guild);
+  if (!member || !channel) return false;
+
+  channel.threads
+    .create({ name: member?.displayName as string, autoArchiveDuration: "MAX" })
+    .then((thread) => {
+      watchlist[id] = thread.id;
+      redis.lPush(`watchlist:${member.id}`, thread.id);
+    })
+    .catch(console.log);
 
   return true;
 }
 
-export function removeFromWatchlist(id: string): boolean {
-  if (!watchlist.includes(id)) return false;
-  watchlist.splice(watchlist.indexOf(id), 1);
-  redis.lRem("watchlist.users", 0, id);
-
-  return true;
+export function removeFromWatchlist(guild: Guild, id: string) {
+  redis.del(`watchlist:${id}`);
+  delete watchlist[id];
 }
 
 export function checkWatchlist(message: Message) {
-  if (!watchlist.includes(message.author.id)) return;
+  if (!watchlist[message.author.id]) return;
   if (message.channel.id == process.env.SPAM_CHANNEL) return;
   if (!message.guild) return;
 
-  const channel: TextChannel = message.client.channels.cache.get(process.env.WATCHLIST_CHANNEL as string) as TextChannel;
+  const channel: ThreadChannel = message.client.channels.cache.get(watchlist[message.author.id]) as ThreadChannel;
   if (channel) {
     const embed = new MessageEmbed()
       .setDescription(`${message.channel}: ${message.content}`)
@@ -53,4 +63,8 @@ export function checkWatchlist(message: Message) {
       .setColor(message.member?.displayHexColor || "#000000");
     channel.send({ embeds: [embed] });
   }
+}
+
+function getWatchlistChannel(guild: Guild) {
+  return guild.channels.cache.get(process.env.WATCHLIST_CHANNEL as string) as TextChannel;
 }
