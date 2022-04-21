@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
-import { title } from "process";
 import { LogEvent } from "../lib/log";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -15,7 +14,7 @@ module.exports = {
     .addNumberOption((option) => option.setName("duration").setDescription("Duration of the poll in minutes (max: 60)").setRequired(true)),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const votes: any = {};
+    const votes: { [key: string]: Array<string> } = {};
     const voters: Array<string> = [];
     const title = interaction.options.getString("title") as string;
 

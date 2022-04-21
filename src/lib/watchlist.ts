@@ -4,13 +4,13 @@ import { redis } from "./redis";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const watchlist: any = {};
+const watchlist: { [key: string]: string } = {};
 
 export async function loadWatchlist() {
   redis.keys("watchlist:*").then((keys) => {
     for (const key of keys) {
-      redis.lRange(key, 0, -1).then((value) => {
-        watchlist[key.replace("watchlist:", "")] = value;
+      redis.get(key).then((value) => {
+        watchlist[key.replace("watchlist:", "")] = value as string;
       });
     }
   });
