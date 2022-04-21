@@ -58,7 +58,7 @@ const pills = [
   "🔽 Shot Speed Down",
   "🔼 Shot Speed Up",
 ];
-const cooldown = 1000 * 60 * 3;
+const cooldown = 1000 * 60 * 60;
 
 module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
