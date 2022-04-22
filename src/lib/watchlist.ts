@@ -7,10 +7,9 @@ dotenv.config();
 const watchlist: { [key: string]: string } = {};
 
 export async function loadWatchlist() {
-  redis.keys("watchlist:*").then((keys) => {
-    for (const key of keys) {
-      redis.get(key).then((value) => {
-        console.log(value);
+  redis.keys("watchlist:*").then(async (keys) => {
+    for await (const key of keys) {
+      await redis.get(key).then((value) => {
         watchlist[key.replace("watchlist:", "")] = value as string;
       });
     }
@@ -19,11 +18,12 @@ export async function loadWatchlist() {
 }
 
 export async function getWatchlist(guild: Guild) {
-  const list: Array<GuildMember> = [];
+  const list: Array<GuildMember | string> = [];
   const keys = Object.keys(watchlist);
   for (const key of keys) {
-    const member = guild.members.cache.get(key.replace("watchlist:", ""));
-    if (member) list.push(member);
+    const id = key.replace("watchlist:", "");
+    const member = guild.members.cache.get(id);
+    list.push(member || id);
   }
   return list;
 }
