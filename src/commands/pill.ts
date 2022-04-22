@@ -64,7 +64,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const timeKey = `pill.${member.id}.time`;
+    const timeKey = `pill:${member.id}`;
 
     if (await redis.exists(timeKey)) {
       const lastUsed = parseInt((await redis.get(timeKey)) || "0");

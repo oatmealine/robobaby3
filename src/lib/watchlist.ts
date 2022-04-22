@@ -10,12 +10,12 @@ export async function loadWatchlist() {
   redis.keys("watchlist:*").then((keys) => {
     for (const key of keys) {
       redis.get(key).then((value) => {
+        console.log(value);
         watchlist[key.replace("watchlist:", "")] = value as string;
       });
     }
+    console.log(`Loaded ${Object.keys(watchlist).length} users in the watchlist.`);
   });
-
-  console.log(`Loaded ${watchlist.length} users in the watchlist.`);
 }
 
 export async function getWatchlist(guild: Guild) {
@@ -37,7 +37,7 @@ export function addToWatchlist(guild: Guild, id: string): boolean {
     .create({ name: member?.displayName as string, autoArchiveDuration: "MAX" })
     .then((thread) => {
       watchlist[id] = thread.id;
-      redis.lPush(`watchlist:${member.id}`, thread.id);
+      redis.set(`watchlist:${member.id}`, thread.id);
     })
     .catch(console.log);
 

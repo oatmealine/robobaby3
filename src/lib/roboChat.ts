@@ -28,7 +28,7 @@ export async function roboChat(message: Message): Promise<void> {
   input = await convertImagesToText(input, message);
 
   // run cleverbot
-  const contextKey = `robochat.${message.author.id}.context`;
+  const contextKey = `robochat:context:${message.author.id}`;
   const context = (await redis.get(contextKey)) || "";
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 

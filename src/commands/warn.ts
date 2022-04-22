@@ -41,7 +41,7 @@ module.exports = {
       return;
     }
 
-    const warnings = parseInt((await redis.get(`punish.${target.id}`)) || "0") + 1;
+    const warnings = parseInt((await redis.get(`warnings:${target.id}`)) || "0") + 1;
     const applyPunishment = interaction.options.getBoolean("punish");
     if (applyPunishment) {
       switch (warnings) {
@@ -59,7 +59,7 @@ module.exports = {
           break;
         case 5:
           target.ban({ days: 1, reason: "Warning #5" });
-          redis.set(`punish.${target.id}`, 0);
+          redis.set(`warnings:${target.id}`, 0);
           break;
       }
     }
@@ -84,7 +84,7 @@ module.exports = {
     target.send({ embeds: [embed] }).catch(() => {
       interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true });
     });
-    redis.set(`punish.${target.id}`, warnings);
+    redis.set(`warnings:${target.id}`, warnings);
 
     LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/5)`);
   },
