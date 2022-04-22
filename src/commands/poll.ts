@@ -14,6 +14,7 @@ module.exports = {
     .addNumberOption((option) => option.setName("duration").setDescription("Duration of the poll in minutes (max: 60)").setRequired(true)),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
+    const channel = interaction.channel;
     const votes: { [key: string]: Array<string> } = {};
     const voters: Array<string> = [];
     const title = interaction.options.getString("title") as string;
@@ -102,8 +103,7 @@ module.exports = {
           iconURL: member.user.displayAvatarURL(),
         })
         .setFooter({ text: "" });
-      interaction.editReply({ embeds: [embed], components: [] });
-      interaction.followUp("Poll has ended. Check it out!");
+      channel?.send({ embeds: [embed], components: [] });
 
       LogEvent(`Poll ended by ${member}: ${title}`);
       console.log(`Poll ended by ${member.displayName}: ${title}`);
