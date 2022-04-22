@@ -71,7 +71,7 @@ module.exports = {
       })
       .setTitle(`Reason: \`${reason}\``)
       .setColor("#475acf");
-    interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
 
     embed = new MessageEmbed()
       .setAuthor({
@@ -82,7 +82,7 @@ module.exports = {
       .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
       .setColor("#475acf");
     target.send({ embeds: [embed] }).catch(() => {
-      interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true });
+      interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true }).catch(console.log);
     });
     redis.set(`warnings:${target.id}`, warnings);
 
