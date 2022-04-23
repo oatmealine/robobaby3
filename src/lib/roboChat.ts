@@ -33,13 +33,13 @@ export async function roboChat(message: Message): Promise<void> {
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 
   const res = await cleverbot.query(input, { cs: context }).catch(console.log);
-  output = res.output;
-  redis.set(contextKey, res.cs);
+  if (res) {
+    output = res.output.toLowerCase();
+    if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
+    if (output.includes("cleverbot")) output.replace("cleverbot", "robo-baby");
 
-  // format output
-  output = output.toLowerCase();
-  if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
-  if (output.includes("cleverbot")) output.replace("cleverbot", "robo-baby");
+    redis.set(contextKey, res.cs);
+  }
 
   // duplication punctuation
   ["?", "!"].forEach((punctuation) => {
@@ -47,8 +47,6 @@ export async function roboChat(message: Message): Promise<void> {
       output += punctuation;
     }
   });
-
-  // update context
 
   // add emojis sometimes
   if (Math.random() < 0.1) {
