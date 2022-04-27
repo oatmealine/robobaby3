@@ -9,7 +9,7 @@ interface PhraseReactor {
 
 export const reacts = [
   {
-    phrases: ["robo", "baby", "robobaby"],
+    phrases: ["robobaby", "robo-baby"],
     reaction: [
       "😉",
       "😍",
@@ -51,14 +51,8 @@ export async function reactToMessage(message: Message): Promise<void> {
   reacts.forEach((pr: PhraseReactor) => {
     if (Math.random() > pr.chance) return;
 
-    if (
-      pr.phrases.some((el) =>
-        ` ${message.cleanContent.toLowerCase()} `.includes(` ${el} `)
-      )
-    ) {
-      message.react(
-        pr.reaction[Math.floor(Math.random() * pr.reaction.length)]
-      );
+    if (pr.phrases.some((el) => ` ${message.cleanContent.toLowerCase()} `.includes(` ${el} `))) {
+      message.react(pr.reaction[Math.floor(Math.random() * pr.reaction.length)]);
     }
   });
 }
