@@ -4,11 +4,7 @@ import { delay, getRandomEmoji } from "./util";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export async function sendMessage(
-  location: TextChannel | Message | User,
-  content: string,
-  maxThinkDuration = 0
-): Promise<Message> {
+export async function sendMessage(location: TextChannel | Message | User, content: string, maxThinkDuration = 0): Promise<Message> {
   await delay((Math.random() * maxThinkDuration) / 2 + maxThinkDuration / 2);
 
   if (location instanceof TextChannel) location.sendTyping();
@@ -26,20 +22,13 @@ export async function sendMessage(
 }
 
 export const removeInvites = (message: Message): void => {
-  if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES))
-    return;
+  if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return;
 
-  if (
-    message.content.match(
-      /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g
-    )
-  ) {
-    message.delete();
+  if (message.content.match(/(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g)) {
+    message.delete().catch(console.log);
     sendMessage(
       message.author,
-      `Don't send invite links to other servers. If you must, send them to the interested parties directly. ${getRandomEmoji(
-        message.guild
-      )}`
+      `Don't send invite links to other servers. If you must, send them to the interested parties directly. ${getRandomEmoji(message.guild)}`
     );
   }
 };

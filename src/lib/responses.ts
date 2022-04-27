@@ -19,14 +19,7 @@ export const responses = [
   { phrases: ["who is robo"], response: "https://youtu.be/QY4AAos0daI" },
   {
     phrases: ["godmode chant"],
-    response:
-      "It's a mod for pro 😁\nI love god\nI love godmode 😮\nIt's nice mode",
-  },
-  {
-    phrases: ["move server", "server move", "old server"],
-    response:
-      "There was no longer an active administrator account on the old server. Now that we have one, you can expect new **features**, **new moderators**, and **Robo-Baby 3.0**.",
-    removeAfter: 12000,
+    response: "It's a mod for pro 😁\nI love god\nI love godmode 😮\nIt's nice mode",
   },
 ];
 
@@ -38,10 +31,10 @@ export async function respondToMessage(message: Message): Promise<void> {
           .then(async (msg) => {
             if (msg && pr.removeAfter) {
               await delay(pr.removeAfter || 10000);
-              msg.delete();
+              msg.delete().catch(console.log);
             }
           })
-          .catch(console.error);
+          .catch(console.log);
         return;
       }
     });
