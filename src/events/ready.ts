@@ -30,7 +30,7 @@ module.exports = {
       client.commands.set(cmd.data.name, cmd);
     }
 
-    const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN as string);
+    /*const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN as string);
 
     rest.get(Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string)).then(async (res: any) => {
       res.forEach((guildCommand: ApplicationCommand) => {
@@ -42,7 +42,7 @@ module.exports = {
             permissions: [perms],
           });
       });
-    });
+    });*/
 
     redis
       .connect()
