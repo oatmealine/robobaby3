@@ -12,8 +12,8 @@ module.exports = {
 
   async execute(message: Message) {
     if (message.author.bot) return;
+    if (removeInvites(message)) return;
 
-    removeInvites(message);
     reactToMessage(message);
     respondToMessage(message);
     roboChat(message);
