@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, Message, MessageEmbed } from "discord.js";
+import { botColor } from "../lib/util";
 import { LogEvent, ReportEvent } from "../lib/log";
 
 const collectionFilter = (message: Message): boolean => {
@@ -15,7 +16,7 @@ module.exports = {
   async execute(interaction: CommandInteraction, member: GuildMember) {
     // reply
     const embed = new MessageEmbed()
-      .setColor("#475acf")
+      .setColor(botColor)
       .setTitle("**The moderators have been alerted.**")
       .setDescription("Thanks for your report. You may receive a message if the report is resolved.");
     interaction.reply({ embeds: [embed], ephemeral: true });
@@ -45,7 +46,7 @@ module.exports = {
                   name: replyMsg.member?.displayName as string,
                   iconURL: replyMsg.author.displayAvatarURL(),
                 })
-                .setColor("#475acf");
+                .setColor(botColor);
               member?.send({ embeds: [embed] }).catch(console.log);
               replyMsg.reply(`Message sent to ${member}`);
             }

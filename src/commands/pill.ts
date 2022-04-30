@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 import * as dotenv from "dotenv";
+import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
 dotenv.config();
 
@@ -87,7 +88,7 @@ module.exports = {
 
     const pill = pills[Math.floor(Math.random() * pills.length)];
 
-    const embed = new MessageEmbed().setColor("#475acf").setDescription(`You ate a pill:\n**${pill}**`);
+    const embed = new MessageEmbed().setColor(botColor).setDescription(`You ate a pill:\n**${pill}**`);
     interaction.reply({
       embeds: [embed],
       ephemeral: interaction.channel?.id != process.env.SPAM_CHANNEL,

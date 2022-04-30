@@ -1,10 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-  CommandInteraction,
-  GuildMember,
-  MessageEmbed,
-  Role,
-} from "discord.js";
+import { CommandInteraction, GuildMember, MessageEmbed, Role } from "discord.js";
+import { botColor } from "../lib/util";
 import { LogEvent } from "../lib/log";
 
 const roles = ["Coder", "Spriter", "Musician", "Designer"];
@@ -36,25 +32,19 @@ module.exports = {
 
     // end if clearing
     if (choice === "Clear") {
-      const embed = new MessageEmbed()
-        .setColor("#475acf")
-        .setDescription("You are now a peasant 🙂");
+      const embed = new MessageEmbed().setColor(botColor).setDescription("You are now a peasant 🙂");
       interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
 
-    const role: Role | undefined = member.guild.roles.cache.find(
-      (r) => r.name === choice
-    );
+    const role: Role | undefined = member.guild.roles.cache.find((r) => r.name === choice);
     if (!role) return;
 
     // add role
     member.roles.add(role).catch((e) => console.log(e));
 
     // response
-    const embed = new MessageEmbed()
-      .setColor(role.color)
-      .setDescription(`You are now a certified **${role}**`);
+    const embed = new MessageEmbed().setColor(role.color).setDescription(`You are now a certified **${role}**`);
     interaction.reply({ embeds: [embed], ephemeral: true });
     LogEvent(`**${member}** became a **${role}**`);
     console.log(`${member.user.tag} became a ${role.name}`);

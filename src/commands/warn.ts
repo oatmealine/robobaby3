@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 import { redis } from "../lib/redis";
 import { LogEvent } from "../lib/log";
+import { botColor } from "../lib/util";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -70,7 +71,7 @@ module.exports = {
         iconURL: target.user.displayAvatarURL(),
       })
       .setTitle(`Reason: \`${reason}\``)
-      .setColor("#475acf");
+      .setColor(botColor);
     await interaction.reply({ embeds: [embed] });
 
     embed = new MessageEmbed()
@@ -80,7 +81,7 @@ module.exports = {
       })
       .setTitle(`Reason: \`${reason}\``)
       .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
-      .setColor("#475acf");
+      .setColor(botColor);
     target.send({ embeds: [embed] }).catch(() => {
       interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true }).catch(console.log);
     });

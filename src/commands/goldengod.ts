@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, Role } from "discord.js";
+import { botColor } from "../lib/util";
 import { ReportEvent } from "../lib/log";
 
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-      .setColor("#475acf")
+      .setColor(botColor)
       .setDescription(
         "**Your request has been sent for review.**\nIf you were an `Angel`, `Demon`, or `Golden God` on the old server, you will be granted the role."
       );

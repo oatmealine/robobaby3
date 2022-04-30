@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { botColor } from "../lib/util";
 import { LogEvent } from "../lib/log";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -41,7 +42,7 @@ module.exports = {
         iconURL: member.user.displayAvatarURL(),
       })
       .setTitle(title)
-      .setColor("#475acf")
+      .setColor(botColor)
       .setFooter({
         text: `Poll ends in ${duration} ${pluralize("minute", duration)} from creation`,
       });
