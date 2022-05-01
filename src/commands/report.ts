@@ -3,10 +3,6 @@ import { CommandInteraction, GuildMember, Message, MessageEmbed } from "discord.
 import { botColor } from "../lib/util";
 import { LogEvent, ReportEvent } from "../lib/log";
 
-const collectionFilter = (message: Message): boolean => {
-  return message.mentions.users.has(message.client.user?.id || "");
-};
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("report")
@@ -29,27 +25,20 @@ module.exports = {
       }\`\`\`Reply to this message to reply to the user.`,
     })
       .then((msg) => {
+        // collect responses
+        if (!msg) return;
+        const filter = (message: Message) => {
+          return message.mentions.users.has(message.client.user?.id || "") && message.reference?.messageId == msg.id;
+        };
         msg?.channel
           .awaitMessages({
-            filter: collectionFilter,
+            filter: filter,
             max: 1,
-            time: 1000 * 60 * 60 * 12,
+            time: 1000 * 60 * 60 * 24,
           })
           .then((collected) => {
-            // handle moderator response
             const replyMsg = collected.first();
-            if (replyMsg && replyMsg.reference?.messageId == msg.id) {
-              const embed = new MessageEmbed()
-                .setTitle("Your report has been resolved!")
-                .setDescription(`The appropriate action has been taken by the moderation team.\n\n>>> **Message:** ${replyMsg.content}`)
-                .setAuthor({
-                  name: replyMsg.member?.displayName as string,
-                  iconURL: replyMsg.author.displayAvatarURL(),
-                })
-                .setColor(botColor);
-              member?.send({ embeds: [embed] }).catch(console.log);
-              replyMsg.reply(`Message sent to ${member}`);
-            }
+            if (replyMsg) handleResponse(replyMsg, member);
           })
           .catch(console.log);
       })
@@ -58,4 +47,24 @@ module.exports = {
     LogEvent(`${member} used \`/report\` in ${interaction.channel}.`);
     console.log(`${member.user.tag} used /report in ${interaction.channel}.`);
   },
+};
+
+const handleResponse = (message: Message, member: GuildMember) => {
+  const embed = new MessageEmbed()
+    .setDescription(`The appropriate action has been taken by the moderation team.\n>>> **Message:** ${message.content}`)
+    .setAuthor({
+      name: `${message.member?.displayName} responded to your report`,
+      iconURL: message.author.displayAvatarURL(),
+    })
+    .setFooter({ text: "Do not respond to this message. I am just the delivery boy 😳" })
+    .setColor(botColor);
+  member
+    ?.send({ embeds: [embed] })
+    .then(() => {
+      message.reply({ content: `Message sent to ${member}:`, embeds: [embed] });
+    })
+    .catch((err) => {
+      message.reply(`Couldn't DM ${member}. They may have DMs disabled.`);
+      console.log(err);
+    });
 };
