@@ -9,6 +9,7 @@ module.exports = {
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const role = member.guild.roles.cache.find((r) => r.name === "Golden God") as Role;
 
+    // ensure doesn't have role
     if (member.roles.cache.has(role.id)) {
       interaction.reply({
         content: `You already have the ${role} role.`,
@@ -17,6 +18,7 @@ module.exports = {
       return;
     }
 
+    // reply to member
     const embed = new MessageEmbed()
       .setColor(botColor)
       .setDescription(
@@ -24,6 +26,7 @@ module.exports = {
       );
     interaction.reply({ embeds: [embed], ephemeral: true });
 
+    // send request to mods
     const row = new MessageActionRow().addComponents(
       new MessageButton().setCustomId("approve").setLabel("Approve").setStyle("SUCCESS"),
       new MessageButton().setCustomId("deny").setLabel("Deny").setStyle("DANGER")
@@ -34,6 +37,7 @@ module.exports = {
       components: [row],
     }).catch(console.log);
 
+    // mod response
     const collector = modReport?.channel?.createMessageComponentCollector({
       time: 1000 * 60 * 60 * 24,
       filter: (i) => i.member.roles.cache.has(process.env.MOD_ROLE as string),
@@ -57,8 +61,7 @@ module.exports = {
         interaction.user.send("Unfortunately, your request for **Golden God** has been denied.").catch(console.log);
       }
 
-      const row = new MessageActionRow().addComponents(button);
-      modReport?.edit({ components: [row] });
+      modReport?.edit({ components: [new MessageActionRow().addComponents(button)] });
     });
   },
 };

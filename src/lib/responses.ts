@@ -23,14 +23,14 @@ export const responses = [
   },
 ];
 
-export async function respondToMessage(message: Message): Promise<void> {
+export const respondToMessage = async (message: Message): Promise<void> => {
   responses.forEach(async (pr: PhraseResponder) => {
     pr.phrases.forEach(async (phrase: string) => {
       if (` ${message.content.toLowerCase()} `.includes(` ${phrase} `)) {
         sendMessage(message, pr.response, 1000)
           .then(async (msg) => {
             if (msg && pr.removeAfter) {
-              await delay(pr.removeAfter || 10000);
+              await delay(pr.removeAfter || 0);
               msg.delete().catch(console.log);
             }
           })
@@ -39,4 +39,4 @@ export async function respondToMessage(message: Message): Promise<void> {
       }
     });
   });
-}
+};

@@ -39,6 +39,7 @@ module.exports = {
       return;
     }
 
+    // validate
     const user = interaction.options.getUser("user");
     if (!user) {
       interaction.reply({
@@ -56,6 +57,7 @@ module.exports = {
       return;
     }
 
+    // add/remove
     const embed = new MessageEmbed();
     let success = false;
     switch (subcommand) {

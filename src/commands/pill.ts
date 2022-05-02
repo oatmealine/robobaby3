@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import * as dotenv from "dotenv";
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -65,8 +65,8 @@ module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
+    // cooldown
     const timeKey = `pill:${member.id}`;
-
     if (await redis.exists(timeKey)) {
       const lastUsed = parseInt((await redis.get(timeKey)) || "0");
       const elapsed = interaction.createdTimestamp - lastUsed;
@@ -85,16 +85,15 @@ module.exports = {
         return;
       }
     }
+    redis.set(timeKey, interaction.createdTimestamp);
 
+    // eat pill
     const pill = pills[Math.floor(Math.random() * pills.length)];
-
     const embed = new MessageEmbed().setColor(botColor).setDescription(`You ate a pill:\n**${pill}**`);
     interaction.reply({
       embeds: [embed],
       ephemeral: interaction.channel?.id != process.env.SPAM_CHANNEL,
     });
     console.log(`${member.user.tag} ate a ${pill} pill.`);
-
-    redis.set(timeKey, interaction.createdTimestamp);
   },
 };

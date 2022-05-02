@@ -3,7 +3,7 @@ import { CommandInteraction, GuildMember, MessageEmbed, Role } from "discord.js"
 import { botColor } from "../lib/util";
 import { LogEvent } from "../lib/log";
 
-const roles = ["Coder", "Spriter", "Musician", "Designer"];
+const titles = ["Coder", "Spriter", "Musician", "Designer"];
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,8 +25,8 @@ module.exports = {
     const choice = interaction.options.getString("choice");
 
     // remove roles
-    roles.forEach((col) => {
-      const r = member.roles.cache.find((r) => r.name === col);
+    titles.forEach((title) => {
+      const r = member.roles.cache.find((r) => r.name === title);
       if (r) member.roles.remove(r);
     });
 

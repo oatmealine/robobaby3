@@ -18,6 +18,8 @@ module.exports = {
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const user = interaction.options.getUser("target");
     const reason = interaction.options.getString("reason");
+
+    // validate target
     if (!user) {
       interaction.reply({
         content: "There was an error finding the user. Please try again.",
@@ -25,7 +27,6 @@ module.exports = {
       });
       return;
     }
-
     const target = interaction.guild?.members.cache.get(user.id);
     if (!target) {
       interaction.reply({
@@ -42,6 +43,7 @@ module.exports = {
       return;
     }
 
+    // apply punishments
     const warnings = parseInt((await redis.get(`warnings:${target.id}`)) || "0") + 1;
     const applyPunishment = interaction.options.getBoolean("punish");
     if (applyPunishment) {
@@ -59,12 +61,13 @@ module.exports = {
           target.timeout(1000 * 60 * 60 * 24 * 7, "Warning #4");
           break;
         case 5:
-          target.ban({ days: 1, reason: "Warning #5" });
+          target.ban({ days: 0, reason: "Warning #5" });
           redis.set(`warnings:${target.id}`, 0);
           break;
       }
     }
 
+    // publicly shame
     let embed = new MessageEmbed()
       .setAuthor({
         name: `${target.displayName} received a warning`,
@@ -74,6 +77,7 @@ module.exports = {
       .setColor(botColor);
     await interaction.reply({ embeds: [embed] });
 
+    // alert target
     embed = new MessageEmbed()
       .setAuthor({
         name: `${member.displayName} gave you a warning`,

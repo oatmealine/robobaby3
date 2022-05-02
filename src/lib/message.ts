@@ -1,8 +1,8 @@
 import { Message, Permissions, TextChannel, User } from "discord.js";
 import { delay, getRandomEmoji } from "./util";
+import { LogEvent } from "./log";
 
 import * as dotenv from "dotenv";
-import { LogEvent } from "./log";
 dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

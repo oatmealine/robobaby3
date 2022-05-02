@@ -19,12 +19,13 @@ module.exports = {
     const votes: { [key: string]: Array<string> } = {};
     const voters: Array<string> = [];
     const title = interaction.options.getString("title") as string;
-
+    const duration = Math.max(1, Math.min(interaction.options.getNumber("duration") as number, 60));
     const options = (interaction.options.getString("options") as string)
       .split(",")
       .slice(0, 5)
       .map((option) => option.trim());
 
+    // validate
     if (options.length < 2) {
       interaction.reply({
         content: "You must provide at least two options.",
@@ -33,9 +34,7 @@ module.exports = {
       return;
     }
 
-    const duration = Math.max(1, Math.min(interaction.options.getNumber("duration") as number, 60));
-
-    const row = new MessageActionRow();
+    // create poll
     const embed = new MessageEmbed()
       .setAuthor({
         name: `${member.displayName} started a poll`,
@@ -55,12 +54,13 @@ module.exports = {
       buttons = [...buttons, new MessageButton().setCustomId(`${i}`).setLabel(`${options[i]}`).setStyle("SECONDARY")];
       votes[`${i}`] = [];
     }
-    row.addComponents(buttons);
+    const row = new MessageActionRow().addComponents(buttons);
 
     await interaction.reply({ embeds: [embed], components: [row] });
     LogEvent(`Poll started by ${member}: ${title}`);
     console.log(`Poll started by ${member.displayName}: ${title}`);
 
+    // collect results
     const filter = () => true;
     const collector = interaction.channel?.createMessageComponentCollector({
       filter: filter,
@@ -78,6 +78,7 @@ module.exports = {
       i.reply({ content: "Voted!", ephemeral: true });
     });
 
+    // show results
     collector?.on("end", () => {
       const highest = Object.keys(votes).reduce((a, b) => {
         return votes[a].length > votes[b].length ? a : b;

@@ -1,9 +1,9 @@
 import { Message } from "discord.js";
 import { sendMessage } from "./message";
 import { delay, getRandomEmoji, removeMarkdown } from "./util";
+import { redis } from "./redis";
 
 import vision from "@google-cloud/vision";
-import { redis } from "./redis";
 const visionClient = new vision.ImageAnnotatorClient();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,7 +14,7 @@ const cleverbot = new cb({
 
 const defaultResponses = ["i'm robo-baby", "no", "what?", "?", "i don't understand", "ok", "okay", "sure", "nice", "lol", "wow", "lmao", "same", "k", "ty"];
 
-export async function roboChat(message: Message): Promise<void> {
+export const roboChat = async (message: Message) => {
   if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
 
   // format input
@@ -36,7 +36,7 @@ export async function roboChat(message: Message): Promise<void> {
   if (res) {
     output = res.output.toLowerCase();
     if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
-    if (output.includes("cleverbot")) output.replace("cleverbot", "robo-baby");
+    if (output.includes("cleverbot")) output = output.replace("cleverbot", "robo-baby");
 
     redis.set(contextKey, res.cs);
   }
@@ -49,13 +49,11 @@ export async function roboChat(message: Message): Promise<void> {
   });
 
   // add emojis sometimes
-  if (Math.random() < 0.1) {
-    output = `${output} ${getRandomEmoji(message.guild)}`;
-  }
+  if (Math.random() < 0.1) output = `${output} ${getRandomEmoji(message.guild)}`;
 
   // respond
-  await sendMessage(message, output, 1500);
-}
+  sendMessage(message, output, 1500);
+};
 
 async function convertImagesToText(text: string, message: Message) {
   await delay(1000);
