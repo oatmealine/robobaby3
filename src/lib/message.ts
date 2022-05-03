@@ -42,6 +42,8 @@ export const removeInvites = (message: Message): boolean => {
 export const logEdits = (oldMessage: Message, newMessage: Message) => {
   const diff = Diff.diffWords(oldMessage.content.replace(/`/g, ""), newMessage.content.replace(/`/g, ""));
   let output = "";
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   diff.forEach((part: any) => {
     output += "\n";
     if (part.added) output += "+ ";
