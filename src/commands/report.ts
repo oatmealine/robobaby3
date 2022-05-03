@@ -28,7 +28,7 @@ module.exports = {
         // collect responses
         if (!msg) return;
         const filter = (message: Message) => {
-          return message.mentions.users.has(message.client.user?.id || "") && message.reference?.messageId == msg.id;
+          return message.reference?.messageId == msg.id;
         };
         msg?.channel
           .awaitMessages({
@@ -51,7 +51,7 @@ module.exports = {
 
 const handleResponse = (message: Message, member: GuildMember) => {
   const embed = new MessageEmbed()
-    .setDescription(`The appropriate action has been taken by the moderation team.\n>>> **Message:** ${message.content}`)
+    .setDescription(`>>> **Message:** ${message.content}`)
     .setAuthor({
       name: `${message.member?.displayName} responded to your report`,
       iconURL: message.author.displayAvatarURL(),
