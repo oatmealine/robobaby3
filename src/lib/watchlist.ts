@@ -51,7 +51,7 @@ export function removeFromWatchlist(guild: Guild, id: string) {
 
 export function checkWatchlist(message: Message) {
   if (!watchlist[message.author.id]) return;
-  if (message.channel.id == process.env.SPAM_CHANNEL) return;
+  if (message.channel.id == process.env.CHANNEL_CHAT) return;
   if (!message.guild) return;
 
   const channel: ThreadChannel = message.client.channels.cache.get(watchlist[message.author.id]) as ThreadChannel;
@@ -66,5 +66,5 @@ export function checkWatchlist(message: Message) {
 }
 
 function getWatchlistChannel(guild: Guild) {
-  return guild.channels.cache.get(process.env.WATCHLIST_CHANNEL as string) as TextChannel;
+  return guild.channels.cache.get(process.env.CHANNEL_WATCHLIST as string) as TextChannel;
 }

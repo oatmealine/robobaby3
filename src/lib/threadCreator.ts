@@ -3,13 +3,13 @@ import { delay, removeMarkdown, removeUrls } from "./util";
 
 export async function createThreads(msg: Message): Promise<void> {
   switch (msg.channel.id) {
-    case process.env.RECRUIT_CHANNEL:
+    case process.env.CHANNEL_RECRUIT:
       manageRecruit(msg);
       break;
-    case process.env.PROMO_CHANNEL:
+    case process.env.CHANNEL_PROMO:
       managePromo(msg);
       break;
-    case process.env.RESOURCES_CHANNEL:
+    case process.env.CHANNEL_RESOURCES:
       manageResources(msg);
       break;
   }

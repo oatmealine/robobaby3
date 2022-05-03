@@ -15,7 +15,7 @@ const cleverbot = new cb({
 const defaultResponses = ["i'm robo-baby", "no", "what?", "?", "i don't understand", "ok", "okay", "sure", "nice", "lol", "wow", "lmao", "same", "k", "ty"];
 
 export const roboChat = async (message: Message) => {
-  if (message.channel.id != process.env.SPAM_CHANNEL || !message.mentions.users.has(message.client.user?.id || "")) return;
+  if (message.channel.id != process.env.CHANNEL_CHAT || !message.mentions.users.has(message.client.user?.id || "")) return;
 
   // format input
   let input = message.content;

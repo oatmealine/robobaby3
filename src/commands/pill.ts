@@ -92,7 +92,7 @@ module.exports = {
     const embed = new MessageEmbed().setColor(botColor).setDescription(`You ate a pill:\n**${pill}**`);
     interaction.reply({
       embeds: [embed],
-      ephemeral: interaction.channel?.id != process.env.SPAM_CHANNEL,
+      ephemeral: interaction.channel?.id != process.env.CHANNEL_CHAT,
     });
     console.log(`${member.user.tag} ate a ${pill} pill.`);
   },

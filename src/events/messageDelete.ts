@@ -6,7 +6,7 @@ module.exports = {
   once: false,
 
   async execute(message: Message) {
-    if (message.author.bot || message.member?.roles.cache.has(process.env.MOD_ROLE as string)) return;
+    if (message.author.bot || message.member?.roles.cache.has(process.env.ROLE_MOD as string)) return;
 
     LogEvent(`${message.author}'s message deleted in ${message.channel}:\n>>> ${message.content}`);
     console.log(`${message.author.tag}'s message deleted in ${message.channel}`);

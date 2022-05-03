@@ -23,7 +23,7 @@ module.exports = {
     )
     .addSubcommand((subcommand) => subcommand.setName("list").setDescription("[MODERATOR] List all users in the watchlist.")),
 
-  permissions: { type: "ROLE", id: process.env.MOD_ROLE, permission: true },
+  permissions: { type: "ROLE", id: process.env.ROLE_MOD, permission: true },
 
   async execute(interaction: CommandInteraction) {
     if (!interaction.guild) return;

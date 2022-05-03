@@ -9,7 +9,7 @@ module.exports = {
   once: false,
 
   async execute(oldMessage: Message, newMessage: Message) {
-    if (newMessage.author.bot || newMessage.member?.roles.cache.has(process.env.MOD_ROLE as string)) return;
+    if (newMessage.author.bot || newMessage.member?.roles.cache.has(process.env.ROLE_MOD as string)) return;
     if (removeInvites(newMessage)) return;
 
     logEdits(oldMessage, newMessage);

@@ -44,7 +44,7 @@ export const reacts = [
 ];
 
 export const reactToMessage = async (message: Message): Promise<void> => {
-  if (message.channel.id == process.env.SPAM_CHANNEL) return;
+  if (message.channel.id == process.env.CHANNEL_CHAT) return;
 
   await delay(Math.random() * 4000 + 1000);
   reacts.forEach((pr: PhraseReactor) => {

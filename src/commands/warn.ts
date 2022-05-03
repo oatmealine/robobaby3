@@ -13,7 +13,7 @@ module.exports = {
     .addStringOption((option) => option.setName("reason").setDescription("The reason for the warning.").setRequired(true))
     .addBooleanOption((option) => option.setName("punish").setDescription("Whether or not to apply the associated punishment.").setRequired(true)),
 
-  permissions: { type: "ROLE", id: process.env.MOD_ROLE, permission: true },
+  permissions: { type: "ROLE", id: process.env.ROLE_MOD, permission: true },
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const user = interaction.options.getUser("target");
@@ -35,7 +35,7 @@ module.exports = {
       });
       return;
     }
-    if (target.roles.cache.has(process.env.MOD_ROLE as string)) {
+    if (target.roles.cache.has(process.env.ROLE_MOD as string)) {
       interaction.reply({
         content: `You don't have permission to warn ${target}.`,
         ephemeral: true,
@@ -49,19 +49,16 @@ module.exports = {
     if (applyPunishment) {
       switch (warnings) {
         case 1:
-          target.timeout(1000 * 60, "Warning #1");
+          target.timeout(1000 * 60 * 60, "Warning #1");
           break;
         case 2:
-          target.timeout(1000 * 60 * 60, "Warning #2");
+          target.timeout(1000 * 60 * 60 * 24, "Warning #2");
           break;
         case 3:
-          target.timeout(1000 * 60 * 60 * 24, "Warning #3");
+          target.timeout(1000 * 60 * 60 * 24 * 3, "Warning #3");
           break;
         case 4:
-          target.timeout(1000 * 60 * 60 * 24 * 7, "Warning #4");
-          break;
-        case 5:
-          target.ban({ days: 0, reason: "Warning #5" });
+          target.ban({ days: 0, reason: "Warning #4" });
           redis.set(`warnings:${target.id}`, 0);
           break;
       }

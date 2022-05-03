@@ -40,7 +40,7 @@ module.exports = {
     // mod response
     const collector = modReport?.channel?.createMessageComponentCollector({
       time: 1000 * 60 * 60 * 24,
-      filter: (i) => i.member.roles.cache.has(process.env.MOD_ROLE as string),
+      filter: (i) => i.member.roles.cache.has(process.env.ROLE_MOD as string),
     });
 
     collector?.on("collect", async (i) => {
