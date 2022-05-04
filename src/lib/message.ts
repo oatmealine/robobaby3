@@ -2,7 +2,9 @@ import { Message, MessageActionRow, MessageButton, MessageComponentInteraction, 
 import { botColor, delay, getRandomEmoji } from "./util";
 import { LogEvent } from "./log";
 import { formatText } from "lua-fmt";
-import levenshtein from "damerau-levenshtein";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const levenshtein = require("damerau-levenshtein");
 
 import * as dotenv from "dotenv";
 dotenv.config();
