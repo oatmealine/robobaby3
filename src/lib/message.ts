@@ -58,7 +58,7 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
   console.log(`${newMessage.author.tag}'s message edited in ${newMessage.channel}`);
 };
 
-export const formatCode = (message: Message): boolean => {
+export const formatLuaCode = (message: Message): boolean => {
   const matches: string[] = [];
   const regex = /```lua\s([^`]+)```/g;
   let match;
@@ -67,14 +67,13 @@ export const formatCode = (message: Message): boolean => {
     const code = match[1];
     if (code.includes("\n") && code.length > 20) matches.push(code);
   }
-
   if (matches.length === 0) return false;
 
   const formatted = matches
     // run lua-fmt
-    .map(t => [t, formatText(t)])
+    .map((t) => [t, formatText(t)])
     // only if it has been changed enough
-    .filter(([old, formatted]) => levenshtein(old.trim(), formatted.trim()).relative > 0.2)
+    .filter(([old, formatted]) => levenshtein(old.trim(), formatted.trim()).relative > 0.1)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([_old, formatted]) => `\`\`\`lua\n${formatted}\n\`\`\``);
 
@@ -84,27 +83,24 @@ export const formatCode = (message: Message): boolean => {
     .setColor(botColor)
     .setDescription("_Auto-formatted code using [lua-fmt](https://github.com/trixnz/lua-fmt)_\n" + formatted.join("\n"));
 
-  const row = new MessageActionRow()
-    .addComponents(
-      new MessageButton()
-        .setCustomId("delete-msg")
-        .setLabel("Remove")
-        .setStyle("DANGER")
-    );
+  const row = new MessageActionRow().addComponents(new MessageButton().setCustomId("delete-msg").setLabel("Remove").setStyle("DANGER"));
 
-  message.reply({
-    embeds: [embed],
-    components: [row]
-  }).then(newMessage => {
-    const filter = (i: MessageComponentInteraction) => i.customId === "delete-msg" && i.user.id === message.author.id;
+  message
+    .reply({
+      embeds: [embed],
+      components: [row],
+    })
+    .then((newMessage) => {
+      const filter = (i: MessageComponentInteraction) => i.customId === "delete-msg" && i.user.id === message.author.id;
 
-    const collector = newMessage.channel.createMessageComponentCollector({filter, time: 30 * 1000});
+      const collector = newMessage.channel.createMessageComponentCollector({ filter, time: 30 * 1000 });
 
-    collector.on("collect", () => {
-      newMessage.delete().catch(console.log);
-      collector.stop();
-    });
-  }).catch(console.log);
+      collector.on("collect", () => {
+        newMessage.delete().catch(console.log);
+        collector.stop();
+      });
+    })
+    .catch(console.log);
 
   return true;
 };
