@@ -83,7 +83,7 @@ export const formatLuaCode = (message: Message): boolean => {
     .setColor(botColor)
     .setDescription("_Auto-formatted code using [lua-fmt](https://github.com/trixnz/lua-fmt)_\n" + formatted.join("\n"));
 
-  const row = new MessageActionRow().addComponents(new MessageButton().setCustomId("delete-msg").setLabel("Remove").setStyle("DANGER"));
+  const row = new MessageActionRow().addComponents(new MessageButton().setCustomId("delete").setLabel("Remove").setStyle("DANGER"));
 
   message
     .reply({
@@ -91,11 +91,16 @@ export const formatLuaCode = (message: Message): boolean => {
       components: [row],
     })
     .then((newMessage) => {
-      const filter = (i: MessageComponentInteraction) => i.customId === "delete-msg" && i.user.id === message.author.id;
+      const filter = (i: MessageComponentInteraction) => i.customId === "delete";
 
       const collector = newMessage.channel.createMessageComponentCollector({ filter, time: 30 * 1000 });
 
-      collector.on("collect", () => {
+      collector.on("collect", (i) => {
+        if (i.user.id !== message.author.id) {
+          i.reply({ content: "Only the original poster can delete this.", ephemeral: true });
+          return;
+        }
+
         newMessage.delete().catch(console.log);
         collector.stop();
       });
