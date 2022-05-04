@@ -55,7 +55,7 @@ export const roboChat = async (message: Message) => {
   sendMessage(message, output, 1500);
 };
 
-async function convertImagesToText(text: string, message: Message) {
+const convertImagesToText = async (text: string, message: Message) => {
   await delay(1000);
   await message.channel.messages
     .fetch(message.id)
@@ -76,4 +76,4 @@ async function convertImagesToText(text: string, message: Message) {
     .catch(console.log);
 
   return text;
-}
+};

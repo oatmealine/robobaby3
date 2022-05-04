@@ -7,7 +7,7 @@ interface PhraseReactor {
   chance?: number;
 }
 
-export const reactions: Array<PhraseReactor> = [
+const reactions: Array<PhraseReactor> = [
   {
     phrases: ["robobaby", "robo-baby"],
     reaction: ["😉", "😍", "😘", "😜", "😝", "😎", "😏", "😒", "😓", "😔", "😖", "😞", "😣", "😢", "😭", "😨", "😩", "😫", "😬", "😰", "😱", "😲", "😳", "😶"],
