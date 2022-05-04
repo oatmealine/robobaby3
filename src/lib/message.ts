@@ -1,6 +1,8 @@
-import { Message, Permissions, TextChannel, User } from "discord.js";
-import { delay, getRandomEmoji } from "./util";
+import { Message, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed, Permissions, TextChannel, User } from "discord.js";
+import { botColor, delay, getRandomEmoji } from "./util";
 import { LogEvent } from "./log";
+import { formatText } from "lua-fmt";
+import levenshtein from "damerau-levenshtein";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -54,4 +56,59 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
 
   LogEvent(`${newMessage.author}'s message edited in ${newMessage.channel}:${diffMsg}`);
   console.log(`${newMessage.author.tag}'s message edited in ${newMessage.channel}`);
+};
+
+const formatDeleteButtonDuration = 1000 * 30;
+
+export const formatLuaCode = (message: Message): boolean => {
+  const matches: string[] = [];
+  const regex = /```lua\s([^`]+)```/g;
+  let match;
+
+  while ((match = regex.exec(message.content)) !== null) {
+    const code = match[1];
+    if (code.includes("\n") && code.length > 20) matches.push(code);
+  }
+  if (matches.length === 0) return false;
+
+  const formatted = matches
+    // run lua-fmt
+    .map((t) => [t, formatText(t)])
+    // only if it has been changed enough
+    .filter(([old, formatted]) => levenshtein(old.trim(), formatted.trim()).relative > 0.1)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(([_old, formatted]) => `\`\`\`lua\n${formatted}\n\`\`\``);
+
+  if (formatted.length === 0) return false;
+
+  const embed = new MessageEmbed()
+    .setColor(botColor)
+    .setDescription("_Auto-formatted code using [lua-fmt](https://github.com/trixnz/lua-fmt)_\n" + formatted.join("\n"));
+
+  const row = new MessageActionRow().addComponents(new MessageButton().setCustomId("delete").setLabel("Remove").setStyle("DANGER"));
+
+  message
+    .reply({
+      embeds: [embed],
+      components: [row],
+    })
+    .then((newMessage) => {
+      const filter = (i: MessageComponentInteraction) => i.customId === "delete";
+
+      const collector = newMessage.channel.createMessageComponentCollector({ filter, time: formatDeleteButtonDuration });
+      setTimeout(() => newMessage.edit({ components: [] }), formatDeleteButtonDuration);
+
+      collector.on("collect", (i) => {
+        if (i.user.id !== message.author.id) {
+          i.reply({ content: "Only the original poster can delete this.", ephemeral: true });
+          return;
+        }
+
+        newMessage.delete().catch(console.log);
+        collector.stop();
+      });
+    })
+    .catch(console.log);
+
+  return true;
 };

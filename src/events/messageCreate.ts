@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { reactToMessage } from "../lib/reactions";
-import { removeInvites } from "../lib/message";
+import { formatLuaCode, removeInvites } from "../lib/message";
 import { respondToMessage } from "../lib/responses";
 import { createThreads } from "../lib/threadCreator";
 import { roboChat } from "../lib/roboChat";
@@ -19,5 +19,6 @@ module.exports = {
     roboChat(message);
     createThreads(message);
     checkWatchlist(message);
+    formatLuaCode(message);
   },
 };
