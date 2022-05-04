@@ -58,6 +58,8 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
   console.log(`${newMessage.author.tag}'s message edited in ${newMessage.channel}`);
 };
 
+const formatDeleteButtonDuration = 1000 * 30;
+
 export const formatLuaCode = (message: Message): boolean => {
   const matches: string[] = [];
   const regex = /```lua\s([^`]+)```/g;
@@ -93,7 +95,8 @@ export const formatLuaCode = (message: Message): boolean => {
     .then((newMessage) => {
       const filter = (i: MessageComponentInteraction) => i.customId === "delete";
 
-      const collector = newMessage.channel.createMessageComponentCollector({ filter, time: 30 * 1000 });
+      const collector = newMessage.channel.createMessageComponentCollector({ filter, time: formatDeleteButtonDuration });
+      setTimeout(() => newMessage.edit({ components: [] }), formatDeleteButtonDuration);
 
       collector.on("collect", (i) => {
         if (i.user.id !== message.author.id) {
