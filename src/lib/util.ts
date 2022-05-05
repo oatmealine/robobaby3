@@ -20,11 +20,11 @@ export const getRandomEmoji = (guild: Guild | null): string | GuildEmoji => {
 };
 
 export const removeMarkdown = (text: string): string => {
-  text = text.replace(/`/g, "");
-  text = text.replace(/\*/g, "");
-  text = text.replace(/_/g, "");
-  text = text.replace(/_/g, "");
-  text = text.replace(/>/g, "");
-  text = text.replace(/|/g, "");
+  const regex = [/`/g, /\*/g, /_/g, /_/g, />/g, /|/g];
+  for (const r of regex) text = text.replace(r, "");
   return text;
+};
+
+export const removePunctuation = (text: string): string => {
+  return text.replace(/[^\w\s']|_/g, "");
 };

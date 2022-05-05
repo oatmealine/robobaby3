@@ -1,32 +1,19 @@
 import { Message } from "discord.js";
-import { delay } from "./util";
-
-interface PhraseReactor {
-  phrases: string[];
-  reaction: string[];
-  chance?: number;
-}
-
-const reactions: Array<PhraseReactor> = [
-  {
-    phrases: ["robobaby", "robo-baby"],
-    reaction: ["😉", "😍", "😘", "😜", "😝", "😎", "😏", "😒", "😓", "😔", "😖", "😞", "😣", "😢", "😭", "😨", "😩", "😫", "😬", "😰", "😱", "😲", "😳", "😶"],
-    chance: 0.5,
-  },
-  { phrases: ["butt"], reaction: ["🍑"] },
-  { phrases: ["crab"], reaction: ["🦀"] },
-  { phrases: ["should i", "am i", "can i"], reaction: ["👍", "👎"] },
-];
+import { PhraseIO, reactionPhrases } from "./data/phrases";
+import { delay, removePunctuation } from "./util";
 
 export const reactToMessage = async (message: Message): Promise<void> => {
-  if (message.channel.id == process.env.CHANNEL_CHAT) return;
+  const text = removePunctuation(` ${message.cleanContent.toLowerCase()} `);
+  console.log(text);
 
-  await delay(Math.random() * 4000 + 1000);
-  reactions.forEach((pr: PhraseReactor) => {
+  reactionPhrases.forEach((pr: PhraseIO) => {
     if (Math.random() > (pr.chance || 1)) return;
 
-    if (pr.phrases.some((el) => ` ${message.cleanContent.toLowerCase()} `.includes(` ${el} `))) {
-      message.react(pr.reaction[Math.floor(Math.random() * pr.reaction.length)]);
+    if (pr.input.some((el) => text.includes(` ${el} `))) {
+      delay(Math.random() * 4000 + 1000).then(() => {
+        message.react(pr.output[Math.floor(Math.random() * pr.output.length)]);
+      });
+      return;
     }
   });
 };
