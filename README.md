@@ -3,7 +3,10 @@ Discord.js bot made specifically for the [Modding of Isaac Discord server](https
 
 ## Setup
 * A server template for development can be found [here](https://discord.new/jfezNGPgwDA4).
-* You'll need a [Redis To Go](https://redistogo.com/) account for the database.
+* You'll need a local Redis server or a free [Redis To Go](https://redistogo.com/) account for the database.
+* For robochat, you'll need:
+  * Cleverbot API key (not free)
+  * Google Cloud Platform service account JSON key with access to Vision API placed in `/keys/google-credentials.json`
 
 ## Usage
 - `npm run dev` - Start the bot
