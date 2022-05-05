@@ -7,8 +7,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export const respondToMessage = async (message: Message): Promise<void> => {
-  const text = removePunctuation(` ${message.content.toLowerCase()} `);
+  if (message.channel.type != "GUILD_TEXT" || message.channel.parentId == process.env.CATEGORY_MODDING) return;
 
+  const text = removePunctuation(` ${message.content.toLowerCase()} `);
   responsePhrases.forEach(async (pr: PhraseIO) => {
     pr.input.forEach(async (phrase: string) => {
       if (text.includes(` ${phrase} `)) {
