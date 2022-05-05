@@ -86,7 +86,7 @@ export const formatLuaCode = (message: Message): boolean => {
     console.log(e);
   }
 
-  if (formatted && formatted.length === 0) return false;
+  if (!formatted || formatted.length === 0) return false;
 
   const embed = new MessageEmbed()
     .setColor(botColor)
