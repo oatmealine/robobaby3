@@ -73,15 +73,20 @@ export const formatLuaCode = (message: Message): boolean => {
   }
   if (matches.length === 0) return false;
 
-  const formatted = matches
-    // run lua-fmt
-    .map((t) => [t, formatText(t)])
-    // only if it has been changed enough
-    .filter(([old, formatted]) => levenshtein(old.trim(), formatted.trim()).relative > 0.1)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    .map(([_old, formatted]) => `\`\`\`lua\n${formatted}\n\`\`\``);
+  let formatted = null;
+  try {
+    formatted = matches
+      // run lua-fmt
+      .map((t) => [t, formatText(t)])
+      // only if it has been changed enough
+      .filter(([old, formatted]) => levenshtein(old.trim(), formatted.trim()).relative > 0.1)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(([_old, formatted]) => `\`\`\`lua\n${formatted}\n\`\`\``);
+  } catch (e) {
+    console.log(e);
+  }
 
-  if (formatted.length === 0) return false;
+  if (formatted && formatted.length === 0) return false;
 
   const embed = new MessageEmbed()
     .setColor(botColor)
