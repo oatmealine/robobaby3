@@ -1,10 +1,9 @@
 import { Message } from "discord.js";
 import { PhraseIO, reactionPhrases } from "./data/phrases";
-import { delay, removePunctuation } from "./util";
+import { delay, getRandomEmoji, removePunctuation } from "./util";
 
 export const reactToMessage = async (message: Message): Promise<void> => {
   const text = removePunctuation(` ${message.cleanContent.toLowerCase()} `);
-  console.log(text);
 
   reactionPhrases.forEach((pr: PhraseIO) => {
     if (Math.random() > (pr.chance || 1)) return;
@@ -16,4 +15,6 @@ export const reactToMessage = async (message: Message): Promise<void> => {
       return;
     }
   });
+
+  if (Math.random() < 0.002) message.react(getRandomEmoji(message.guild));
 };
