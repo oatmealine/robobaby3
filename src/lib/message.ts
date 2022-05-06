@@ -106,7 +106,7 @@ export const formatLuaCode = async (message: Message): Promise<boolean> => {
       const filter = (i: MessageComponentInteraction) => i.customId === "delete";
 
       const collector = newMessage.channel.createMessageComponentCollector({ filter, time: formatDeleteButtonDuration });
-      setTimeout(() => newMessage.edit({ components: [] }), formatDeleteButtonDuration);
+      setTimeout(() => newMessage.edit({ components: [] }).catch(console.log), formatDeleteButtonDuration);
 
       collector.on("collect", (i) => {
         if (i.user.id !== message.author.id) {
