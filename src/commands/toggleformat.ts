@@ -10,7 +10,7 @@ module.exports = {
     .addBooleanOption((option) => option.setName("state").setDescription("Turn formatting on or off.").setRequired(true)),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const enabled = interaction.options.getBoolean("toggle");
+    const enabled = interaction.options.getBoolean("state");
 
     redis.set(`formattingDisabled:${member.id}`, !enabled ? 1 : 0);
 
