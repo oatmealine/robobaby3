@@ -62,6 +62,7 @@ module.exports = {
       }
 
       modReport?.edit({ components: [new MessageActionRow().addComponents(button)] });
+      collector.stop();
     });
   },
 };
