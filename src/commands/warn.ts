@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { CommandInteraction, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import { redis } from "../lib/redis";
 import { LogEvent } from "../lib/log";
 import { botColor } from "../lib/util";
@@ -10,16 +10,16 @@ module.exports = {
     .setDescription("[MODERATOR] Apply a warning to a member.")
     .setDefaultPermission(false)
     .addUserOption((option) => option.setName("target").setDescription("The member to warn.").setRequired(true))
+    .addStringOption((option) => option.setName("message").setDescription("ID of the offending message.").setRequired(true))
     .addStringOption((option) => option.setName("reason").setDescription("The reason for the warning.").setRequired(true))
     .addBooleanOption((option) => option.setName("punish").setDescription("Whether or not to apply the associated punishment.").setRequired(true)),
-
-  permissions: { type: "ROLE", id: process.env.ROLE_MOD, permission: true },
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const user = interaction.options.getUser("target");
     const reason = interaction.options.getString("reason");
+    const messageIdData = interaction.options.getString("message")?.split("-");
 
-    // validate target
+    // validate
     if (!user) {
       interaction.reply({
         content: "There was an error finding the user. Please try again.",
@@ -43,6 +43,31 @@ module.exports = {
       return;
     }
 
+    // validate offending message
+    if (messageIdData?.length != 2) {
+      interaction.reply({
+        content: "Invalid message ID format. Use the format `CHANNELID-MESSAGEID`.\nYou can obtain this by holding shift and clicking the **Copy ID** button.",
+        ephemeral: true,
+      });
+      return;
+    }
+    const offendingChannel = (await interaction.client.channels.fetch(messageIdData[0])) as TextChannel;
+    const offendingMessage = await offendingChannel?.messages.fetch(messageIdData[1]);
+    if (!offendingMessage) {
+      interaction.reply({ content: "Couldn't find the offending message in this channel.", ephemeral: true });
+      return;
+    }
+    if (offendingMessage.author.id != target.id) {
+      interaction.reply({ content: "The specified message does not belong to the user you are warning.", ephemeral: true });
+      return;
+    }
+
+    const messageEmbed = new MessageEmbed();
+    messageEmbed
+      .setAuthor({ name: `The offending message in #${offendingChannel.name}:`, iconURL: target.user.displayAvatarURL() })
+      .setDescription(`**${target.displayName}:** ${offendingMessage.content}\n\n[View message](${offendingMessage.url})`)
+      .setColor(target.displayColor);
+
     // apply punishments
     const warnings = parseInt((await redis.get(`warnings:${target.id}`)) || "0") + 1;
     const applyPunishment = interaction.options.getBoolean("punish");
@@ -65,29 +90,30 @@ module.exports = {
     }
 
     // publicly shame
-    let embed = new MessageEmbed()
+    const warningEmbed = new MessageEmbed()
       .setAuthor({
-        name: `${target.displayName} received a warning`,
-        iconURL: target.user.displayAvatarURL(),
+        name: `${member.displayName} warned ${target.displayName}`,
+        iconURL: member.displayAvatarURL(),
       })
       .setTitle(`Reason: \`${reason}\``)
       .setColor(botColor);
-    await interaction.reply({ embeds: [embed] });
+    await offendingMessage.reply({ embeds: [warningEmbed] });
+    interaction.reply({ content: `Warned ${target}.`, ephemeral: true });
 
     // alert target
-    embed = new MessageEmbed()
+    const alertEmbed = new MessageEmbed()
       .setAuthor({
         name: `${member.displayName} gave you a warning`,
         iconURL: member.user.displayAvatarURL(),
       })
       .setTitle(`Reason: \`${reason}\``)
-      .setDescription(`**Warning:** \`${warnings}/5\`\n\nA punishment has been applied. Please read our rules carefully.`)
+      .setDescription(`**Warning:** \`${warnings}/4\`\n\n${applyPunishment ? "A punishment has been applied. " : ""}Please read our rules carefully.`)
       .setColor(botColor);
-    target.send({ embeds: [embed] }).catch(() => {
+    target.send({ embeds: [alertEmbed, messageEmbed] }).catch(() => {
       interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true }).catch(console.log);
     });
     redis.set(`warnings:${target.id}`, warnings);
 
-    LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/5)`);
+    LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/4)`);
   },
 };

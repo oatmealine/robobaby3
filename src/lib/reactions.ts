@@ -6,7 +6,6 @@ export const reactToMessage = async (message: Message): Promise<void> => {
   if (message.channel.type != "GUILD_TEXT" || message.channel.parentId == process.env.CATEGORY_MODDING) return;
 
   const text = removePunctuation(` ${message.cleanContent.toLowerCase()} `);
-
   reactionPhrases.forEach((pr: PhraseIO) => {
     if (Math.random() > (pr.chance || 1)) return;
 
