@@ -7,6 +7,7 @@ import { formatText } from "lua-fmt";
 const levenshtein = require("damerau-levenshtein");
 
 import * as dotenv from "dotenv";
+import { redis } from "./redis";
 dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -62,7 +63,9 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
 
 const formatDeleteButtonDuration = 1000 * 30;
 
-export const formatLuaCode = (message: Message): boolean => {
+export const formatLuaCode = async (message: Message): Promise<boolean> => {
+  if (await redis.get(`formattingDisabled:${message.author.id}`) == "1") return false;
+
   const matches: string[] = [];
   const regex = /```lua\s([^`]+)```/g;
   let match;
@@ -103,7 +106,7 @@ export const formatLuaCode = (message: Message): boolean => {
       const filter = (i: MessageComponentInteraction) => i.customId === "delete";
 
       const collector = newMessage.channel.createMessageComponentCollector({ filter, time: formatDeleteButtonDuration });
-      setTimeout(() => newMessage.edit({ components: [] }), formatDeleteButtonDuration);
+      setTimeout(() => newMessage.edit({ components: [] }).catch(console.log), formatDeleteButtonDuration);
 
       collector.on("collect", (i) => {
         if (i.user.id !== message.author.id) {
