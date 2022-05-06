@@ -51,13 +51,13 @@ module.exports = {
           member.roles.add(role);
           button.setLabel(`${i.user.username} approved the request`);
           button.setStyle("SUCCESS");
-          i.reply({ content: "Approved!", ephemeral: true });
-          interaction.user.send("You have been granted the **Golden God** role!");
+          i.reply({ content: "Approved!", ephemeral: true }).catch(console.log);
+          interaction.user.send("You have been granted the **Golden God** role!").catch(console.log);
         }
       } else {
         button.setLabel(`${i.user.username} denied the request`);
         button.setStyle("DANGER");
-        i.reply({ content: "Denied!", ephemeral: true });
+        i.reply({ content: "Denied!", ephemeral: true }).catch(console.log);
         interaction.user.send("Unfortunately, your request for **Golden God** has been denied.").catch(console.log);
       }
 
