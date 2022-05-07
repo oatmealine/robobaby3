@@ -24,7 +24,7 @@ module.exports = {
 
     // cooldown
     const timeKey = `pill:${member.id}`;
-    if ((await redis.exists(timeKey)) && !member.roles.cache.find((r) => r.id == process.env.ROLE_MOD)) {
+    if ((await redis.exists(timeKey)) && process.env.NODE_ENV !== "development") {
       const lastUsed = parseInt((await redis.get(timeKey)) || "0");
       const elapsed = interaction.createdTimestamp - lastUsed;
       if (elapsed < cooldown) {
