@@ -106,7 +106,7 @@ export const pills: Array<Pill> = [
   {
     name: "Pretty Fly",
     icon: "🪰",
-    effect: async (m) => await AdjustMemberStat(m, "flies", 1),
+    effect: async (m) => await AdjustMemberStat(m, "prettyFlies", 1),
   },
   {
     name: "Range Down",
