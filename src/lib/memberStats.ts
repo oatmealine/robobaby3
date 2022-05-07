@@ -3,11 +3,11 @@ import { MemberStats } from "./data/stats";
 import { redis } from "./redis";
 
 export const GetMemberStat = async (member: GuildMember, stat: string): Promise<number> => {
-  return parseInt((await redis.get(`${member.id}:${stat}`)) || `${MemberStats[stat].defaultValue}`);
+  return parseInt((await redis.get(`stats:${member.id}:${stat}`)) || `${MemberStats[stat].defaultValue}`);
 };
 
 export const SetMemberStat = async (member: GuildMember, stat: string, value: number) => {
-  await redis.set(`${member.id}:${stat}`, `${value}`);
+  await redis.set(`stats:${member.id}:${stat}`, `${value}`);
 };
 
 export const AdjustMemberStat = async (member: GuildMember, stat: string, amount: number) => {
