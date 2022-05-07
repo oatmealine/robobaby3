@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { GetMemberStatsEmbed } from "../lib/stats";
+import { GetMemberStatsEmbed } from "../lib/memberStats";
 
 module.exports = {
   data: new SlashCommandBuilder().setName("stats").setDescription("🏆 View your member stats."),

@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import { AdjustMemberStat, SetMemberStat } from "../stats";
+import { AdjustMemberStat, SetMemberStat } from "../memberStats";
 import { MemberStats } from "./stats";
 
 interface Pill {
