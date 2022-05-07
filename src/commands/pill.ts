@@ -2,63 +2,12 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
+import { pills } from "../lib/data/pills";
 import * as dotenv from "dotenv";
 dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pluralize = require("pluralize");
-
-const pills = [
-  "🔋 48 Hour Energy",
-  "❓ Amnesia",
-  "💨 Bad Gas",
-  "😈 Bad Trip",
-  "💙 Balls of Steel",
-  "💣 Bombs Are Key 🔑",
-  "💥 Explosive Diarrhea",
-  "💖 Full Health",
-  "🔽 Health Down",
-  "🔼 Health Up",
-  "💕 Hematemesis",
-  "👀 I Can See Forever",
-  "😏 I Found Pills",
-  "🍋 Lemon Party",
-  "🔽 Luck Down",
-  "😐 Paralysis",
-  "👃 Pheromones",
-  "👦🏼 Puberty",
-  "🛡️ Pretty Fly",
-  "🔽 Range Down",
-  "🔼 Range Up",
-  "✨ R U a Wizard?",
-  "🔽 Speed Down",
-  "🔼 Speed Up",
-  "🔽 Tears Down",
-  "🔼 Tears Up",
-  "🌟 Telepills",
-  "🍺 Addicted",
-  "🙏 Friends Till The End!",
-  "🕷️ Infested!",
-  "🕸️ Infested?",
-  "◾ One Makes You Small",
-  "◼️️ One Makes You Larger",
-  "💊 Percs",
-  "🕹️ Power Pill",
-  "💩 Re-Lax",
-  "👾 Retro Vision",
-  "🌽 ???",
-  "🌞 Feels like I'm walking on sunshine!",
-  "🍸 Gulp!",
-  "💣 Horf!",
-  "😴 I'm Drowsy...",
-  "😀 I'm Excited!!!",
-  "🤢 Something's wrong...",
-  "😩 Vurp!",
-  "💩 X-Lax",
-  "😷 Experimental Pill",
-  "🔽 Shot Speed Down",
-  "🔼 Shot Speed Up",
-];
 const cooldown = 1000 * 60 * 60;
 
 module.exports = {
@@ -66,31 +15,33 @@ module.exports = {
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     // cooldown
-    const timeKey = `pill:${member.id}`;
-    if (await redis.exists(timeKey)) {
-      const lastUsed = parseInt((await redis.get(timeKey)) || "0");
-      const elapsed = interaction.createdTimestamp - lastUsed;
-      if (elapsed < cooldown) {
-        const seconds = Math.floor((cooldown - elapsed) / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const left =
-          seconds > 60
-            ? `${minutes} ${pluralize("minute", minutes)} and ${seconds % 60} ${pluralize("second", seconds % 60)}`
-            : `${seconds} ${pluralize("second", seconds)}`;
+    // const timeKey = `pill:${member.id}`;
+    // if (await redis.exists(timeKey)) {
+    //   const lastUsed = parseInt((await redis.get(timeKey)) || "0");
+    //   const elapsed = interaction.createdTimestamp - lastUsed;
+    //   if (elapsed < cooldown) {
+    //     const seconds = Math.floor((cooldown - elapsed) / 1000);
+    //     const minutes = Math.floor(seconds / 60);
+    //     const left =
+    //       seconds > 60
+    //         ? `${minutes} ${pluralize("minute", minutes)} and ${seconds % 60} ${pluralize("second", seconds % 60)}`
+    //         : `${seconds} ${pluralize("second", seconds)}`;
 
-        interaction.reply({
-          content: `You can have another one in \`${left}\`.`,
-          ephemeral: true,
-        });
-        return;
-      }
-    }
-    redis.set(timeKey, interaction.createdTimestamp);
+    //     interaction.reply({
+    //       content: `You can have another one in \`${left}\`.`,
+    //       ephemeral: true,
+    //     });
+    //     return;
+    //   }
+    // }
+    // redis.set(timeKey, interaction.createdTimestamp);
 
     // eat pill
     const pill = pills[Math.floor(Math.random() * pills.length)];
-    const embed = new MessageEmbed().setColor(botColor).setDescription(`You ate a pill:\n**${pill}**`);
+    const embed = new MessageEmbed().setTitle(pill.icon).setDescription(pill.name).setColor(botColor);
+    pill.effect(member);
     interaction.reply({
+      content: "You ate a pill.",
       embeds: [embed],
       ephemeral: interaction.channel?.id != process.env.CHANNEL_CHAT,
     });
