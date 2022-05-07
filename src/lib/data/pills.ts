@@ -1,5 +1,6 @@
 import { GuildMember } from "discord.js";
-import { AdjustMemberStat } from "../stats";
+import { AdjustMemberStat, SetMemberStat } from "../stats";
+import { MemberStats } from "./stats";
 
 interface Pill {
   name: string;
@@ -42,6 +43,9 @@ export const pills: Array<Pill> = [
   {
     name: "Full Health",
     icon: "💖",
+    effect: async (m: GuildMember) => {
+      await SetMemberStat(m, "health", MemberStats["health"].maxValue);
+    },
   },
   {
     name: "Health Down",
@@ -60,6 +64,9 @@ export const pills: Array<Pill> = [
   {
     name: "Hematemesis",
     icon: "💕",
+    effect: async (m: GuildMember) => {
+      await SetMemberStat(m, "health", 1);
+    },
   },
   {
     name: "I Can See Forever",
@@ -98,6 +105,9 @@ export const pills: Array<Pill> = [
   {
     name: "Puberty",
     icon: "👦",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "age", 1);
+    },
   },
   {
     name: "Pretty Fly",
@@ -206,6 +216,9 @@ export const pills: Array<Pill> = [
   {
     name: "Re-Lax",
     icon: "💩",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "poop", 5);
+    },
   },
   {
     name: "Retro Vision",
