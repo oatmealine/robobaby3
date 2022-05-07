@@ -54,7 +54,7 @@ module.exports = {
     for await (const [name, statData] of Object.entries(MemberStats)) {
       const stat = await GetMemberStat(member, name);
       if (statData.maxValue <= 7) {
-        statsEmbed.addField(statData.name, `${"🔵".repeat(stat)}${"⚪".repeat(statData.maxValue - stat)}`, true);
+        statsEmbed.addField(statData.name, `${(statData.icon || "🔵").repeat(stat)}${"▫️".repeat(statData.maxValue - stat)}`, true);
       } else {
         statsEmbed.addField(statData.name, `${stat}`, true);
       }
