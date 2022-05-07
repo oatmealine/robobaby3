@@ -3,7 +3,7 @@ import { GuildMember } from "discord.js";
 interface Pill {
   name: string;
   icon: string;
-  effect: (member: GuildMember) => void;
+  effect?: (member: GuildMember) => void;
 }
 
 export const pills: Array<Pill> = [
@@ -43,15 +43,15 @@ export const pills: Array<Pill> = [
     },
   },
   {
-    name: "Bombs Are Key 🔑",
-    icon: "💣",
+    name: "Bombs Are Key",
+    icon: "💣🔑",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Explosive Diarrhea",
-    icon: "💥",
+    icon: "💩💥",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -65,14 +65,14 @@ export const pills: Array<Pill> = [
   },
   {
     name: "Health Down",
-    icon: "🔽",
+    icon: "❤️⬇️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Health Up",
-    icon: "🔼",
+    icon: "❤️⬆️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -107,7 +107,14 @@ export const pills: Array<Pill> = [
   },
   {
     name: "Luck Down",
-    icon: "🔽",
+    icon: "🍀⬇️",
+    effect: (m: GuildMember) => {
+      console.log("Effect");
+    },
+  },
+  {
+    name: "Luck Up",
+    icon: "🍀⬆️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -128,63 +135,63 @@ export const pills: Array<Pill> = [
   },
   {
     name: "Puberty",
-    icon: "👦🏼",
+    icon: "👦",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Pretty Fly",
-    icon: "🛡️",
+    icon: "🪰",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Range Down",
-    icon: "🔽",
+    icon: "🎯⬇️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Range Up",
-    icon: "🔼",
+    icon: "🎯⬆️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "R U a Wizard?",
-    icon: "✨",
+    icon: "🧙‍♂️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Speed Down",
-    icon: "🔽",
+    icon: "👢⬇️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Speed Up",
-    icon: "🔼",
+    icon: "👢⬆️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Tears Down",
-    icon: "🔽",
+    icon: "😭⬇️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Tears Up",
-    icon: "🔼",
+    icon: "😭⬆️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -226,14 +233,14 @@ export const pills: Array<Pill> = [
   },
   {
     name: "One Makes You Small",
-    icon: "◾",
+    icon: "👶",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
-    name: "️ One Makes You Larger",
-    icon: "◼️",
+    name: "️One Makes You Larger",
+    icon: "👨",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -289,7 +296,7 @@ export const pills: Array<Pill> = [
   },
   {
     name: "Horf!",
-    icon: "💣",
+    icon: "🧨",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -310,7 +317,7 @@ export const pills: Array<Pill> = [
   },
   {
     name: "Something's wrong...",
-    icon: "🤢",
+    icon: "😵‍💫",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
@@ -338,14 +345,14 @@ export const pills: Array<Pill> = [
   },
   {
     name: "Shot Speed Down",
-    icon: "🔽",
+    icon: "🚿⬇️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },
   },
   {
     name: "Shot Speed Up",
-    icon: "🔼",
+    icon: "🚿⬆️",
     effect: (m: GuildMember) => {
       console.log("Effect");
     },

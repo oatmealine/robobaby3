@@ -39,7 +39,7 @@ module.exports = {
     // eat pill
     const pill = pills[Math.floor(Math.random() * pills.length)];
     const embed = new MessageEmbed().setTitle(pill.icon).setDescription(pill.name).setColor(botColor);
-    pill.effect(member);
+    if (pill.effect) pill.effect(member);
     interaction.reply({
       content: "You ate a pill.",
       embeds: [embed],
