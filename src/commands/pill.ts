@@ -45,7 +45,7 @@ module.exports = {
     const pill = GetRandomPill();
     const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setColor(botColor);
     if (pill.effect) await pill.effect(member);
-    AdjustMemberStat(member, "pills", 1);
+    await AdjustMemberStat(member, "pills", 1);
 
     // stats button
     const statsEmbed = await GetMemberStatsEmbed(member);
