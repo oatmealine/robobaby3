@@ -20,7 +20,7 @@ export const GetMemberStatsEmbed = async (member: GuildMember): Promise<MessageE
   const embed = new MessageEmbed().setAuthor({ name: `${member.displayName}'s stats`, iconURL: member.user.displayAvatarURL() }).setColor(member.displayColor);
   for await (const [name, statData] of Object.entries(MemberStats)) {
     const stat = await GetMemberStat(member, name);
-    embed.addField(`${statData.name} ${statData.icon}`, `**${stat}**${statData.maxValue < 20 ? ` / ${statData.maxValue}` : ""}`, true);
+    embed.addField(statData.name, `${statData.icon} **${stat}**${statData.maxValue < 20 ? ` / ${statData.maxValue}` : ""}`, true);
   }
   return embed;
 };

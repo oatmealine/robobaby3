@@ -100,7 +100,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
   },
   spiders: {
     name: "# of Spiders",
-    icon: "🕷",
+    icon: "🕸️",
     minValue: 0,
     maxValue: 999,
     defaultValue: 0,
