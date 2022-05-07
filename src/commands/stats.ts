@@ -5,8 +5,8 @@ import { GetMemberStatsEmbed } from "../lib/memberStats";
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("stats")
-    .setDescription("🏆 View your member stats.")
-    .addUserOption((option) => option.setName("member").setDescription("Member to view the stats of (leave blank for self).")),
+    .setDescription("🏆 View your or another member's stats.")
+    .addUserOption((option) => option.setName("member").setDescription("Member to view the stats of (leave blank for self)")),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const user = interaction.options.getUser("member");

@@ -58,13 +58,12 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
   const diffMsg = `\`\`\`diff\n${output}\`\`\``;
 
   LogEvent(`${newMessage.author}'s message edited in ${newMessage.channel}:${diffMsg}`);
-  console.log(`${newMessage.author.tag}'s message edited in ${newMessage.channel}`);
 };
 
 const formatDeleteButtonDuration = 1000 * 30;
 
 export const formatLuaCode = async (message: Message): Promise<boolean> => {
-  if (await redis.get(`formattingDisabled:${message.author.id}`) == "1") return false;
+  if ((await redis.get(`formattingDisabled:${message.author.id}`)) == "1") return false;
 
   const matches: string[] = [];
   const regex = /```lua\s([^`]+)```/g;
