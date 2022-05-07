@@ -63,12 +63,12 @@ module.exports = {
       }
     }
 
-    const button = new MessageButton().setCustomId(member.id).setLabel("View Stats").setStyle("SECONDARY");
+    const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
     const collector = interaction.channel?.createMessageComponentCollector({
       time: statButtonDuration,
     });
     collector?.on("collect", async (i) => {
-      i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
+      i.reply({ embeds: [statsEmbed], ephemeral: true }).catch();
     });
     setTimeout(() => {
       interaction.editReply({ components: [] }).catch(console.log);
