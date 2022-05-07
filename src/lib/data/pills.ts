@@ -1,4 +1,4 @@
-import { ApplicationCommandPermissionsManager, GuildMember, TextChannel } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
 import { AdjustMemberStat, SetMemberStat } from "../memberStats";
 import { redis } from "../redis";
 import { GetRandomStatName, MemberStats } from "./stats";
@@ -171,7 +171,7 @@ export const pills: Array<Pill> = [
     icon: "👶",
     effect: async (m) => {
       SetNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
-      await AdjustMemberStat(m, "size", -1);
+      return await AdjustMemberStat(m, "size", -1);
     },
   },
   {
@@ -179,7 +179,7 @@ export const pills: Array<Pill> = [
     icon: "👨",
     effect: async (m) => {
       SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
-      await AdjustMemberStat(m, "size", 1);
+      return await AdjustMemberStat(m, "size", 1);
     },
   },
   {
@@ -229,7 +229,7 @@ export const pills: Array<Pill> = [
     icon: "😴",
     effect: async (m) => {
       m.timeout(1000 * 30);
-      await AdjustMemberStat(m, "hype", -1);
+      return await AdjustMemberStat(m, "hype", -1);
     },
   },
   {
@@ -256,8 +256,11 @@ export const pills: Array<Pill> = [
     name: "Experimental Pill",
     icon: "😷",
     effect: async (m) => {
-      await AdjustMemberStat(m, GetRandomStatName(true), -1);
-      await AdjustMemberStat(m, GetRandomStatName(true), 1);
+      const stat1 = GetRandomStatName(true);
+      const stat2 = GetRandomStatName(true);
+      await AdjustMemberStat(m, stat1, -1);
+      await AdjustMemberStat(m, stat2, 1);
+      return [stat1, stat2];
     },
   },
   {

@@ -44,11 +44,15 @@ module.exports = {
     // eat pill
     const pill = GetRandomPill();
     const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setColor(botColor);
-    if (pill.effect) await pill.effect(member);
+    const affectedStats: Array<string> = [];
+    if (pill.effect) {
+      const stat = await pill.effect(member);
+      if (typeof stat === "string") affectedStats.push(stat);
+    }
     await AdjustMemberStat(member, "pills", 1);
 
     // stats button
-    const statsEmbed = await GetMemberStatsEmbed(member);
+    const statsEmbed = await GetMemberStatsEmbed(member, affectedStats);
 
     const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
     const collector = interaction.channel?.createMessageComponentCollector({

@@ -14,14 +14,21 @@ export const AdjustMemberStat = async (member: GuildMember, stat: string, amount
   let value = (await GetMemberStat(member, stat)) + amount;
   value = Math.max(Math.min(value, MemberStats[stat].maxValue), MemberStats[stat].minValue);
   await SetMemberStat(member, stat, value);
+  return stat;
 };
 
-export const GetMemberStatsEmbed = async (member: GuildMember): Promise<MessageEmbed> => {
+export const GetMemberStatsEmbed = async (member: GuildMember, affectedStats?: Array<string>): Promise<MessageEmbed> => {
   const embed = new MessageEmbed().setAuthor({ name: `${member.displayName}'s stats`, iconURL: member.user.displayAvatarURL() }).setColor(member.displayColor);
   for await (const [name, statData] of Object.entries(MemberStats)) {
     const stat = await GetMemberStat(member, name);
-    if (statData.maxValue < 20) embed.addField(statData.name, `${statData.icon} **${stat}** / ${statData.maxValue}`, true);
-    else embed.addField(statData.name, `${statData.icon} x **${stat}**`, true);
+
+    let statName = statData.name;
+    let statValue = statData.maxValue < 20 ? `${statData.icon} ${stat} / ${statData.maxValue}` : `${statData.icon} x ${stat}`;
+    if (affectedStats?.includes(name)) {
+      statName = `⭐ ${statName} ⭐`;
+      statValue = `**${statValue}**`;
+    }
+    embed.addField(statName, statValue, true);
   }
   return embed;
 };
