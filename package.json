@@ -29,6 +29,7 @@
     "pluralize": "^8.0.0",
     "redis": "^4.0.6",
     "source-map-support": "^0.5.21",
+    "tiny-text": "^1.0.1",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
   },

@@ -1,11 +1,15 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { ApplicationCommandPermissionsManager, GuildMember, TextChannel } from "discord.js";
 import { AdjustMemberStat, SetMemberStat } from "../memberStats";
-import { GetRandomStat, MemberStats } from "./stats";
+import { redis } from "../redis";
+import { GetRandomStatName, MemberStats } from "./stats";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const tinytext = require("tiny-text");
 
 interface Pill {
   name: string;
   icon: string;
-  effect?: (member: GuildMember) => Promise<void>;
+  effect?: (member: GuildMember) => Promise<unknown>;
 }
 
 export const pills: Array<Pill> = [
@@ -16,18 +20,7 @@ export const pills: Array<Pill> = [
   {
     name: "Amnesia",
     icon: "❓",
-    effect: async (m) => {
-      setTimeout(async () => {
-        m.guild.channels.cache.each(async (c) => {
-          if (c.type === "GUILD_TEXT" || c.type == "GUILD_VOICE") c.permissionOverwrites.create(m, { VIEW_CHANNEL: false }).catch(console.log);
-        });
-      }, 1000 * 2);
-      setTimeout(async () => {
-        m.guild.channels.cache.each((c) => {
-          if (c.type === "GUILD_TEXT" || c.type == "GUILD_VOICE") c.permissionOverwrites.delete(m).catch(console.log);
-        });
-      }, 1000 * 12);
-    },
+    effect: async (m) => HideAllChannels(m, 10),
   },
   {
     name: "Bad Gas",
@@ -79,7 +72,8 @@ export const pills: Array<Pill> = [
   },
   {
     name: "I Found Pills",
-    icon: "😏",
+    icon: "🥴",
+    effect: async (m) => SetNickname(m, "🥴", 1000 * 60 * 10),
   },
   {
     name: "Lemon Party",
@@ -98,6 +92,7 @@ export const pills: Array<Pill> = [
   {
     name: "Paralysis",
     icon: "😐",
+    effect: async (m) => m.timeout(1000 * 30),
   },
   {
     name: "Pheromones",
@@ -174,12 +169,18 @@ export const pills: Array<Pill> = [
   {
     name: "One Makes You Small",
     icon: "👶",
-    effect: async (m) => await AdjustMemberStat(m, "size", -1),
+    effect: async (m) => {
+      SetNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
+      await AdjustMemberStat(m, "size", -1);
+    },
   },
   {
     name: "️One Makes You Larger",
     icon: "👨",
-    effect: async (m) => await AdjustMemberStat(m, "size", 1),
+    effect: async (m) => {
+      SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
+      await AdjustMemberStat(m, "size", 1);
+    },
   },
   {
     name: "Percs",
@@ -188,6 +189,7 @@ export const pills: Array<Pill> = [
   {
     name: "Power Pill",
     icon: "🕹️",
+    effect: async (m) => SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10),
   },
   {
     name: "Re-Lax",
@@ -202,6 +204,10 @@ export const pills: Array<Pill> = [
   {
     name: "???",
     icon: "🌽",
+    effect: async (m) => {
+      HideAllChannels(m, 30);
+      setTimeout(() => RevealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
+    },
   },
   {
     name: "Feels like I'm walking on sunshine!",
@@ -211,15 +217,20 @@ export const pills: Array<Pill> = [
   {
     name: "Gulp!",
     icon: "🍸",
+    effect: async (m) => await AdjustMemberStat(m, GetRandomStatName(true), 1),
   },
   {
     name: "Horf!",
     icon: "🧨",
+    effect: async (m) => await AdjustMemberStat(m, "damage", 1),
   },
   {
     name: "I'm Drowsy...",
     icon: "😴",
-    effect: async (m) => await AdjustMemberStat(m, "hype", -1),
+    effect: async (m) => {
+      m.timeout(1000 * 30);
+      await AdjustMemberStat(m, "hype", -1);
+    },
   },
   {
     name: "I'm Excited!!!",
@@ -229,10 +240,12 @@ export const pills: Array<Pill> = [
   {
     name: "Something's wrong...",
     icon: "😵‍💫",
+    effect: async (m) => await AdjustMemberStat(m, "poop", 2),
   },
   {
     name: "Vurp!",
     icon: "😩",
+    effect: async (m) => redis.set(`pill:${m.id}`, "0"),
   },
   {
     name: "X-Lax",
@@ -243,8 +256,8 @@ export const pills: Array<Pill> = [
     name: "Experimental Pill",
     icon: "😷",
     effect: async (m) => {
-      await AdjustMemberStat(m, GetRandomStat(), -1);
-      await AdjustMemberStat(m, GetRandomStat(), 1);
+      await AdjustMemberStat(m, GetRandomStatName(true), -1);
+      await AdjustMemberStat(m, GetRandomStatName(true), 1);
     },
   },
   {
@@ -271,4 +284,22 @@ const RevealChannel = (channelId: string, member: GuildMember, duration: number)
   setTimeout(() => {
     channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: false }).catch(console.log);
   }, duration);
+};
+
+const HideAllChannels = (member: GuildMember, duration: number) => {
+  setTimeout(async () => {
+    member.guild.channels.cache.each(async (c) => {
+      if (c.type === "GUILD_TEXT" || c.type == "GUILD_VOICE") c.permissionOverwrites.create(member, { VIEW_CHANNEL: false }).catch(console.log);
+    });
+  }, 1000 * 2);
+  setTimeout(async () => {
+    member.guild.channels.cache.each((c) => {
+      if (c.type === "GUILD_TEXT" || c.type == "GUILD_VOICE") c.permissionOverwrites.delete(member).catch(console.log);
+    });
+  }, duration + 2000);
+};
+
+const SetNickname = (member: GuildMember, nick: string, duration: number) => {
+  member.setNickname(nick).catch(console.log);
+  setTimeout(() => member.setNickname("").catch(console.log), duration);
 };

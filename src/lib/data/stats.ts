@@ -4,6 +4,7 @@ interface MemberStat {
   minValue: number;
   maxValue: number;
   defaultValue: number;
+  isBasic?: boolean;
 }
 
 export const MemberStats: { [key: string]: MemberStat } = {
@@ -13,6 +14,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 12,
     defaultValue: 3,
+    isBasic: true,
   },
   speed: {
     name: "Speed",
@@ -20,6 +22,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   tears: {
     name: "Tears",
@@ -27,6 +30,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   damage: {
     name: "Damage",
@@ -34,6 +38,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   range: {
     name: "Range",
@@ -41,6 +46,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   shotSpeed: {
     name: "Shot Speed",
@@ -48,6 +54,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   luck: {
     name: "Luck",
@@ -55,6 +62,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   size: {
     name: "Size",
@@ -62,6 +70,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   hype: {
     name: "Hype",
@@ -69,6 +78,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
+    isBasic: true,
   },
   age: {
     name: "Age",
@@ -114,6 +124,11 @@ export const MemberStats: { [key: string]: MemberStat } = {
   },
 };
 
-export const GetRandomStat = (): string => {
-  return Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
+export const GetRandomStatName = (basicOnly?: boolean): string => {
+  let stat = Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
+  if (basicOnly) {
+    do stat = Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
+    while (MemberStats[stat].isBasic);
+  }
+  return stat;
 };
