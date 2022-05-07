@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
-import { pills } from "../lib/data/pills";
+import { GetRandomPill, pills } from "../lib/data/pills";
 import { AdjustMemberStat, GetMemberStatsEmbed } from "../lib/memberStats";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -42,7 +42,7 @@ module.exports = {
     redis.set(timeKey, interaction.createdTimestamp);
 
     // eat pill
-    const pill = pills[Math.floor(Math.random() * pills.length)];
+    const pill = pills[1]; //GetRandomPill();
     const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setColor(botColor);
     if (pill.effect) await pill.effect(member);
     AdjustMemberStat(member, "pills", 1);
