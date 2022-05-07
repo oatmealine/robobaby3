@@ -63,11 +63,32 @@ export const MemberStats: { [key: string]: MemberStat } = {
     maxValue: 7,
     defaultValue: 2,
   },
+  hype: {
+    name: "Hype",
+    icon: "🎉",
+    minValue: 0,
+    maxValue: 7,
+    defaultValue: 2,
+  },
   age: {
     name: "Age",
     icon: "💀",
     minValue: 0,
     maxValue: 3,
+    defaultValue: 0,
+  },
+  prettyFlies: {
+    name: "Pretty Flies",
+    icon: "🛡️",
+    minValue: 0,
+    maxValue: 3,
+    defaultValue: 0,
+  },
+  pills: {
+    name: "Pills Eaten",
+    icon: "💊",
+    minValue: 0,
+    maxValue: 9999,
     defaultValue: 0,
   },
   flies: {
@@ -91,4 +112,8 @@ export const MemberStats: { [key: string]: MemberStat } = {
     maxValue: 999,
     defaultValue: 0,
   },
+};
+
+export const GetRandomStat = (): string => {
+  return Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
 };

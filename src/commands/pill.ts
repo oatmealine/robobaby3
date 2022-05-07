@@ -3,7 +3,7 @@ import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, Messa
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
 import { pills } from "../lib/data/pills";
-import { GetMemberStatsEmbed } from "../lib/memberStats";
+import { AdjustMemberStat, GetMemberStatsEmbed } from "../lib/memberStats";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -45,6 +45,7 @@ module.exports = {
     const pill = pills[Math.floor(Math.random() * pills.length)];
     const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setColor(botColor);
     if (pill.effect) await pill.effect(member);
+    AdjustMemberStat(member, "pills", 1);
 
     // stats button
     const statsEmbed = await GetMemberStatsEmbed(member);
@@ -54,7 +55,7 @@ module.exports = {
       time: statButtonDuration,
     });
     collector?.on("collect", async (i) => {
-      i.reply({ embeds: [statsEmbed], ephemeral: true }).catch();
+      i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
     });
     setTimeout(() => {
       interaction.editReply({ components: [] }).catch(console.log);

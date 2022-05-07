@@ -1,6 +1,6 @@
 import { GuildMember } from "discord.js";
 import { AdjustMemberStat, SetMemberStat } from "../memberStats";
-import { MemberStats } from "./stats";
+import { GetRandomStat, MemberStats } from "./stats";
 
 interface Pill {
   name: string;
@@ -237,6 +237,9 @@ export const pills: Array<Pill> = [
   {
     name: "Feels like I'm walking on sunshine!",
     icon: "🌞",
+    effect: async (m: GuildMember) => {
+      await SetMemberStat(m, "hype", MemberStats["hype"].maxValue);
+    },
   },
   {
     name: "Gulp!",
@@ -249,10 +252,16 @@ export const pills: Array<Pill> = [
   {
     name: "I'm Drowsy...",
     icon: "😴",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "hype", -1);
+    },
   },
   {
     name: "I'm Excited!!!",
     icon: "😀",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "hype", 1);
+    },
   },
   {
     name: "Something's wrong...",
@@ -272,6 +281,10 @@ export const pills: Array<Pill> = [
   {
     name: "Experimental Pill",
     icon: "😷",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, GetRandomStat(), -1);
+      await AdjustMemberStat(m, GetRandomStat(), 1);
+    },
   },
   {
     name: "Shot Speed Down",
@@ -288,3 +301,7 @@ export const pills: Array<Pill> = [
     },
   },
 ];
+
+export const GetRandomPill = async (): Promise<Pill> => {
+  return pills[Math.floor(Math.random() * pills.length)];
+};
