@@ -24,10 +24,16 @@ export const pills: Array<Pill> = [
   {
     name: "Bad Trip",
     icon: "😈",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "health", -1);
+    },
   },
   {
     name: "Balls of Steel",
     icon: "💙",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "health", 2);
+    },
   },
   {
     name: "Bombs Are Key",

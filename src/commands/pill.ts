@@ -3,8 +3,7 @@ import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, Messa
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
 import { pills } from "../lib/data/pills";
-import { MemberStats } from "../lib/data/stats";
-import { GetMemberStat, GetMemberStatsEmbed } from "../lib/memberStats";
+import { GetMemberStatsEmbed } from "../lib/memberStats";
 import * as dotenv from "dotenv";
 dotenv.config();
 
