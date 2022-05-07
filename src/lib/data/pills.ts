@@ -20,7 +20,7 @@ export const pills: Array<Pill> = [
   {
     name: "Amnesia",
     icon: "❓",
-    effect: async (m) => HideAllChannels(m, 10),
+    effect: async (m) => HideAllChannels(m, 1000 * 10),
   },
   {
     name: "Bad Gas",
@@ -205,7 +205,7 @@ export const pills: Array<Pill> = [
     name: "???",
     icon: "🌽",
     effect: async (m) => {
-      HideAllChannels(m, 30);
+      HideAllChannels(m, 1000 * 30);
       setTimeout(() => RevealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
     },
   },
@@ -279,11 +279,13 @@ export const GetRandomPill = (): Pill => {
   return pills[Math.floor(Math.random() * pills.length)];
 };
 
-const RevealChannel = (channelId: string, member: GuildMember, duration: number) => {
+const RevealChannel = async (channelId: string, member: GuildMember, duration: number) => {
   const channel = member.guild.channels.cache.get(channelId) as TextChannel;
   if (!channel) return;
-
-  channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: true }).catch(console.log);
+  await channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: true }).catch(console.log);
+  channel.send(`${member}`).then((msg) => {
+    msg.delete().catch(console.log);
+  });
   setTimeout(() => {
     channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: false }).catch(console.log);
   }, duration);
