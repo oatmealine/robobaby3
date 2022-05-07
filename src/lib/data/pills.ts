@@ -35,6 +35,9 @@ export const pills: Array<Pill> = [
   {
     name: "Explosive Diarrhea",
     icon: "💩💥",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "poop", 5);
+    },
   },
   {
     name: "Full Health",
@@ -160,6 +163,9 @@ export const pills: Array<Pill> = [
   {
     name: "Friends Till The End!",
     icon: "🙏",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "flies", 12);
+    },
   },
   {
     name: "Infested!",
@@ -240,6 +246,9 @@ export const pills: Array<Pill> = [
   {
     name: "X-Lax",
     icon: "💩",
+    effect: async (m: GuildMember) => {
+      await AdjustMemberStat(m, "poop", 5);
+    },
   },
   {
     name: "Experimental Pill",
