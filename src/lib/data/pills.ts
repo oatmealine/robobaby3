@@ -145,7 +145,10 @@ export const pills: Array<Pill> = [
   {
     name: "Telepills",
     icon: "🌟",
-    effect: async (m) => RevealChannel(process.env.CHANNEL_ERROR as string, m, 1000 * 60),
+    effect: async (m) => {
+      HideAllChannels(m, 1000 * 30);
+      setTimeout(() => RevealChannel(process.env.CHANNEL_ERROR as string, m, 1000 * 30), 1000 * 2);
+    },
   },
   {
     name: "Addicted",
