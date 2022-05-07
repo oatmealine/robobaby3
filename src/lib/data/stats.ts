@@ -16,7 +16,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
   },
   speed: {
     name: "Speed",
-    icon: "🥾",
+    icon: "👢",
     minValue: 0,
     maxValue: 7,
     defaultValue: 2,
