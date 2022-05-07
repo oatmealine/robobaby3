@@ -1,6 +1,6 @@
 interface MemberStat {
   name: string;
-  icon?: string;
+  icon: string;
   minValue: number;
   maxValue: number;
   defaultValue: number;
@@ -11,8 +11,8 @@ export const MemberStats: { [key: string]: MemberStat } = {
     name: "Health",
     icon: "❤️",
     minValue: 0,
-    maxValue: 7,
-    defaultValue: 2,
+    maxValue: 12,
+    defaultValue: 3,
   },
   speed: {
     name: "Speed",
@@ -72,18 +72,21 @@ export const MemberStats: { [key: string]: MemberStat } = {
   },
   flies: {
     name: "# of Flies",
+    icon: "🪰",
     minValue: 0,
     maxValue: 999,
     defaultValue: 0,
   },
   spiders: {
     name: "# of Spiders",
+    icon: "🕷",
     minValue: 0,
     maxValue: 999,
     defaultValue: 0,
   },
   poop: {
     name: "# of Poops",
+    icon: "💩",
     minValue: 0,
     maxValue: 999,
     defaultValue: 0,
