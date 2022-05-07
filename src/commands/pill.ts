@@ -31,10 +31,7 @@ module.exports = {
       if (elapsed < cooldown) {
         const minutes = Math.floor((cooldown - elapsed) / 1000 / 60);
         const hours = Math.floor(minutes / 60);
-        const left =
-          hours > 1
-            ? `${hours} ${pluralize("hour", hours)} and ${minutes % 60} ${pluralize("minute", minutes % 60)}`
-            : `${minutes} ${pluralize("minute", minutes)}`;
+        const left = hours > 1 ? `${hours} ${pluralize("hour", hours)}` : `${minutes} ${pluralize("minute", minutes)}`;
 
         interaction.reply({
           content: `You can have another one in \`${left}\`.`,
