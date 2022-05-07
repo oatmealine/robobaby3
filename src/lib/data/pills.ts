@@ -247,7 +247,7 @@ export const pills: Array<Pill> = [
   },
 ];
 
-export const GetRandomPill = async (): Promise<Pill> => {
+export const GetRandomPill = (): Pill => {
   return pills[Math.floor(Math.random() * pills.length)];
 };
 

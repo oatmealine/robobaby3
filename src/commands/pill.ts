@@ -42,7 +42,7 @@ module.exports = {
     redis.set(timeKey, interaction.createdTimestamp);
 
     // eat pill
-    const pill = pills[1]; //GetRandomPill();
+    const pill = GetRandomPill();
     const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setColor(botColor);
     if (pill.effect) await pill.effect(member);
     AdjustMemberStat(member, "pills", 1);
