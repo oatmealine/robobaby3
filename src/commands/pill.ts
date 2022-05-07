@@ -4,7 +4,7 @@ import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
 import { pills } from "../lib/data/pills";
 import { MemberStats } from "../lib/data/stats";
-import { GetMemberStat } from "../lib/stats";
+import { GetMemberStat, GetMemberStatsEmbed } from "../lib/stats";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -48,17 +48,7 @@ module.exports = {
     if (pill.effect) await pill.effect(member);
 
     // stats button
-    const statsEmbed = new MessageEmbed()
-      .setAuthor({ name: `${member.displayName}'s stats`, iconURL: member.user.displayAvatarURL() })
-      .setColor(member.displayColor);
-    for await (const [name, statData] of Object.entries(MemberStats)) {
-      const stat = await GetMemberStat(member, name);
-      if (statData.maxValue <= 7) {
-        statsEmbed.addField(statData.name, `${(statData.icon || "🔵").repeat(stat)}${"▫️".repeat(statData.maxValue - stat)}`, true);
-      } else {
-        statsEmbed.addField(statData.name, `${stat}`, true);
-      }
-    }
+    const statsEmbed = await GetMemberStatsEmbed(member);
 
     const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
     const collector = interaction.channel?.createMessageComponentCollector({
