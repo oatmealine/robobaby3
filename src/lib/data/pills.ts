@@ -137,13 +137,13 @@ export const pills: Array<Pill> = [
     name: "Range Down",
     icon: "🎯⬇️",
     description: "You can't see very far...",
-    effect: async (m) => await AdjustMemberStat(m, "luck", -1),
+    effect: async (m) => await AdjustMemberStat(m, "range", -1),
   },
   {
     name: "Range Up",
     icon: "🎯⬆️",
     description: "You can see for miles!",
-    effect: async (m) => await AdjustMemberStat(m, "luck", 1),
+    effect: async (m) => await AdjustMemberStat(m, "range", 1),
   },
   {
     name: "R U a Wizard?",
