@@ -107,7 +107,7 @@ module.exports = {
         .setFooter({ text: "" });
       channel?.send({ embeds: [embed], components: [] });
 
-      interaction.editReply({ components: [] }).catch(console.log);
+      interaction.editReply({ components: [] }).catch(() => interaction.deleteReply().catch(console.log));
 
       LogEvent(`Poll ended by ${member}: ${title}`);
       console.log(`Poll ended by ${member.displayName}: ${title}`);
