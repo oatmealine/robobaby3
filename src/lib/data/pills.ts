@@ -27,6 +27,8 @@ export const pills: Array<Pill> = [
   {
     name: "Bad Gas",
     icon: "💨",
+    description: "You hate side effects...",
+    effect: async (m) => GiveRole(m, "Stinky", 1000 * 60 * 30),
   },
   {
     name: "Bad Trip",
@@ -48,7 +50,10 @@ export const pills: Array<Pill> = [
     name: "Explosive Diarrhea",
     icon: "💩💥",
     description: "That got messy...",
-    effect: async (m) => await AdjustMemberStat(m, "poop", 5),
+    effect: async (m) => {
+      GiveRole(m, "Stinky", 1000 * 60 * 30);
+      return await AdjustMemberStat(m, "poop", 5);
+    },
   },
   {
     name: "Full Health",
@@ -89,6 +94,8 @@ export const pills: Array<Pill> = [
   {
     name: "Lemon Party",
     icon: "🍋",
+    description: "You woke up feeling wet...",
+    effect: async (m) => GiveRole(m, "Bedwetter", 1000 * 60 * 30),
   },
   {
     name: "Luck Down",
@@ -111,6 +118,8 @@ export const pills: Array<Pill> = [
   {
     name: "Pheromones",
     icon: "👃",
+    description: "You feel seductive...",
+    effect: async (m) => GiveRole(m, "Thirsty", 1000 * 60 * 30),
   },
   {
     name: "Puberty",
@@ -139,6 +148,8 @@ export const pills: Array<Pill> = [
   {
     name: "R U a Wizard?",
     icon: "🧙‍♂️",
+    description: "You feel magical...",
+    effect: async (m) => GiveRole(m, "Wizard", 1000 * 60 * 30),
   },
   {
     name: "Speed Down",
@@ -227,7 +238,10 @@ export const pills: Array<Pill> = [
     name: "Re-Lax",
     icon: "💩",
     description: "You feel queasy...",
-    effect: async (m) => await AdjustMemberStat(m, "poop", 5),
+    effect: async (m) => {
+      GiveRole(m, "Stinky", 1000 * 60 * 30);
+      return await AdjustMemberStat(m, "poop", 5);
+    },
   },
   {
     name: "Retro Vision",
@@ -293,7 +307,10 @@ export const pills: Array<Pill> = [
     name: "X-Lax",
     icon: "💩",
     description: "You feel like using the bathroom...",
-    effect: async (m) => await AdjustMemberStat(m, "poop", 5),
+    effect: async (m) => {
+      GiveRole(m, "Stinky", 1000 * 60 * 30);
+      return await AdjustMemberStat(m, "poop", 5);
+    },
   },
   {
     name: "Experimental Pill",
@@ -353,4 +370,12 @@ const HideAllChannels = (member: GuildMember, duration: number) => {
 const SetNickname = (member: GuildMember, nick: string, duration: number) => {
   member.setNickname(nick).catch(console.log);
   setTimeout(() => member.setNickname("").catch(console.log), duration);
+};
+
+const GiveRole = (member: GuildMember, roleName: string, duration: number) => {
+  const role = member.guild.roles.cache.find((r) => r.name === roleName);
+  if (!role) return;
+
+  member.roles.add(role).catch(console.log);
+  setTimeout(() => member.roles.remove(role).catch(console.log), duration);
 };
