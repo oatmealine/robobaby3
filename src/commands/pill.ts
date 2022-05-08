@@ -39,7 +39,7 @@ module.exports = {
 
     // eat pill
     const pill = GetRandomPill();
-    const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setColor(botColor);
+    const pillEmbed = new MessageEmbed().setTitle(`${pill.icon} » ${pill.name}`).setDescription(`${pill.description}`).setColor(botColor);
     const affectedStats: Array<string> = [];
     if (pill.effect) {
       const stat = await pill.effect(member);
