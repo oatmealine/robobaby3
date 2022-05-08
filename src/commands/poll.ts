@@ -43,7 +43,7 @@ module.exports = {
       .setTitle(title)
       .setColor(botColor)
       .setFooter({
-        text: `Poll ends in ${duration} ${pluralize("minute", duration)} from creation`,
+        text: `Poll ends ${duration} ${pluralize("minute", duration)} from creation`,
       });
 
     let buttons: Array<MessageButton> = [];
@@ -106,6 +106,8 @@ module.exports = {
         })
         .setFooter({ text: "" });
       channel?.send({ embeds: [embed], components: [] });
+
+      interaction.editReply({ components: [] }).catch(console.log);
 
       LogEvent(`Poll ended by ${member}: ${title}`);
       console.log(`Poll ended by ${member.displayName}: ${title}`);
