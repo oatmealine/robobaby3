@@ -60,6 +60,7 @@ module.exports = {
 
       const collector = interaction.channel?.createMessageComponentCollector({
         time: statButtonDuration,
+        filter: (i) => i.customId == member.id,
       });
       collector?.on("collect", async (i) => {
         i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
