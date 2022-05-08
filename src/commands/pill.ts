@@ -16,11 +16,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    if (interaction.channel?.id != process.env.CHANNEL_CHAT) {
-      const channel = interaction.guild?.channels.cache.find((c) => c.id === process.env.CHANNEL_CHAT);
-      interaction.reply({ content: `You can only use this command in ${channel}`, ephemeral: true });
-      return;
-    }
+    const isChatChannel = interaction.channel?.id == process.env.CHANNEL_CHAT;
 
     // cooldown
     const timeKey = `pill:${member.id}`;
@@ -53,22 +49,28 @@ module.exports = {
 
     // stats button
     const statsEmbed = await GetMemberStatsEmbed(member, affectedStats);
+    const row = new MessageActionRow();
 
-    const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
-    const collector = interaction.channel?.createMessageComponentCollector({
-      time: statButtonDuration,
-    });
-    collector?.on("collect", async (i) => {
-      i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
-    });
-    setTimeout(() => {
-      interaction.editReply({ components: [] }).catch(console.log);
-    }, statButtonDuration);
+    if (isChatChannel) {
+      const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
+      row.addComponents(button);
+
+      const collector = interaction.channel?.createMessageComponentCollector({
+        time: statButtonDuration,
+      });
+      collector?.on("collect", async (i) => {
+        i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
+      });
+      setTimeout(() => {
+        interaction.editReply({ components: [] }).catch(console.log);
+      }, statButtonDuration);
+    }
 
     // response
     await interaction.reply({
       embeds: [pillEmbed],
-      components: [new MessageActionRow().addComponents(button)],
+      components: row.components.length > 0 ? [row] : [],
+      ephemeral: !isChatChannel,
     });
     interaction.followUp({ embeds: [statsEmbed], ephemeral: true });
     console.log(`${member.user.tag} ate a pill: ${pill.name}`);
