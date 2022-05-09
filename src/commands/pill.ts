@@ -2,8 +2,8 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
-import { GetRandomPill } from "../lib/data/pills";
-import { AdjustMemberStat, GetMemberStatsEmbed } from "../lib/memberStats";
+import { GetRandomPill, pills } from "../lib/data/pills";
+import { AdjustMemberStat, GetMemberStatsEmbed, StatChange } from "../lib/memberStats";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -38,15 +38,15 @@ module.exports = {
     redis.set(timeKey, interaction.createdTimestamp);
 
     // eat pill
-    const pill = GetRandomPill();
+    const pill = pills[pills.length - 3]; //GetRandomPill();
     const pillEmbed = new MessageEmbed()
       .setTitle(`${pill.icon} » ${pill.name}`)
       .setDescription(pill.description || "")
       .setColor(botColor);
-    const affectedStats: Array<string> = [];
+    let affectedStats: Array<StatChange> = [];
     if (pill.effect) {
-      const stat = await pill.effect(member);
-      if (typeof stat === "string") affectedStats.push(stat);
+      const change = await pill.effect(member);
+      if (Array.isArray(change)) affectedStats = change;
     }
     await AdjustMemberStat(member, "pills", 1);
 

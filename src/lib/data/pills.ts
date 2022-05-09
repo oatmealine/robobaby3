@@ -321,7 +321,10 @@ export const pills: Array<Pill> = [
       const stat2 = GetRandomStatName(true);
       await AdjustMemberStat(m, stat1, -1);
       await AdjustMemberStat(m, stat2, 1);
-      return [stat1, stat2];
+      return [
+        { stat: stat1, value: -1 },
+        { stat: stat2, value: 1 },
+      ];
     },
   },
   {
