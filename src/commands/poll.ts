@@ -95,7 +95,8 @@ module.exports = {
         if (!votes[`${i}`]) return;
 
         const numVotes = votes[`${i}`].length;
-        embed.addField(`${option}`, `**${numVotes}** ${pluralize("vote", numVotes)}`, true);
+        const percent = Math.round((numVotes / voters.length) * 100);
+        embed.addField(`${option}`, `**${numVotes}** (${percent}%)`, true);
       });
       if (voters.length > 0) embed.setDescription(`**${pluralize("Winner", winners.length)}:** ${winners.join(" and ")}`);
       else embed.setDescription("No one voted 😔");
@@ -108,9 +109,7 @@ module.exports = {
       channel?.send({ embeds: [embed], components: [] });
 
       interaction.editReply({ components: [] }).catch(() => interaction.deleteReply().catch(console.log));
-
-      LogEvent(`Poll ended by ${member}: ${title}`);
-      console.log(`Poll ended by ${member.displayName}: ${title}`);
+      console.log(`Poll ended by ${member.user.tag}: ${title}`);
     });
   },
 };
