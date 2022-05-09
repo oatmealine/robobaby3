@@ -43,7 +43,7 @@ module.exports = {
       .setTitle(title)
       .setColor(botColor)
       .setFooter({
-        text: `Poll ends ${duration} ${pluralize("minute", duration)} from creation`,
+        text: `Ends in ${duration} ${pluralize("minute", duration)}`,
       });
 
     let buttons: Array<MessageButton> = [];
@@ -59,6 +59,20 @@ module.exports = {
     const message = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
     LogEvent(`Poll started by ${member}: ${title}`);
     console.log(`Poll started by ${member.displayName}: ${title}`);
+
+    // countdown
+    if (message.type == "APPLICATION_COMMAND") {
+      let minLeft = duration;
+      const ticker = setInterval(() => {
+        minLeft--;
+        if (minLeft <= 0) clearInterval(ticker);
+
+        embed.setFooter({
+          text: `Ends in ${minLeft} ${pluralize("minute", minLeft)}`,
+        });
+        message.edit({ embeds: [embed] }).catch(console.log);
+      }, 60000);
+    }
 
     // collect results
     const collector = interaction.channel?.createMessageComponentCollector({
