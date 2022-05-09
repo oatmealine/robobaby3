@@ -317,13 +317,16 @@ export const pills: Array<Pill> = [
     icon: "😷",
     description: "You feel a little sheepish...",
     effect: async (m) => {
-      const stat1 = GetRandomStatName(true);
-      const stat2 = GetRandomStatName(true);
-      await AdjustMemberStat(m, stat1, -1);
-      await AdjustMemberStat(m, stat2, 1);
+      const primaryStat = GetRandomStatName(true);
+      let secondaryStat = GetRandomStatName(true);
+      do secondaryStat = GetRandomStatName(true);
+      while (primaryStat === secondaryStat);
+
+      AdjustMemberStat(m, primaryStat, 1);
+      await AdjustMemberStat(m, secondaryStat, -1);
       return [
-        { stat: stat1, value: -1 },
-        { stat: stat2, value: 1 },
+        { stat: primaryStat, value: 1 },
+        { stat: secondaryStat, value: -1 },
       ];
     },
   },
