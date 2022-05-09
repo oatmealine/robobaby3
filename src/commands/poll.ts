@@ -56,14 +56,13 @@ module.exports = {
     }
     const row = new MessageActionRow().addComponents(buttons);
 
-    await interaction.reply({ embeds: [embed], components: [row] });
+    const message = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
     LogEvent(`Poll started by ${member}: ${title}`);
     console.log(`Poll started by ${member.displayName}: ${title}`);
 
     // collect results
-    const filter = () => true;
     const collector = interaction.channel?.createMessageComponentCollector({
-      filter: filter,
+      filter: (i) => i.message.id == message.id,
       time: duration * 1000 * 60,
     });
 
@@ -75,7 +74,7 @@ module.exports = {
 
       votes[i.customId].push(i.user.id);
       voters.push(i.user.id);
-      i.reply({ content: "Voted!", ephemeral: true });
+      i.reply({ content: "Voted!", ephemeral: true }).catch(console.log);
     });
 
     // show results
