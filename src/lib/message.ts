@@ -50,12 +50,11 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   diff.forEach((part: any) => {
-    output += "\n";
-    if (part.added) output += "+ ";
-    if (part.removed) output += "- ";
-    output += part.value;
+    if (part.added) output += `[2;32m[1;32m${part.value}[0m`;
+    if (part.removed) output += `[2;41m[1;2m${part.value}[0m`;
+    if (!part.added && !part.removed) output += part.value;
   });
-  const diffMsg = `\`\`\`diff\n${output}\`\`\``;
+  const diffMsg = `\`\`\`ansi\n${output}\`\`\``;
 
   LogEvent(`${newMessage.author}'s message edited in ${newMessage.channel}:${diffMsg}`);
 };
