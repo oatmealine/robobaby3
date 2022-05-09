@@ -128,7 +128,7 @@ export const GetRandomStatName = (basicOnly?: boolean): string => {
   let stat = Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
   if (basicOnly) {
     do stat = Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
-    while (MemberStats[stat].isBasic);
+    while (!MemberStats[stat].isBasic);
   }
   return stat;
 };
