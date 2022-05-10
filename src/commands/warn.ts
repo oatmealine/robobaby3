@@ -59,7 +59,7 @@ module.exports = {
           break;
         case 4:
           target.ban({ days: 0, reason: "Warning #4" });
-          redis.set(`warnings:${target.id}`, 0);
+          redis.del(`warnings:${target.id}`);
           break;
       }
     }
