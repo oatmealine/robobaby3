@@ -122,6 +122,27 @@ export const MemberStats: { [key: string]: MemberStat } = {
     maxValue: 999,
     defaultValue: 0,
   },
+  coins: {
+    name: "Coins",
+    icon: "🪙",
+    minValue: 0,
+    maxValue: 99,
+    defaultValue: 0,
+  },
+  bombs: {
+    name: "Bombs",
+    icon: "💣",
+    minValue: 0,
+    maxValue: 99,
+    defaultValue: 0,
+  },
+  keys: {
+    name: "Keys",
+    icon: "🔑",
+    minValue: 0,
+    maxValue: 99,
+    defaultValue: 0,
+  },
 };
 
 export const GetRandomStatName = (basicOnly?: boolean): string => {
