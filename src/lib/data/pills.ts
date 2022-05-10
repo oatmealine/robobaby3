@@ -1,6 +1,6 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember } from "discord.js";
 import { AdjustMemberStat, SetMemberStat } from "../memberStats";
-import { redis } from "../redis";
+import { PillEffects } from "../pills";
 import { GetRandomStatName, MemberStats } from "./stats";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -22,13 +22,13 @@ export const pills: Array<Pill> = [
     name: "Amnesia",
     icon: "❓",
     description: "You find yourself in an unfamiliar place...",
-    effect: async (m) => HideAllChannels(m, 1000 * 10),
+    effect: async (m) => PillEffects.hideAllChannels(m, 1000 * 10),
   },
   {
     name: "Bad Gas",
     icon: "💨",
     description: "You feel like you're being avoided...",
-    effect: async (m) => GiveRole(m, "Stinky", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30),
   },
   {
     name: "Bad Trip",
@@ -51,7 +51,7 @@ export const pills: Array<Pill> = [
     icon: "💩💥",
     description: "That got messy...",
     effect: async (m) => {
-      GiveRole(m, "Stinky", 1000 * 60 * 30);
+      PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
       return await AdjustMemberStat(m, "poop", 5);
     },
   },
@@ -83,19 +83,19 @@ export const pills: Array<Pill> = [
     name: "I Can See Forever",
     icon: "👀",
     description: "You see a strange hole in the wall...",
-    effect: async (m) => RevealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 60),
+    effect: async (m) => PillEffects.revealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 60),
   },
   {
     name: "I Found Pills",
     icon: "🥴",
     description: "Derp!",
-    effect: async (m) => SetNickname(m, "🥴", 1000 * 60 * 10),
+    effect: async (m) => PillEffects.setNickname(m, "🥴", 1000 * 60 * 10),
   },
   {
     name: "Lemon Party",
     icon: "🍋",
     description: "You woke up feeling wet...",
-    effect: async (m) => GiveRole(m, "Bedwetter", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.giveRole(m, "Bedwetter", 1000 * 60 * 30),
   },
   {
     name: "Luck Down",
@@ -119,7 +119,7 @@ export const pills: Array<Pill> = [
     name: "Pheromones",
     icon: "👃",
     description: "You feel seductive...",
-    effect: async (m) => GiveRole(m, "Thirsty", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.giveRole(m, "Thirsty", 1000 * 60 * 30),
   },
   {
     name: "Puberty",
@@ -149,7 +149,7 @@ export const pills: Array<Pill> = [
     name: "R U a Wizard?",
     icon: "🧙‍♂️",
     description: "You feel magical...",
-    effect: async (m) => GiveRole(m, "Wizard", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.giveRole(m, "Wizard", 1000 * 60 * 30),
   },
   {
     name: "Speed Down",
@@ -180,15 +180,15 @@ export const pills: Array<Pill> = [
     icon: "🌟",
     description: "You find yourself in a stra̺̫͢n͖̣̮̪͖̥g̛̣̘e̪ p͉̯l҉͕̻̞̺̙̜̻̀̕ͅà̢̹̞̠c̢̗̻͖̩̀͟͠è̸̛̫͇̝̖̮͈͎̘̠̲͔̕",
     effect: async (m) => {
-      HideAllChannels(m, 1000 * 30);
-      setTimeout(() => RevealChannel(process.env.CHANNEL_ERROR as string, m, 1000 * 30), 1000 * 2);
+      PillEffects.hideAllChannels(m, 1000 * 30);
+      setTimeout(() => PillEffects.revealChannel(process.env.CHANNEL_ERROR as string, m, 1000 * 30), 1000 * 2);
     },
   },
   {
     name: "Addicted",
     icon: "🍺",
     description: "You just can't stop...",
-    effect: async (m) => redis.set(`pill:${m.id}`, "0"),
+    effect: async (m) => PillEffects.resetCooldown(m),
   },
   {
     name: "Friends Till The End!",
@@ -213,7 +213,7 @@ export const pills: Array<Pill> = [
     icon: "👶",
     description: "You feel emasculated...",
     effect: async (m) => {
-      SetNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
+      PillEffects.setNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
       return await AdjustMemberStat(m, "size", -1);
     },
   },
@@ -222,7 +222,7 @@ export const pills: Array<Pill> = [
     icon: "👨",
     description: "You feel great!",
     effect: async (m) => {
-      SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
+      PillEffects.setNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
       return await AdjustMemberStat(m, "size", 1);
     },
   },
@@ -230,20 +230,20 @@ export const pills: Array<Pill> = [
     name: "Percs",
     icon: "💊",
     description: "You feel like you could use another...",
-    effect: async (m) => redis.set(`pill:${m.id}`, "0"),
+    effect: async (m) => PillEffects.resetCooldown(m),
   },
   {
     name: "Power Pill",
     icon: "🕹️",
     description: "You feel POWERFUL!",
-    effect: async (m) => SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10),
+    effect: async (m) => PillEffects.setNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10),
   },
   {
     name: "Re-Lax",
     icon: "💩",
     description: "You feel queasy...",
     effect: async (m) => {
-      GiveRole(m, "Stinky", 1000 * 60 * 30);
+      PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
       return await AdjustMemberStat(m, "poop", 5);
     },
   },
@@ -251,15 +251,15 @@ export const pills: Array<Pill> = [
     name: "Retro Vision",
     icon: "👾",
     description: "You feel nostalgic...",
-    effect: async (m) => RevealChannel(process.env.CHANNEL_LEGACY as string, m, 1000 * 60 * 5),
+    effect: async (m) => PillEffects.revealChannel(process.env.CHANNEL_LEGACY as string, m, 1000 * 60 * 5),
   },
   {
     name: "???",
     icon: "🌽",
     description: "Is that corn?!?! WHY???",
     effect: async (m) => {
-      HideAllChannels(m, 1000 * 30);
-      setTimeout(() => RevealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
+      PillEffects.hideAllChannels(m, 1000 * 30);
+      setTimeout(() => PillEffects.revealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
     },
   },
   {
@@ -305,14 +305,14 @@ export const pills: Array<Pill> = [
     name: "Vurp!",
     icon: "😩",
     description: "You feel ready to go again!",
-    effect: async (m) => redis.set(`pill:${m.id}`, "0"),
+    effect: async (m) => PillEffects.resetCooldown(m),
   },
   {
     name: "X-Lax",
     icon: "💩",
     description: "You feel like using the bathroom...",
     effect: async (m) => {
-      GiveRole(m, "Stinky", 1000 * 60 * 30);
+      PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
       return await AdjustMemberStat(m, "poop", 5);
     },
   },
@@ -350,42 +350,4 @@ export const pills: Array<Pill> = [
 
 export const GetRandomPill = (): Pill => {
   return pills[Math.floor(Math.random() * pills.length)];
-};
-
-const RevealChannel = async (channelId: string, member: GuildMember, duration: number) => {
-  const channel = member.guild.channels.cache.get(channelId) as TextChannel;
-  if (!channel) return;
-  await channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: true }).catch(console.log);
-  channel.send(`${member}`).then((msg) => {
-    msg.delete().catch(console.log);
-  });
-  setTimeout(() => {
-    channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: false }).catch(console.log);
-  }, duration);
-};
-
-const HideAllChannels = (member: GuildMember, duration: number) => {
-  setTimeout(async () => {
-    member.guild.channels.cache.each(async (c) => {
-      if (c.type === "GUILD_TEXT" || c.type == "GUILD_VOICE") c.permissionOverwrites.create(member, { VIEW_CHANNEL: false }).catch(console.log);
-    });
-  }, 1000 * 2);
-  setTimeout(async () => {
-    member.guild.channels.cache.each((c) => {
-      if (c.type === "GUILD_TEXT" || c.type == "GUILD_VOICE") c.permissionOverwrites.delete(member).catch(console.log);
-    });
-  }, duration + 2000);
-};
-
-const SetNickname = (member: GuildMember, nick: string, duration: number) => {
-  member.setNickname(nick).catch(console.log);
-  setTimeout(() => member.setNickname("").catch(console.log), duration);
-};
-
-const GiveRole = (member: GuildMember, roleName: string, duration: number) => {
-  const role = member.guild.roles.cache.find((r) => r.name === roleName);
-  if (!role) return;
-
-  member.roles.add(role).catch(console.log);
-  setTimeout(() => member.roles.remove(role).catch(console.log), duration);
 };

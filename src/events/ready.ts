@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Collection } from "discord.js";
 import { connectToRedis } from "../lib/redis";
+import { createPillStatCollector } from "../lib/pills";
 import path from "path";
 import fs = require("node:fs");
 
@@ -18,10 +19,8 @@ module.exports = {
       type: "PLAYING",
     });
 
-    // load command functions
     loadCommands(client);
-
-    // connect to db
+    createPillStatCollector(client);
     connectToRedis();
   },
 };

@@ -3,6 +3,7 @@ import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, Messa
 import { botColor } from "../lib/util";
 import { redis } from "../lib/redis";
 import { GetRandomPill } from "../lib/data/pills";
+import { MemberStats } from "../lib/data/stats";
 import { AdjustMemberStat, GetMemberStatsEmbed, StatChange } from "../lib/memberStats";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -10,7 +11,6 @@ dotenv.config();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pluralize = require("pluralize");
 const cooldown = 1000 * 60 * 60 * 12;
-const statButtonDuration = 1000 * 60 * 10;
 
 module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
@@ -39,10 +39,6 @@ module.exports = {
 
     // eat pill
     const pill = GetRandomPill();
-    const pillEmbed = new MessageEmbed()
-      .setTitle(`${pill.icon} » ${pill.name}`)
-      .setDescription(pill.description || "")
-      .setColor(botColor);
     let affectedStats: Array<StatChange> = [];
     if (pill.effect) {
       const change = await pill.effect(member);
@@ -50,24 +46,20 @@ module.exports = {
     }
     await AdjustMemberStat(member, "pills", 1);
 
+    // pill embed
+    const title = `${pill.icon} » ${pill.name}`;
+    const desc = `${pill.description || ""}${
+      affectedStats.length > 0 ? `\n\n${affectedStats.map((s) => `> **${MemberStats[s.stat].name}:** ${s.value > 0 ? "🔺" : "🔻"}`).join("\n")}` : ""
+    }`;
+    const pillEmbed = new MessageEmbed().setTitle(title).setDescription(desc).setColor(botColor);
+
     // stats button
-    const statsEmbed = await GetMemberStatsEmbed(member, affectedStats);
+    const statsEmbed = await GetMemberStatsEmbed(member);
     const row = new MessageActionRow();
 
     if (isChatChannel) {
       const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
       row.addComponents(button);
-
-      const collector = interaction.channel?.createMessageComponentCollector({
-        time: statButtonDuration,
-        filter: (i) => i.customId == member.id,
-      });
-      collector?.on("collect", async (i) => {
-        i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
-      });
-      setTimeout(() => {
-        interaction.editReply({ components: [] }).catch(console.log);
-      }, statButtonDuration);
     }
 
     // response
