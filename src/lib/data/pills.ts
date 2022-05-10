@@ -27,7 +27,7 @@ export const pills: Array<Pill> = [
   {
     name: "Bad Gas",
     icon: "💨",
-    description: "You hate side effects...",
+    description: "You feel like you're being avoided...",
     effect: async (m) => GiveRole(m, "Stinky", 1000 * 60 * 30),
   },
   {
@@ -187,6 +187,8 @@ export const pills: Array<Pill> = [
   {
     name: "Addicted",
     icon: "🍺",
+    description: "You just can't stop...",
+    effect: async (m) => redis.set(`pill:${m.id}`, "0"),
   },
   {
     name: "Friends Till The End!",
@@ -227,6 +229,8 @@ export const pills: Array<Pill> = [
   {
     name: "Percs",
     icon: "💊",
+    description: "You feel like you could use another...",
+    effect: async (m) => redis.set(`pill:${m.id}`, "0"),
   },
   {
     name: "Power Pill",
