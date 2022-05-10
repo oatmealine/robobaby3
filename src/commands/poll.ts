@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { CommandInteraction, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { botColor } from "../lib/util";
 import { LogEvent } from "../lib/log";
 
@@ -56,7 +56,7 @@ module.exports = {
     }
     const row = new MessageActionRow().addComponents(buttons);
 
-    const message = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+    const message = (await interaction.reply({ embeds: [embed], components: [row], fetchReply: true })) as Message;
     LogEvent(`Poll started by ${member}: ${title}`);
     console.log(`Poll started by ${member.displayName}: ${title}`);
 
@@ -65,7 +65,12 @@ module.exports = {
       let minLeft = duration;
       const ticker = setInterval(() => {
         minLeft--;
-        if (minLeft <= 0) clearInterval(ticker);
+        if (minLeft <= 0) {
+          clearInterval(ticker);
+          embed.setFooter({ text: "" });
+          message.edit({ embeds: [embed] }).catch(console.log);
+          return;
+        }
 
         embed.setFooter({
           text: `Ends in ${minLeft} ${pluralize("minute", minLeft)}`,
@@ -109,19 +114,18 @@ module.exports = {
 
         const numVotes = votes[`${i}`].length;
         const percent = Math.round((numVotes / voters.length) * 100);
-        embed.addField(`${option}`, `**${numVotes}** (${percent}%)`, true);
+        embed.addField(`${option}`, `**${numVotes}** (${!isNaN(percent) ? percent : 0}%)`, true);
       });
-      if (voters.length > 0) embed.setDescription(`**${pluralize("Winner", winners.length)}:** ${winners.join(" and ")}`);
-      else embed.setDescription("No one voted 😔");
+      embed.setDescription(voters.length > 0 ? `>>> **${pluralize("Winner", winners.length)}:** ${winners.join(" and ")}` : ">>> 😔 No one voted...");
       embed
         .setAuthor({
           name: `${member.displayName}'s poll results`,
           iconURL: member.user.displayAvatarURL(),
         })
         .setFooter({ text: "" });
-      channel?.send({ embeds: [embed], components: [] });
+      message.reply({ embeds: [embed], components: [] });
 
-      interaction.editReply({ components: [] }).catch(() => interaction.deleteReply().catch(console.log));
+      message.edit({ components: [] }).catch(console.log);
       console.log(`Poll ended by ${member.user.tag}: ${title}`);
     });
   },
