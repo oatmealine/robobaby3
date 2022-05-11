@@ -9,7 +9,7 @@ export interface StatChange {
 
 export const createStatButtonCollector = (client: Client): void => {
   const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
-  const collector = channel?.createMessageComponentCollector();
+  const collector = channel?.createMessageComponentCollector({ filter: (i) => Number.isInteger(parseInt(i.customId)) });
   collector?.on("collect", async (i) => {
     const member = await i.guild?.members.fetch(i.customId);
     if (!member) return;

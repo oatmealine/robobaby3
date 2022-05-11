@@ -21,7 +21,7 @@ const createChestButtonCollector = (client: Client) => {
 };
 
 const openChest = async (i: ButtonInteraction) => {
-  const member = i.guild?.members.cache.get(i.member?.user.id as string);
+  const member = await i.guild?.members.fetch(i.member?.user.id as string);
   if (!member) return;
 
   // validate
