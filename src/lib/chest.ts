@@ -34,7 +34,8 @@ const openChest = async (i: ButtonInteraction) => {
   // open chest
   const msg = i.message as Message;
   const row = new MessageActionRow().addComponents(
-    new MessageButton().setCustomId("nope").setLabel(`Claimed by ${member.displayName}`).setStyle("SECONDARY").setDisabled(true)
+    new MessageButton().setCustomId("nope").setLabel(`Claimed by ${member.displayName}`).setStyle("DANGER").setDisabled(true),
+    new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY")
   );
   msg.edit({ files: ["https://moddingofisaac.com/img/chest_open.png?v=3"], components: [row] }).catch(console.log);
   console.log(`Chest opened by ${member.displayName}`);
