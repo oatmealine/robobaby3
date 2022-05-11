@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed } from "discord.js";
+import { Client, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import { MemberStats } from "./data/stats";
 import { redis } from "./redis";
 
@@ -6,6 +6,17 @@ export interface StatChange {
   stat: string;
   value: number;
 }
+
+export const createStatButtonCollector = (client: Client): void => {
+  const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
+  const collector = channel?.createMessageComponentCollector();
+  collector?.on("collect", async (i) => {
+    const member = await i.guild?.members.fetch(i.customId);
+    if (!member) return;
+    const statsEmbed = await GetMemberStatsEmbed(member);
+    i.reply({ embeds: [statsEmbed], ephemeral: true }).catch(console.log);
+  });
+};
 
 export const GetMemberStat = async (member: GuildMember, stat: string): Promise<number> => {
   return parseInt((await redis.get(`stats:${member.id}:${stat}`)) || `${MemberStats[stat].defaultValue}`);

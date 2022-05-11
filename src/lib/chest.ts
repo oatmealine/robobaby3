@@ -9,10 +9,10 @@ export const initializeChestGenerator = (client: Client) => {
   setInterval(() => {
     if (Math.random() < 0.014) spawnChest(client);
   }, 1000 * 60 * 10);
-  createChestCollector(client);
+  createChestButtonCollector(client);
 };
 
-const createChestCollector = (client: Client) => {
+const createChestButtonCollector = (client: Client) => {
   const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
   if (!channel) return;
 
@@ -73,7 +73,7 @@ const getLoot = () => {
   return loot;
 };
 
-const spawnChest = (client: Client) => {
+export const spawnChest = (client: Client) => {
   const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
   if (!channel) return;
 

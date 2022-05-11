@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Collection } from "discord.js";
 import { connectToRedis } from "../lib/redis";
-import { createPillStatCollector } from "../lib/pills";
 import { initializeChestGenerator } from "../lib/chest";
+import { createStatButtonCollector } from "../lib/memberStats";
 import path from "path";
 import fs = require("node:fs");
 
@@ -21,8 +21,9 @@ module.exports = {
     });
 
     loadCommands(client);
-    createPillStatCollector(client);
     connectToRedis();
+
+    createStatButtonCollector(client);
     initializeChestGenerator(client);
   },
 };
