@@ -2,6 +2,7 @@
 import { Client, Collection } from "discord.js";
 import { connectToRedis } from "../lib/redis";
 import { createPillStatCollector } from "../lib/pills";
+import { initializeChestGenerator } from "../lib/chest";
 import path from "path";
 import fs = require("node:fs");
 
@@ -22,6 +23,7 @@ module.exports = {
     loadCommands(client);
     createPillStatCollector(client);
     connectToRedis();
+    initializeChestGenerator(client);
   },
 };
 
