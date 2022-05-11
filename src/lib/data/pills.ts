@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import { AdjustMemberStat, SetMemberStat } from "../memberStats";
+import { AdjustMemberStat, GetMemberStat, SetMemberStat } from "../memberStats";
 import { PillEffects } from "../pills";
 import { GetRandomStatName, MemberStats } from "./stats";
 
@@ -45,6 +45,18 @@ export const pills: Array<Pill> = [
   {
     name: "Bombs Are Key",
     icon: "💣🔑",
+    description: "Extra protection!",
+    effect: async (m) => {
+      const bombs = await GetMemberStat(m, "bombs");
+      const keys = await GetMemberStat(m, "keys");
+      await SetMemberStat(m, "bombs", keys);
+      await SetMemberStat(m, "keys", bombs);
+
+      return [
+        { stat: "bombs", value: bombs < keys ? 1 : -1 },
+        { stat: "keys", value: keys < bombs ? 1 : -1 },
+      ];
+    },
   },
   {
     name: "Explosive Diarrhea",
