@@ -6,7 +6,7 @@ dotenv.config();
 
 export const createPillStatCollector = (client: Client): void => {
   const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
-  const collector = channel?.createMessageComponentCollector();
+  const collector = channel?.createMessageComponentCollector({ filter: (i) => Number.isInteger(parseInt(i.customId)) });
   collector?.on("collect", async (i) => {
     const member = i.guild?.members.cache.get(i.customId);
     if (!member) return;
