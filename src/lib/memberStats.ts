@@ -25,14 +25,14 @@ export const GetMemberStat = async (member: GuildMember, stat: string): Promise<
 export const SetMemberStat = async (member: GuildMember, stat: string, value: number): Promise<Array<StatChange>> => {
   const oldStat = await GetMemberStat(member, stat);
   await redis.set(`stats:${member.id}:${stat}`, `${value}`);
-  return [{ stat: stat, value: oldStat <= value ? 1 : -1 }];
+  return value != oldStat ? [{ stat: stat, value: oldStat <= value ? 1 : -1 }] : [];
 };
 
 export const AdjustMemberStat = async (member: GuildMember, stat: string, amount: number): Promise<Array<StatChange>> => {
-  let value = (await GetMemberStat(member, stat)) + amount;
-  value = Math.max(Math.min(value, MemberStats[stat].maxValue), MemberStats[stat].minValue);
+  const origValue = await GetMemberStat(member, stat);
+  const value = Math.max(Math.min(origValue + amount, MemberStats[stat].maxValue), MemberStats[stat].minValue);
   await redis.set(`stats:${member.id}:${stat}`, `${value}`);
-  return [{ stat: stat, value: amount }];
+  return value != origValue ? [{ stat: stat, value: amount }] : [];
 };
 
 export const GetMemberStatsEmbed = async (member: GuildMember): Promise<MessageEmbed> => {
