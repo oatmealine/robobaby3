@@ -22,7 +22,7 @@ export const pills: Array<Pill> = [
     name: "Amnesia",
     icon: "❓",
     description: "You find yourself in an unfamiliar place...",
-    effect: async (m) => PillEffects.hideAllChannels(m, 1000 * 10),
+    effect: async (m) => PillEffects.hideAllChannels(m, 1000 * 15),
   },
   {
     name: "Bad Gas",
@@ -268,7 +268,7 @@ export const pills: Array<Pill> = [
   {
     name: "???",
     icon: "🌽",
-    description: "Is that corn?!?! WHY???",
+    description: "Where'd you go?",
     effect: async (m) => {
       PillEffects.hideAllChannels(m, 1000 * 30);
       setTimeout(() => PillEffects.revealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
