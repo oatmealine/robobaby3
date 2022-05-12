@@ -278,7 +278,7 @@ export const pills: Array<Pill> = [
     name: "Feels like I'm walking on sunshine!",
     icon: "🌞",
     description: "You feel AMAZING!",
-    effect: async (m) => await SetMemberStat(m, "hype", MemberStats["hype"].maxValue),
+    effect: async (m) => await AdjustMemberStat(m, "hype", 2),
   },
   {
     name: "Gulp!",
