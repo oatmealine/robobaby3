@@ -49,7 +49,7 @@ const openChest = async (i: ButtonInteraction, chestType: string) => {
   // validate
   for await (const [stat, cost] of Object.entries(chests[chestType].cost)) {
     if ((await GetMemberStat(member, stat)) < cost) {
-      i.reply("You don't have enough to open this chest.");
+      i.reply({ content: "You don't have enough to open this chest.", ephemeral: true });
       return;
     }
     AdjustMemberStat(member, stat, -cost);
