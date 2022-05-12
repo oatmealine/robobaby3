@@ -4,27 +4,30 @@ import { MemberStats } from "./data/stats";
 import { AdjustMemberStat, GetMemberStat, GetMemberStatsEmbed } from "./memberStats";
 import { botColor } from "./util";
 
+const chestChannels = [process.env.CHANNEL_CHAT as string, process.env.CHANNEL_SECRET as string, process.env.CHANNEL_ERROR as string];
+
 export const initializeChestGenerator = (client: Client) => {
+  const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
   setInterval(() => {
     if (Math.random() < 0.02) {
-      if (Math.random() > 0.3) spawnChest(client, "common");
-      else spawnChest(client, Math.random() < 0.5 ? "gold" : "stone");
+      if (Math.random() > 0.3) spawnChest(client, "common", channel);
+      else spawnChest(client, Math.random() < 0.5 ? "gold" : "stone", channel);
     }
   }, 1000 * 60 * 9);
-  createChestButtonCollector(client);
+
+  for (const channelId of chestChannels) createChestButtonCollector(client, channelId);
 };
 
-const createChestButtonCollector = (client: Client) => {
-  const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
+const createChestButtonCollector = (client: Client, channelId: string) => {
+  const channel = client.channels.cache.get(channelId) as TextChannel;
   if (!channel) return;
 
   const collector = channel.createMessageComponentCollector({ filter: (i) => i.customId.startsWith("open-") });
   collector.on("collect", (i) => openChest(i as ButtonInteraction, i.customId.split("-")[1]));
 };
 
-export const spawnChest = (client: Client, chestType: string) => {
-  const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
-  if (!channel) return;
+export const spawnChest = (client: Client, chestType: string, channel: TextChannel) => {
+  if (!chestChannels.includes(channel.id)) return;
 
   const hasCost = Object.keys(chests[chestType].cost).length > 0;
   const costString = hasCost

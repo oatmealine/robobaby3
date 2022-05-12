@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, TextChannel } from "discord.js";
 import { chests } from "../lib/data/chests";
 import { spawnChest } from "../lib/chest";
 
@@ -12,16 +12,14 @@ module.exports = {
       option.setName("type").setDescription("The type of chest to spawn.").setRequired(true);
       for (const choice of Object.keys(chests)) option.addChoice(choice, choice);
       return option;
-    }),
+    })
+    .addChannelOption((option) => option.setName("channel").setDescription("The channel to spawn the chest in.").setRequired(true)),
 
   async execute(interaction: CommandInteraction) {
     const type = interaction.options.getString("type") as string;
-    if (!Object.keys(chests).includes(type)) {
-      interaction.reply({ content: `Not a real type (possible: ${Object.keys(chests).join(", ")})`, ephemeral: true });
-      return;
-    }
+    const channel = interaction.options.getChannel("channel") as TextChannel;
 
-    spawnChest(interaction.client, type);
+    spawnChest(interaction.client, type, channel);
     interaction.reply({ content: "Spawned a chest.", ephemeral: true });
   },
 };
