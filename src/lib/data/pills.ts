@@ -199,7 +199,7 @@ export const pills: Array<Pill> = [
   {
     name: "Addicted",
     icon: "🍺",
-    description: "You just can't stop...",
+    description: "You just can't stop... why not have another?",
     effect: async (m) => PillEffects.resetCooldown(m),
   },
   {
