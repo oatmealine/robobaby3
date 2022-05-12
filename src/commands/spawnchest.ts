@@ -8,7 +8,11 @@ module.exports = {
     .setName("spawnchest")
     .setDescription("[ADMIN] Force a chest spawn.")
     .setDefaultPermission(false)
-    .addStringOption((option) => option.setName("type").setRequired(true).setDescription("The type of chest to spawn.")),
+    .addStringOption((option) => {
+      option.setName("type").setDescription("The type of chest to spawn.").setRequired(true);
+      for (const choice of Object.keys(chests)) option.addChoice(choice, choice);
+      return option;
+    }),
 
   async execute(interaction: CommandInteraction) {
     const type = interaction.options.getString("type") as string;

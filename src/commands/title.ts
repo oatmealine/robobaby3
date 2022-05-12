@@ -9,17 +9,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("title")
     .setDescription("👾 Set your modding title.")
-    .addStringOption((option) =>
-      option
-        .setName("choice")
-        .setDescription("Your desired role.")
-        .setRequired(true)
-        .addChoice("Coder", "Coder")
-        .addChoice("Spriter", "Spriter")
-        .addChoice("Musician", "Musician")
-        .addChoice("Designer", "Designer")
-        .addChoice("Clear", "Clear")
-    ),
+    .addStringOption((option) => {
+      option.setName("choice").setDescription("Your desired role.").setRequired(true);
+      for (const title of titles) option.addChoice(title, title);
+      option.addChoice("Clear", "Clear");
+      return option;
+    }),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const choice = interaction.options.getString("choice");
