@@ -10,7 +10,7 @@ dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pluralize = require("pluralize");
-const cooldown = 1000 * 60 * 60 * 12;
+const cooldown = 1000 * 60 * 60 * 10;
 
 module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
