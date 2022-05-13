@@ -56,7 +56,7 @@ export const containerData: { [key: string]: IContainerData } = {
   },
   slots: {
     infinite: true,
-    cooldown: new CooldownManager("slots", 1000 * 60 * 60 * 24),
+    cooldown: new CooldownManager("slots", 1000 * 60 * 60 * 20),
     actions: {
       use: {
         label: "Use",
