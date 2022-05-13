@@ -14,5 +14,6 @@ module.exports = {
 
     const embed = await GetMemberStatsEmbed(target);
     interaction.reply({ embeds: [embed], ephemeral: true });
+    console.log(`${member.user.tag} viewed ${target.user.tag}'s stats`);
   },
 };

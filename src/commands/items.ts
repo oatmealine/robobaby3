@@ -20,11 +20,11 @@ module.exports = {
     }
 
     const images = items.map((i) => `./images/items/${i}.png`);
-    console.log(images);
 
     const embed = new MessageEmbed()
       .setAuthor({ name: `${target.displayName}'s items`, iconURL: target.user.displayAvatarURL() })
       .setColor(target.displayColor);
     interaction.reply({ embeds: [embed], files: images, ephemeral: true });
+    console.log(`${member.user.tag} viewed ${target.user.tag}'s items`);
   },
 };
