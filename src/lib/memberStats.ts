@@ -2,13 +2,28 @@ import { Client, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import { MemberStats } from "./data/stats";
 import { redis } from "./redis";
 
+const statsChannels = [
+  process.env.CHANNEL_CHAT as string,
+  process.env.CHANNEL_CHESTS as string,
+  process.env.CHANNEL_SECRET as string,
+  process.env.CHANNEL_ERROR as string,
+];
+
 export interface StatChange {
   stat: string;
   value: number;
 }
 
-export const createStatButtonCollector = (client: Client): void => {
-  const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
+export const initializeStats = async (client: Client) => {
+  for (const channelId of statsChannels) {
+    const channel = client.channels.cache.get(channelId) as TextChannel;
+    if (!channel) continue;
+
+    createStatButtonCollector(client, channel);
+  }
+};
+
+const createStatButtonCollector = (client: Client, channel: TextChannel): void => {
   const collector = channel?.createMessageComponentCollector({ filter: (i) => Number.isInteger(parseInt(i.customId)) });
   collector?.on("collect", async (i) => {
     const member = await i.guild?.members.fetch(i.customId);

@@ -3,7 +3,7 @@ import { Client, Collection } from "discord.js";
 import { connectToRedis } from "../lib/redis";
 import { initializeChestGenerator } from "../lib/chest";
 import { initializeShop } from "../lib/shop";
-import { createStatButtonCollector } from "../lib/memberStats";
+import { initializeStats } from "../lib/memberStats";
 import path from "path";
 import fs = require("node:fs");
 
@@ -24,7 +24,7 @@ module.exports = {
     loadCommands(client);
     connectToRedis();
 
-    createStatButtonCollector(client);
+    initializeStats(client);
     initializeChestGenerator(client);
     initializeShop(client);
   },
