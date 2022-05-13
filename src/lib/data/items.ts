@@ -35,7 +35,7 @@ export const items: { [key: string]: Item } = {
     name: "Godhead",
     description: "Obtain access to a world of secrets.",
     color: "#bbbbbb",
-    cost: 80,
+    cost: 50,
     effect: async (member: GuildMember) => giveRole(member, "Godhead"),
   },
 };
