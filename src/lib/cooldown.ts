@@ -1,6 +1,8 @@
 import { GuildMember } from "discord.js";
 import { redis } from "./redis";
-import pluralize from "pluralize";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pluralize = require("pluralize");
 
 export class CooldownManager {
   private name: string;
