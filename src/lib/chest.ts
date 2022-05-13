@@ -55,6 +55,20 @@ const openChest = async (i: ButtonInteraction, chestType: string) => {
   const member = await i.guild?.members.fetch(i.member?.user.id as string);
   if (!member) return;
 
+  // cooldown
+  if (chests[chestType].cooldown) {
+    const remaining = (await chests[chestType].cooldown?.GetRemainingTime(member)) || 0;
+
+    if (remaining > 0) {
+      i.reply({
+        content: `You can open more chests in **${chests[chestType].cooldown?.GetTimeString(remaining)}**.`,
+        ephemeral: true,
+      });
+      return;
+    }
+    chests[chestType].cooldown?.Trigger(member);
+  }
+
   // validate
   for await (const [stat, cost] of Object.entries(chests[chestType].cost)) {
     if ((await GetMemberStat(member, stat)) < cost) {

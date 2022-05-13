@@ -1,3 +1,5 @@
+import { CooldownManager } from "../cooldown";
+
 interface ChestLoot {
   coins?: number;
   bombs?: number;
@@ -7,6 +9,7 @@ interface ChestLoot {
 interface ChestData {
   possibleContents: () => ChestLoot;
   cost: { [key: string]: number };
+  cooldown?: CooldownManager;
 }
 
 export const chests: { [key: string]: ChestData } = {
@@ -15,6 +18,7 @@ export const chests: { [key: string]: ChestData } = {
       return { coins: Math.ceil(Math.random() * 3), bombs: Math.round(Math.random() * 0.75), keys: Math.round(Math.random() * 0.75) };
     },
     cost: {},
+    cooldown: new CooldownManager("chest-common", 1000 * 60 * 60 * 4),
   },
   gold: {
     possibleContents: () => {
