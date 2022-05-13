@@ -30,16 +30,24 @@ export class PillEffects {
   };
 
   static setNickname = (member: GuildMember, nick: string, duration: number) => {
-    member.setNickname(nick).catch(console.log);
-    setTimeout(() => member.setNickname("").catch(console.log), duration);
+    member
+      .setNickname(nick)
+      .then(() => {
+        setTimeout(() => member.setNickname("").catch(console.log), duration);
+      })
+      .catch(console.log);
   };
 
   static giveRole = (member: GuildMember, roleName: string, duration: number) => {
     const role = member.guild.roles.cache.find((r) => r.name === roleName);
     if (!role) return;
 
-    member.roles.add(role).catch(console.log);
-    setTimeout(() => member.roles.remove(role).catch(console.log), duration);
+    member.roles
+      .add(role)
+      .then(() => {
+        setTimeout(() => member.roles.remove(role).catch(console.log), duration);
+      })
+      .catch(console.log);
   };
 
   static resetCooldown = (member: GuildMember) => {
