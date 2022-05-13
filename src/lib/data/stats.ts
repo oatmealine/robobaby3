@@ -126,7 +126,7 @@ export const MemberStats: { [key: string]: MemberStat } = {
     name: "Coins",
     icon: "🪙",
     minValue: 0,
-    maxValue: 99,
+    maxValue: 999,
     defaultValue: 0,
   },
   bombs: {
