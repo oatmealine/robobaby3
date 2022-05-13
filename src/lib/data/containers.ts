@@ -1,14 +1,19 @@
+import { ButtonInteraction } from "discord.js";
 import { CooldownManager } from "../cooldown";
 
 export interface IContainerData {
-  possibleContents: () => IContainerLoot;
-  cost: { [key: string]: number };
-  cooldown?: CooldownManager;
-  buttonText: string;
   infinite?: boolean;
+  cooldown?: CooldownManager;
+  actions: { [key: string]: IContainerAction };
 }
 
-interface IContainerLoot {
+export interface IContainerAction {
+  label: string;
+  cost: { [key: string]: number };
+  effect: (i: ButtonInteraction) => ILoot | void;
+}
+
+export interface ILoot {
   coins?: number;
   bombs?: number;
   keys?: number;
@@ -16,34 +21,57 @@ interface IContainerLoot {
 
 export const containerData: { [key: string]: IContainerData } = {
   common: {
-    possibleContents: () => {
-      return { coins: Math.ceil(Math.random() * 2), bombs: Math.round(Math.random() * 0.7), keys: Math.round(Math.random() * 0.7) };
-    },
-    cost: {},
     cooldown: new CooldownManager("commonChest", 1000 * 60 * 60 * 4),
-    buttonText: "Open",
+    actions: {
+      open: {
+        label: "Open",
+        cost: {},
+        effect: () => {
+          return { coins: Math.ceil(Math.random() * 2), keys: Math.round(Math.random() * 0.55), bombs: Math.round(Math.random() * 0.55) };
+        },
+      },
+    },
   },
   gold: {
-    possibleContents: () => {
-      return { coins: Math.round(Math.random() * 4 + 6) };
+    actions: {
+      unlock: {
+        label: "Unlock",
+        cost: { keys: 1 },
+        effect: () => {
+          return { coins: Math.round(Math.random() * 4) + 6, bombs: Math.round(Math.random() * 0.6) };
+        },
+      },
     },
-    cost: { keys: 1 },
-    buttonText: "Unlock",
   },
   stone: {
-    possibleContents: () => {
-      return { coins: Math.round(Math.random() * 6 + 4), keys: Math.round(Math.random() * 0.65), bombs: Math.round(Math.random() * 0.65) };
+    actions: {
+      blowUp: {
+        label: "Blow Up",
+        cost: { bombs: 1 },
+        effect: () => {
+          return { coins: Math.round(Math.random() * 4) + 4, keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
+        },
+      },
     },
-    cost: { bombs: 1 },
-    buttonText: "Bomb",
   },
   slots: {
-    possibleContents: () => {
-      return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
-    },
-    cost: {},
-    cooldown: new CooldownManager("slots", 1000 * 60 * 60 * 24),
     infinite: true,
-    buttonText: "Use Machine",
+    cooldown: new CooldownManager("slots", 1000 * 60 * 60 * 24),
+    actions: {
+      use: {
+        label: "Use",
+        cost: {},
+        effect: () => {
+          return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.55), bombs: Math.round(Math.random() * 0.55) };
+        },
+      },
+      blowUp: {
+        label: "Blow Up",
+        cost: { bombs: 1 },
+        effect: () => {
+          return { coins: Math.ceil(Math.random() * 3) + 3, keys: Math.round(Math.random() * 0.65) };
+        },
+      },
+    },
   },
 };

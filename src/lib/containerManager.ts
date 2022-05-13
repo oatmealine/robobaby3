@@ -12,16 +12,17 @@ export class ContainerManager extends InteractiveElementManager {
     const container = ContainerManager.data[id] as IContainerData;
     const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
 
-    const hasCost = Object.keys(container.cost).length > 0;
-    const costString = hasCost
-      ? Object.keys(container.cost)
-          .map((stat) => statData[stat].icon)
-          .join("")
-      : "";
+    const row = new MessageActionRow();
+    for (const [action, data] of Object.entries(container.actions)) {
+      const hasCost = Object.keys(data.cost).length > 0;
+      const costString = hasCost
+        ? Object.keys(data.cost)
+            .map((stat) => statData[stat].icon)
+            .join("")
+        : "";
 
-    const row = new MessageActionRow().addComponents(
-      ContainerManager.CreateButton(id, "open", hasCost ? `${container.buttonText} (${costString})` : container.buttonText, hasCost ? "PRIMARY" : "SUCCESS")
-    );
+      row.addComponents(ContainerManager.CreateButton(id, action, hasCost ? `${data.label} (${costString})` : data.label, hasCost ? "PRIMARY" : "SUCCESS"));
+    }
     channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] }).then((msg) => {
       if (!container.infinite) msg.reply(`${role}`).then((msg) => msg.delete());
     });
@@ -30,6 +31,7 @@ export class ContainerManager extends InteractiveElementManager {
 
   protected static async Use(i: ButtonInteraction, action: string, id: string) {
     const container = ContainerManager.data[id] as IContainerData;
+    const actionData = container.actions[action];
 
     const member = await i.guild?.members.fetch(i.member?.user.id as string);
     if (!member) return;
@@ -49,7 +51,7 @@ export class ContainerManager extends InteractiveElementManager {
     }
 
     // validate
-    for await (const [stat, cost] of Object.entries(container.cost)) {
+    for await (const [stat, cost] of Object.entries(actionData.cost)) {
       if ((await StatManager.GetStat(member, stat)) < cost) {
         i.reply({ content: "You can't afford that.", ephemeral: true });
         console.log(`${member.user.tag} can't afford container ${id}`);
@@ -69,17 +71,19 @@ export class ContainerManager extends InteractiveElementManager {
     }
 
     // get loot
-    const loot = container.possibleContents();
-    const embed = new MessageEmbed().setTitle("You obtained").setColor(botColor);
-    for (const [key, value] of Object.entries(loot)) {
-      if (value === 0) continue;
-      const stat = statData[key];
-      embed.addField(stat.name, `${stat.icon} x **${value}**`, true);
-      await StatManager.AdjustStat(member, key, value);
+    const loot = actionData.effect(i);
+    if (loot) {
+      const embed = new MessageEmbed().setTitle("You obtained").setColor(botColor);
+      for (const [key, value] of Object.entries(loot)) {
+        if (value === 0) continue;
+        const stat = statData[key];
+        embed.addField(stat.name, `${stat.icon} x **${value}**`, true);
+        await StatManager.AdjustStat(member, key, value);
+      }
+      const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
+      i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
+      console.log(`Container (${id}) opened by ${member.displayName}`);
     }
-    const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
-    i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
-    console.log(`Container (${id}) opened by ${member.displayName}`);
   }
 }
 
