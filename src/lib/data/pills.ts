@@ -1,4 +1,5 @@
 import { GuildMember } from "discord.js";
+import { CooldownManager } from "../cooldown";
 import { AdjustMemberStat, GetMemberStat, SetMemberStat } from "../memberStats";
 import { PillEffects } from "../pills";
 import { GetRandomStatName, MemberStats } from "./stats";
@@ -200,7 +201,7 @@ export const pills: Array<Pill> = [
     name: "Addicted",
     icon: "🍺",
     description: "You just can't stop... why not have another?",
-    effect: async (m) => PillEffects.resetCooldown(m),
+    effect: async (m) => CooldownManager.ResetCooldown("pill", m),
   },
   {
     name: "Friends Till The End!",
@@ -242,7 +243,7 @@ export const pills: Array<Pill> = [
     name: "Percs",
     icon: "💊",
     description: "You feel like you could use another...",
-    effect: async (m) => PillEffects.resetCooldown(m),
+    effect: async (m) => CooldownManager.ResetCooldown("pill", m),
   },
   {
     name: "Power Pill",
@@ -317,7 +318,7 @@ export const pills: Array<Pill> = [
     name: "Vurp!",
     icon: "😩",
     description: "You feel ready to go again!",
-    effect: async (m) => PillEffects.resetCooldown(m),
+    effect: async (m) => CooldownManager.ResetCooldown("pill", m),
   },
   {
     name: "X-Lax",

@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import { PillEffects } from "../pills";
+import { CooldownManager } from "../cooldown";
 import { giveRole } from "../util";
 
 interface Item {
@@ -50,6 +50,6 @@ export const items: { [key: string]: Item } = {
     color: "#f7bb43",
     cost: 5,
     unique: false,
-    effect: async (member: GuildMember) => PillEffects.resetCooldown(member),
+    effect: async (member: GuildMember) => CooldownManager.ResetCooldown("pill", member),
   },
 };

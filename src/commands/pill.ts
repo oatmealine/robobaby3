@@ -1,16 +1,15 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
 import { botColor } from "../lib/util";
-import { redis } from "../lib/redis";
 import { GetRandomPill } from "../lib/data/pills";
 import { MemberStats } from "../lib/data/stats";
 import { AdjustMemberStat, GetMemberStatsEmbed, StatChange } from "../lib/memberStats";
-import * as dotenv from "dotenv";
-dotenv.config();
+import { CooldownManager } from "../lib/cooldown";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pluralize = require("pluralize");
-const cooldown = 1000 * 60 * 60 * 10;
+
+const pillCd = new CooldownManager("pill", 1000 * 60 * 60 * 10);
 
 module.exports = {
   data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
@@ -19,23 +18,15 @@ module.exports = {
     const isChatChannel = interaction.channel?.id == process.env.CHANNEL_CHAT;
 
     // cooldown
-    const timeKey = `pill:${member.id}`;
-    if ((await redis.exists(timeKey)) && process.env.NODE_ENV !== "development") {
-      const lastUsed = parseInt((await redis.get(timeKey)) || "0");
-      const elapsed = interaction.createdTimestamp - lastUsed;
-      if (elapsed < cooldown) {
-        const minutes = Math.floor((cooldown - elapsed) / 1000 / 60);
-        const hours = Math.floor(minutes / 60);
-        const left = hours > 1 ? `${hours} ${pluralize("hour", hours)}` : `${minutes} ${pluralize("minute", minutes)}`;
-
-        interaction.reply({
-          content: `You can have another one in \`${left}\`.`,
-          ephemeral: true,
-        });
-        return;
-      }
+    const remaining = await pillCd.GetRemainingTime(member);
+    if (remaining > 0) {
+      interaction.reply({
+        content: `You can have another one in **${pillCd.GetTimeString(remaining)}**.`,
+        ephemeral: true,
+      });
+      return;
     }
-    redis.set(timeKey, interaction.createdTimestamp);
+    pillCd.Trigger(member);
 
     // eat pill
     const pill = GetRandomPill();

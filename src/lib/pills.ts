@@ -1,7 +1,4 @@
 import { GuildMember, TextChannel } from "discord.js";
-import { redis } from "./redis";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 export class PillEffects {
   static revealChannel = async (channelId: string, member: GuildMember, duration: number) => {
@@ -48,9 +45,5 @@ export class PillEffects {
         setTimeout(() => member.roles.remove(role).catch(console.log), duration);
       })
       .catch(console.log);
-  };
-
-  static resetCooldown = (member: GuildMember) => {
-    redis.set(`pill:${member.id}`, "0");
   };
 }
