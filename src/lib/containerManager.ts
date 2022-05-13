@@ -10,6 +10,7 @@ export class ContainerManager extends InteractiveElementManager {
 
   static Create(channel: TextChannel, id: string) {
     const container = ContainerManager.data[id] as ContainerData;
+    const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
 
     const hasCost = Object.keys(container.cost).length > 0;
     const costString = hasCost
@@ -21,7 +22,9 @@ export class ContainerManager extends InteractiveElementManager {
     const row = new MessageActionRow().addComponents(
       ContainerManager.CreateButton(id, "open", hasCost ? `${container.buttonText} (${costString})` : container.buttonText, hasCost ? "PRIMARY" : "SUCCESS")
     );
-    channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] });
+    channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] }).then((msg) => {
+      if (!container.infinite) msg.reply(`${role}`).then((msg) => msg.delete());
+    });
     console.log(`Container (${id}) spawned`);
   }
 

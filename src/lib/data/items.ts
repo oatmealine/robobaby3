@@ -52,4 +52,12 @@ export const itemData: { [key: string]: Item } = {
     unique: false,
     effect: async (member: GuildMember) => CooldownManager.ResetCooldown("pill", member),
   },
+  innerEye: {
+    name: "Inner Eye",
+    description: "See chests immediately when they appear.",
+    color: "#dbe7fb",
+    cost: 50,
+    unique: true,
+    effect: async (member: GuildMember) => giveRole(member, "Inner Eye"),
+  },
 };
