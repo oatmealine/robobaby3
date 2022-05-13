@@ -1,5 +1,6 @@
 import { ButtonInteraction, Client, ColorResolvable, GuildMember, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js";
 import { items } from "./data/items";
+import { imgur } from "./imgur";
 import { LogEvent } from "./log";
 import { AdjustMemberStat, GetMemberStat, GetMemberStatsEmbed } from "./memberStats";
 import { redis } from "./redis";
@@ -18,10 +19,15 @@ export const addProduct = async (client: Client, productName: string) => {
 
   const product = items[productName];
 
-  const imageMsg = await channel.send({ files: [`./images/items/${productName}.png`] });
-  const imageUrl = imageMsg.attachments.first()?.url as string;
-  imageMsg.delete();
+  // create thumbnail
+  const tempMsg = await channel.send({ files: [`./images/items/${productName}.png`] });
+  const tempUrl = tempMsg.attachments.first()?.url as string;
+  tempMsg.delete();
 
+  const imageData = await imgur.upload({ image: tempUrl, type: "url" });
+  const imageUrl = imageData.data.link;
+
+  // publish item
   const embed = new MessageEmbed()
     .setTitle(product.name)
     .setDescription(product.description)
