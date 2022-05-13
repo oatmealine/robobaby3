@@ -1,5 +1,5 @@
 import { Message, MessageActionRow, MessageButton, MessageComponentInteraction, MessageEmbed, Permissions, TextChannel, User } from "discord.js";
-import { botColor, delay, getRandomEmoji } from "./util";
+import { botColor, Delay, GetRandomEmoji } from "./util";
 import { LogEvent } from "./log";
 import { formatText } from "lua-fmt";
 
@@ -13,13 +13,13 @@ dotenv.config();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Diff = require("diff");
 
-export const sendMessage = async (location: TextChannel | Message | User, content: string, maxThinkDuration = 0): Promise<Message> => {
-  await delay((Math.random() * maxThinkDuration) / 2 + maxThinkDuration / 2);
+export const SendMessage = async (location: TextChannel | Message | User, content: string, maxThinkDuration = 0): Promise<Message> => {
+  await Delay((Math.random() * maxThinkDuration) / 2 + maxThinkDuration / 2);
 
   if (location instanceof TextChannel) location.sendTyping();
   else if (location instanceof Message) location.channel.sendTyping();
 
-  await delay(Math.random() * 500 + content.length * 15);
+  await Delay(Math.random() * 500 + content.length * 15);
 
   if (location instanceof Message) {
     const msg = await location.reply(content);
@@ -30,21 +30,21 @@ export const sendMessage = async (location: TextChannel | Message | User, conten
   }
 };
 
-export const removeInvites = (message: Message): boolean => {
+export const RemoveInvites = (message: Message): boolean => {
   if (message.member?.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return false;
 
   if (message.content.match(/(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g)) {
     message.delete().catch(console.log);
-    sendMessage(
+    SendMessage(
       message.author,
-      `Don't send invite links to other servers. If you must, send them to the interested parties directly. ${getRandomEmoji(message.guild)}`
+      `Don't send invite links to other servers. If you must, send them to the interested parties directly. ${GetRandomEmoji(message.guild)}`
     ).catch(console.log);
     return true;
   }
   return false;
 };
 
-export const logEdits = (oldMessage: Message, newMessage: Message) => {
+export const LogEdits = (oldMessage: Message, newMessage: Message) => {
   const diff = Diff.diffWords(oldMessage.content.replace(/`/g, ""), newMessage.content.replace(/`/g, ""));
   let output = "";
 
@@ -61,7 +61,7 @@ export const logEdits = (oldMessage: Message, newMessage: Message) => {
 
 const formatDeleteButtonDuration = 1000 * 30;
 
-export const formatLuaCode = async (message: Message): Promise<boolean> => {
+export const FormatLuaCode = async (message: Message): Promise<boolean> => {
   if ((await redis.get(`formattingDisabled:${message.author.id}`)) == "1") return false;
 
   const matches: string[] = [];

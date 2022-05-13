@@ -13,7 +13,7 @@ module.exports = {
     try {
       await command.execute(interaction, interaction.member as GuildMember);
     } catch (error) {
-      await interaction.reply({ content: "`ERROR`", ephemeral: true });
+      interaction.reply({ content: "`ERROR`", ephemeral: true });
       console.error(error);
     }
   },

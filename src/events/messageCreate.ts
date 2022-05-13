@@ -1,10 +1,10 @@
 import { Message } from "discord.js";
-import { reactToMessage } from "../lib/reactions";
-import { formatLuaCode, removeInvites } from "../lib/message";
-import { respondToMessage } from "../lib/responses";
-import { createThreads } from "../lib/threadCreator";
-import { roboChat } from "../lib/roboChat";
-import { checkWatchlist } from "../lib/watchlist";
+import { ReactToMessage } from "../lib/reactions";
+import { FormatLuaCode, RemoveInvites } from "../lib/message";
+import { RespondToMessage } from "../lib/responses";
+import { CreateSpecialThreads } from "../lib/threadCreator";
+import { RoboChat } from "../lib/roboChat";
+import { Watchlist } from "../lib/watchlist";
 
 module.exports = {
   name: "messageCreate",
@@ -12,13 +12,13 @@ module.exports = {
 
   async execute(message: Message) {
     if (message.author.bot) return;
-    if (removeInvites(message)) return;
+    if (RemoveInvites(message)) return;
 
-    reactToMessage(message);
-    respondToMessage(message);
-    roboChat(message);
-    createThreads(message);
-    checkWatchlist(message);
-    formatLuaCode(message);
+    ReactToMessage(message);
+    RespondToMessage(message);
+    RoboChat(message);
+    CreateSpecialThreads(message);
+    FormatLuaCode(message);
+    Watchlist.CheckMessage(message);
   },
 };

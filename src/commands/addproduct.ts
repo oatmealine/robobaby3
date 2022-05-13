@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, TextChannel } from "discord.js";
-import { ItemManager } from "../lib/items";
+import { ItemManager } from "../lib/itemManager";
 import { itemData } from "../lib/data/items";
 
 module.exports = {

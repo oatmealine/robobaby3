@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
-import { sendMessage } from "./message";
-import { delay, getRandomEmoji, removeMarkdown } from "./util";
+import { SendMessage } from "./message";
+import { Delay, GetRandomEmoji, RemoveMarkdown } from "./util";
 import { redis } from "./redis";
 
 import vision from "@google-cloud/vision";
@@ -14,7 +14,7 @@ const cleverbot = new cb({
 
 const defaultResponses = ["i'm robo-baby", "no", "what?", "?", "i don't understand", "ok", "okay", "sure", "nice", "lol", "wow", "lmao", "same", "k", "ty"];
 
-export const roboChat = async (message: Message) => {
+export const RoboChat = async (message: Message) => {
   if (message.channel.id != process.env.CHANNEL_CHAT || !message.mentions.users.has(message.client.user?.id || "")) return;
 
   // format input
@@ -22,10 +22,10 @@ export const roboChat = async (message: Message) => {
   input = input.replace(/<@!?[0-9]+>/g, "");
   if (input.length < 2) input = "🙂";
   input = input.trim();
-  input = removeMarkdown(input);
+  input = RemoveMarkdown(input);
 
   // replace images with text
-  input = await convertImagesToText(input, message);
+  input = await ConvertImagesToText(input, message);
 
   // run cleverbot
   const contextKey = `robochat:context:${message.author.id}`;
@@ -49,26 +49,26 @@ export const roboChat = async (message: Message) => {
   });
 
   // add emojis sometimes
-  if (Math.random() < 0.1) output = `${output} ${getRandomEmoji(message.guild)}`;
+  if (Math.random() < 0.1) output = `${output} ${GetRandomEmoji(message.guild)}`;
 
   // respond
-  sendMessage(message, output, 1500);
+  SendMessage(message, output, 1500);
 };
 
-const convertImagesToText = async (text: string, message: Message) => {
-  await delay(1000);
+const ConvertImagesToText = async (text: string, message: Message) => {
+  await Delay(1000);
   await message.channel.messages
     .fetch(message.id)
     .then(async (msg) => {
       await Promise.all(
         msg.embeds.map(async (embed) => {
-          if (embed.type == "image" && embed.url) {
-            const [result] = await visionClient.labelDetection(embed.url);
+          if (embed.image) {
+            const [result] = await visionClient.labelDetection(embed.image.url);
             const labels: Array<string> = [];
             result.labelAnnotations?.map((label) => labels.push(label.description || ""));
             const description = labels.slice(0, 5).join(", ");
-            text = text.replace(embed.url, description);
-            console.log(`Converted ${embed.url} to "${description}"`);
+            text = text.replace(embed.image.url, description);
+            console.log(`Converted ${embed.image.url} to "${description}"`);
           }
         })
       );

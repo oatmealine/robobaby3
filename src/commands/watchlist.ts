@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { addToWatchlist, getWatchlist, removeFromWatchlist } from "../lib/watchlist";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -31,9 +30,9 @@ module.exports = {
     const subcommand = interaction.options.getSubcommand(true);
 
     // list
-    if (subcommand == "list") {
+    if (subcommand === "list") {
       if (!interaction.guild) return;
-      const list = await getWatchlist(interaction.guild);
+      const list = await this.GetMembers(interaction.guild);
       const embed = new MessageEmbed().setTitle("Watchlist").setDescription(list.length ? list.join("\n") : "No users in the watchlist.");
       interaction.reply({ embeds: [embed] });
       return;
@@ -62,7 +61,7 @@ module.exports = {
     let success = false;
     switch (subcommand) {
       case "add":
-        success = await addToWatchlist(interaction.guild, target.id);
+        success = await this.AddMemberID(interaction.guild, target.id);
         if (success)
           embed.setAuthor({
             name: `${target.displayName} added to watchlist`,
@@ -75,7 +74,7 @@ module.exports = {
           });
         break;
       case "remove":
-        removeFromWatchlist(interaction.guild, target.id);
+        this.RemoveMemberID(interaction.guild, target.id);
         embed.setAuthor({
           name: `${target.displayName} removed from watchlist`,
           iconURL: target.user.displayAvatarURL(),

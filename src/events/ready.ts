@@ -1,36 +1,35 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Collection } from "discord.js";
-import { connectToRedis } from "../lib/redis";
+import { ConnectToRedis } from "../lib/redis";
 import { InitializeContainers } from "../lib/containerManager";
-import { InitializeStats } from "../lib/stats";
-import { InitializeItems } from "../lib/items";
+import { InitializeStats } from "../lib/statManager";
+import { InitializeItems } from "../lib/itemManager";
+import { Watchlist } from "../lib/watchlist";
 import path from "path";
 import fs = require("node:fs");
-
-import * as dotenv from "dotenv";
-dotenv.config();
 
 module.exports = {
   name: "ready",
   once: false,
 
-  execute(client: Client) {
+  async execute(client: Client) {
     if (!client || !client.user || !client.application) return;
 
     client.user.setActivity("The Binding of Isaac: Rebirth", {
       type: "PLAYING",
     });
 
-    loadCommands(client);
-    connectToRedis();
+    LoadCommands(client);
 
+    await ConnectToRedis();
     InitializeStats(client);
-    InitializeContainers(client);
     InitializeItems(client);
+    InitializeContainers(client);
+    Watchlist.Load();
   },
 };
 
-const loadCommands = (client: Client) => {
+const LoadCommands = (client: Client) => {
   client.commands = new Collection();
   const cmdFiles = fs.readdirSync(path.join(__dirname, "../commands")).filter((file: string) => file.endsWith(".js"));
   for (const file of cmdFiles) {

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { StatManager } from "../lib/stats";
-import { MemberStats } from "../lib/data/stats";
+import { StatManager } from "../lib/statManager";
+import { statData } from "../lib/data/stats";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,7 +11,7 @@ module.exports = {
     .addUserOption((option) => option.setName("member").setDescription("Member to set the stats of").setRequired(true))
     .addStringOption((option) => {
       option.setName("stat").setDescription("The stat.").setRequired(true);
-      for (const choice of Object.keys(MemberStats)) option.addChoice(choice, choice);
+      for (const choice of Object.keys(statData)) option.addChoice(choice, choice);
       return option;
     })
     .addNumberOption((option) => option.setName("value").setDescription("The value.").setRequired(true)),

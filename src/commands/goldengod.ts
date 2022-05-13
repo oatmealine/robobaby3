@@ -46,7 +46,7 @@ module.exports = {
     collector?.on("collect", async (i) => {
       const button = new MessageButton().setCustomId("nope").setDisabled(true);
 
-      if (i.customId == "approve") {
+      if (i.customId === "approve") {
         if (role) {
           member.roles.add(role);
           button.setLabel(`${i.user.username} approved the request`);

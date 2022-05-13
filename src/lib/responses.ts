@@ -1,19 +1,16 @@
 import { Message } from "discord.js";
-import { sendMessage } from "./message";
-import { removePunctuation } from "./util";
-import { PhraseIO, responsePhrases } from "./data/phrases";
+import { SendMessage } from "./message";
+import { RemovePunctuation } from "./util";
+import { IPhraseIO, responsePhrases } from "./data/phrases";
 
-import * as dotenv from "dotenv";
-dotenv.config();
+export const RespondToMessage = async (message: Message): Promise<void> => {
+  if (message.channel.type != "GUILD_TEXT" || message.channel.parentId === process.env.CATEGORY_MODDING) return;
 
-export const respondToMessage = async (message: Message): Promise<void> => {
-  if (message.channel.type != "GUILD_TEXT" || message.channel.parentId == process.env.CATEGORY_MODDING) return;
-
-  const text = removePunctuation(` ${message.content.toLowerCase()} `);
-  responsePhrases.forEach(async (pr: PhraseIO) => {
+  const text = RemovePunctuation(` ${message.content.toLowerCase()} `);
+  responsePhrases.forEach(async (pr: IPhraseIO) => {
     pr.input.forEach(async (phrase: string) => {
       if (text.includes(` ${phrase} `)) {
-        sendMessage(message, pr.output[Math.floor(Math.random() * pr.output.length)], 1000).catch(console.log);
+        SendMessage(message, pr.output[Math.floor(Math.random() * pr.output.length)], 1000).catch(console.log);
         return;
       }
     });

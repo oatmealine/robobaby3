@@ -3,7 +3,7 @@ import { itemData } from "./data/items";
 import { imgur } from "./imgur";
 import { InteractiveElementManager } from "./interactiveElement";
 import { LogEvent } from "./log";
-import { StatManager } from "./stats";
+import { StatManager } from "./statManager";
 import { redis } from "./redis";
 
 export class ItemManager extends InteractiveElementManager {
@@ -31,41 +31,41 @@ export class ItemManager extends InteractiveElementManager {
     channel.send({ embeds: [embed], components: [row] });
   }
   protected static async Use(i: ButtonInteraction, action: string, id: string) {
-    const product = itemData[id];
-    if (!product) return;
+    const item = itemData[id];
+    if (!item) return;
 
     const member = i.member as GuildMember;
     const imageFiles = [`./images/items/${id}.png`];
 
     // validate
     const itemsKey = `items:${member.id}`;
-    if (product.unique) {
+    if (item.unique) {
       const memberItems = await redis.lRange(itemsKey, 0, -1);
       if (memberItems.includes(id)) {
-        i.reply({ content: `You already own **${product.name}**.`, files: imageFiles, ephemeral: true });
-        console.log(`${member.user.tag} already owns ${product.name}`);
+        i.reply({ content: `You already own **${item.name}**.`, files: imageFiles, ephemeral: true });
+        console.log(`${member.user.tag} already owns ${item.name}`);
         return;
       }
     }
     const coins = await StatManager.GetStat(member, "coins");
-    if (coins < product.cost) {
+    if (coins < item.cost) {
       const statsEmbed = await StatManager.GetEmbed(member, ["coins"]);
-      i.reply({ content: `You can't afford **${product.name}**.`, files: imageFiles, embeds: [statsEmbed], ephemeral: true });
-      console.log(`${member.user.tag} can't afford ${product.name}`);
+      i.reply({ content: `You can't afford **${item.name}**.`, files: imageFiles, embeds: [statsEmbed], ephemeral: true });
+      console.log(`${member.user.tag} can't afford item ${item.name}`);
       return;
     }
 
     // complete purchase
-    await StatManager.AdjustStat(member, "coins", -product.cost);
-    await product.effect(member).catch(console.log);
-    if (product.unique) redis.rPush(itemsKey, id);
+    await StatManager.AdjustStat(member, "coins", -item.cost);
+    await item.effect(member).catch(console.log);
+    if (item.unique) redis.rPush(itemsKey, id);
 
     // response
     const statsEmbed = await StatManager.GetEmbed(member, ["coins"]);
     i.reply({ content: "Purchased!", embeds: [statsEmbed], files: imageFiles, ephemeral: true });
 
-    LogEvent(`${member} purchased ${product.name}`);
-    console.log(`${member.user.tag} purchased ${product.name}`);
+    LogEvent(`${member} purchased ${item.name}`);
+    console.log(`${member.user.tag} purchased ${item.name}`);
   }
 
   static async GetMemberItems(member: GuildMember) {

@@ -28,7 +28,7 @@ module.exports = {
         // collect responses
         if (!msg) return;
         const filter = (message: Message) => {
-          return message.reference?.messageId == msg.id;
+          return message.reference?.messageId === msg.id;
         };
         msg?.channel
           .awaitMessages({

@@ -1,7 +1,7 @@
 import { GuildMember, TextChannel } from "discord.js";
 
 export class PillEffects {
-  static revealChannel = async (channelId: string, member: GuildMember, duration: number) => {
+  static RevealChannel = async (channelId: string, member: GuildMember, duration: number) => {
     const channel = member.guild.channels.cache.get(channelId) as TextChannel;
     if (!channel) return;
     await channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: true }).catch(console.log);
@@ -13,7 +13,7 @@ export class PillEffects {
     }, duration);
   };
 
-  static hideAllChannels = (member: GuildMember, duration: number) => {
+  static HideAllChannels = (member: GuildMember, duration: number) => {
     setTimeout(async () => {
       member.guild.channels.cache.each(async (c) => {
         if (c.type === "GUILD_TEXT" || c.type === "GUILD_VOICE") c.permissionOverwrites.create(member, { VIEW_CHANNEL: false }).catch(console.log);
@@ -26,7 +26,7 @@ export class PillEffects {
     }, duration + 2000);
   };
 
-  static setNickname = (member: GuildMember, nick: string, duration: number) => {
+  static SetNickname = (member: GuildMember, nick: string, duration: number) => {
     member
       .setNickname(nick)
       .then(() => {
@@ -35,7 +35,7 @@ export class PillEffects {
       .catch(console.log);
   };
 
-  static giveRole = (member: GuildMember, roleName: string, duration: number) => {
+  static GiveRole = (member: GuildMember, roleName: string, duration: number) => {
     const role = member.guild.roles.cache.find((r) => r.name === roleName);
     if (!role) return;
 

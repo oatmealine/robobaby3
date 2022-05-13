@@ -1,4 +1,4 @@
-interface MemberStat {
+interface IStatData {
   name: string;
   icon: string;
   minValue: number;
@@ -7,7 +7,7 @@ interface MemberStat {
   isBasic?: boolean;
 }
 
-export const MemberStats: { [key: string]: MemberStat } = {
+export const statData: { [key: string]: IStatData } = {
   health: {
     name: "Health",
     icon: "❤️",
@@ -146,10 +146,10 @@ export const MemberStats: { [key: string]: MemberStat } = {
 };
 
 export const GetRandomStatName = (basicOnly?: boolean): string => {
-  let stat = Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
+  let stat = Object.keys(statData)[Math.floor(Math.random() * Object.keys(statData).length)];
   if (basicOnly) {
-    do stat = Object.keys(MemberStats)[Math.floor(Math.random() * Object.keys(MemberStats).length)];
-    while (!MemberStats[stat].isBasic);
+    do stat = Object.keys(statData)[Math.floor(Math.random() * Object.keys(statData).length)];
+    while (!statData[stat].isBasic);
   }
   return stat;
 };

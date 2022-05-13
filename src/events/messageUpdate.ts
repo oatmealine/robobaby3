@@ -1,8 +1,5 @@
 import { Message } from "discord.js";
-import { logEdits, removeInvites } from "../lib/message";
-
-import * as dotenv from "dotenv";
-dotenv.config();
+import { LogEdits, RemoveInvites } from "../lib/message";
 
 module.exports = {
   name: "messageUpdate",
@@ -10,8 +7,8 @@ module.exports = {
 
   async execute(oldMessage: Message, newMessage: Message) {
     if (newMessage.author.bot || newMessage.member?.roles.cache.has(process.env.ROLE_MOD as string)) return;
-    if (removeInvites(newMessage)) return;
+    if (RemoveInvites(newMessage)) return;
 
-    logEdits(oldMessage, newMessage);
+    LogEdits(oldMessage, newMessage);
   },
 };

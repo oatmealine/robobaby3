@@ -1,17 +1,11 @@
 import { createClient, SocketClosedUnexpectedlyError } from "redis";
-import { loadWatchlist } from "./watchlist";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 export const redis = createClient({ url: process.env.REDISTOGO_URL });
 
-export const connectToRedis = () => {
+export const ConnectToRedis = () => {
   redis
     .connect()
-    .then(() => {
-      loadWatchlist();
-      console.log("Connected to redis database");
-    })
+    .then(() => console.log("Connected to redis database"))
     .catch(console.log);
 
   redis.on("error", (err) => {

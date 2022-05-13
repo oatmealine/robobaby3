@@ -1,10 +1,10 @@
-export interface PhraseIO {
+export interface IPhraseIO {
   input: string[];
   output: string[];
   chance?: number;
 }
 
-export const reactionPhrases: Array<PhraseIO> = [
+export const reactionPhrases: Array<IPhraseIO> = [
   {
     input: ["robobaby", "robo-baby"],
     output: ["😉", "😍", "😘", "😜", "😝", "😎", "😏", "😒", "😓", "😔", "😖", "😞", "😣", "😢", "😭", "😨", "😩", "😫", "😬", "😰", "😱", "😲", "😳", "😶"],
@@ -15,7 +15,7 @@ export const reactionPhrases: Array<PhraseIO> = [
   { input: ["should i", "am i", "can i", "what do you think"], output: ["👍", "👎"], chance: 0.75 },
 ];
 
-export const responsePhrases: Array<PhraseIO> = [
+export const responsePhrases: Array<IPhraseIO> = [
   {
     input: ["crab dancing to chiptune"],
     output: ["https://youtu.be/j_d_4CnuqZQ"],

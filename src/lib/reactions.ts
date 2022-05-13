@@ -1,21 +1,21 @@
 import { Message } from "discord.js";
-import { PhraseIO, reactionPhrases } from "./data/phrases";
-import { delay, getRandomEmoji, removePunctuation } from "./util";
+import { IPhraseIO, reactionPhrases } from "./data/phrases";
+import { Delay, GetRandomEmoji, RemovePunctuation } from "./util";
 
-export const reactToMessage = async (message: Message): Promise<void> => {
-  if (message.channel.type != "GUILD_TEXT" || message.channel.parentId == process.env.CATEGORY_MODDING) return;
+export const ReactToMessage = async (message: Message): Promise<void> => {
+  if (message.channel.type != "GUILD_TEXT" || message.channel.parentId === process.env.CATEGORY_MODDING) return;
 
-  const text = removePunctuation(` ${message.cleanContent.toLowerCase()} `);
-  reactionPhrases.forEach((pr: PhraseIO) => {
+  const text = RemovePunctuation(` ${message.cleanContent.toLowerCase()} `);
+  reactionPhrases.forEach((pr: IPhraseIO) => {
     if (Math.random() > (pr.chance || 1)) return;
 
     if (pr.input.some((el) => text.includes(` ${el} `))) {
-      delay(Math.random() * 4000 + 1000).then(() => {
+      Delay(Math.random() * 4000 + 1000).then(() => {
         message.react(pr.output[Math.floor(Math.random() * pr.output.length)]);
       });
       return;
     }
   });
 
-  if (Math.random() < 0.002) message.react(getRandomEmoji(message.guild));
+  if (Math.random() < 0.002) message.react(GetRandomEmoji(message.guild));
 };

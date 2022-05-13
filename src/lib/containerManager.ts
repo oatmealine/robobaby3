@@ -1,21 +1,21 @@
 import { ButtonInteraction, Client, Message, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js";
-import { containerData, ContainerData } from "./data/containers";
-import { MemberStats } from "./data/stats";
+import { containerData, IContainerData } from "./data/containers";
+import { statData } from "./data/stats";
 import { InteractiveElementManager } from "./interactiveElement";
-import { StatManager } from "./stats";
+import { StatManager } from "./statManager";
 import { botColor } from "./util";
 
 export class ContainerManager extends InteractiveElementManager {
   protected static elementName = "container";
 
   static Create(channel: TextChannel, id: string) {
-    const container = ContainerManager.data[id] as ContainerData;
+    const container = ContainerManager.data[id] as IContainerData;
     const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
 
     const hasCost = Object.keys(container.cost).length > 0;
     const costString = hasCost
       ? Object.keys(container.cost)
-          .map((stat) => MemberStats[stat].icon)
+          .map((stat) => statData[stat].icon)
           .join("")
       : "";
 
@@ -29,7 +29,7 @@ export class ContainerManager extends InteractiveElementManager {
   }
 
   protected static async Use(i: ButtonInteraction, action: string, id: string) {
-    const container = ContainerManager.data[id] as ContainerData;
+    const container = ContainerManager.data[id] as IContainerData;
 
     const member = await i.guild?.members.fetch(i.member?.user.id as string);
     if (!member) return;
@@ -52,6 +52,7 @@ export class ContainerManager extends InteractiveElementManager {
     for await (const [stat, cost] of Object.entries(container.cost)) {
       if ((await StatManager.GetStat(member, stat)) < cost) {
         i.reply({ content: "You can't afford that.", ephemeral: true });
+        console.log(`${member.user.tag} can't afford container ${id}`);
         return;
       }
       StatManager.AdjustStat(member, stat, -cost);
@@ -72,7 +73,7 @@ export class ContainerManager extends InteractiveElementManager {
     const embed = new MessageEmbed().setTitle("You obtained").setColor(botColor);
     for (const [key, value] of Object.entries(loot)) {
       if (value === 0) continue;
-      const stat = MemberStats[key];
+      const stat = statData[key];
       embed.addField(stat.name, `${stat.icon} x **${value}**`, true);
       await StatManager.AdjustStat(member, key, value);
     }

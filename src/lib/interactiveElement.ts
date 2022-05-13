@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ButtonInteraction, Client, MessageButton, MessageButtonStyleResolvable, TextChannel } from "discord.js";
-interface ElementData {
+interface IElementData {
   [key: string]: unknown;
 }
 
 export abstract class InteractiveElementManager {
   private static channels: string[] = [];
-  protected static data: ElementData = {};
+  protected static data: IElementData = {};
   protected static elementName = "";
 
-  static Initialize(client: Client, data: ElementData, validChannels: string[]) {
+  static Initialize(client: Client, data: IElementData, validChannels: string[]) {
     this.data = data;
     this.channels = validChannels;
     this.CreateButtonCollectors(client, validChannels);

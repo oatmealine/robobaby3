@@ -60,7 +60,7 @@ module.exports = {
     console.log(`Poll started by ${member.displayName}: ${title}`);
 
     // countdown
-    if (message.type == "APPLICATION_COMMAND") {
+    if (message.type === "APPLICATION_COMMAND") {
       let minLeft = duration;
       const ticker = setInterval(() => {
         minLeft--;
@@ -80,7 +80,7 @@ module.exports = {
 
     // collect results
     const collector = interaction.channel?.createMessageComponentCollector({
-      filter: (i) => i.message.id == message.id,
+      filter: (i) => i.message.id === message.id,
       time: duration * 1000 * 60,
     });
 

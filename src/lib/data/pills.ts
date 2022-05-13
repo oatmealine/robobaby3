@@ -1,20 +1,20 @@
 import { GuildMember } from "discord.js";
 import { CooldownManager } from "../cooldown";
-import { PillEffects } from "../pills";
-import { StatManager } from "../stats";
-import { GetRandomStatName, MemberStats } from "./stats";
+import { PillEffects } from "../pillEffects";
+import { StatManager } from "../statManager";
+import { GetRandomStatName, statData } from "./stats";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const tinytext = require("tiny-text");
 
-interface Pill {
+interface IPillData {
   name: string;
   icon: string;
   description?: string;
   effect?: (member: GuildMember) => Promise<unknown>;
 }
 
-export const pills: Array<Pill> = [
+export const pillData: Array<IPillData> = [
   {
     name: "48 Hour Energy",
     icon: "🔋",
@@ -23,13 +23,13 @@ export const pills: Array<Pill> = [
     name: "Amnesia",
     icon: "❓",
     description: "You find yourself in an unfamiliar place...",
-    effect: async (m) => PillEffects.hideAllChannels(m, 1000 * 15),
+    effect: async (m) => PillEffects.HideAllChannels(m, 1000 * 15),
   },
   {
     name: "Bad Gas",
     icon: "💨",
     description: "You feel like you're being avoided...",
-    effect: async (m) => PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.GiveRole(m, "Stinky", 1000 * 60 * 30),
   },
   {
     name: "Bad Trip",
@@ -64,7 +64,7 @@ export const pills: Array<Pill> = [
     icon: "💩💥",
     description: "That got messy...",
     effect: async (m) => {
-      PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
+      PillEffects.GiveRole(m, "Stinky", 1000 * 60 * 30);
       return await StatManager.AdjustStat(m, "poop", 5);
     },
   },
@@ -72,7 +72,7 @@ export const pills: Array<Pill> = [
     name: "Full Health",
     icon: "💖",
     description: "You feel fantastic!",
-    effect: async (m) => await StatManager.SetStat(m, "health", MemberStats["health"].maxValue),
+    effect: async (m) => await StatManager.SetStat(m, "health", statData["health"].maxValue),
   },
   {
     name: "Health Down",
@@ -90,25 +90,25 @@ export const pills: Array<Pill> = [
     name: "Hematemesis",
     icon: "💕",
     description: "You feel empty...",
-    effect: async (m) => await StatManager.SetStat(m, "health", 1 + Math.floor(Math.random() * MemberStats["health"].maxValue)),
+    effect: async (m) => await StatManager.SetStat(m, "health", 1 + Math.floor(Math.random() * statData["health"].maxValue)),
   },
   {
     name: "I Can See Forever",
     icon: "👀",
     description: "You see a strange hole in the wall...",
-    effect: async (m) => PillEffects.revealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 60),
+    effect: async (m) => PillEffects.RevealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 60),
   },
   {
     name: "I Found Pills",
     icon: "🥴",
     description: "Derp!",
-    effect: async (m) => PillEffects.setNickname(m, "🥴", 1000 * 60 * 10),
+    effect: async (m) => PillEffects.SetNickname(m, "🥴", 1000 * 60 * 10),
   },
   {
     name: "Lemon Party",
     icon: "🍋",
     description: "You woke up feeling wet...",
-    effect: async (m) => PillEffects.giveRole(m, "Bedwetter", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.GiveRole(m, "Bedwetter", 1000 * 60 * 30),
   },
   {
     name: "Luck Down",
@@ -132,7 +132,7 @@ export const pills: Array<Pill> = [
     name: "Pheromones",
     icon: "👃",
     description: "You feel seductive...",
-    effect: async (m) => PillEffects.giveRole(m, "Thirsty", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.GiveRole(m, "Thirsty", 1000 * 60 * 30),
   },
   {
     name: "Puberty",
@@ -162,7 +162,7 @@ export const pills: Array<Pill> = [
     name: "R U a Wizard?",
     icon: "🧙‍♂️",
     description: "You feel magical...",
-    effect: async (m) => PillEffects.giveRole(m, "Wizard", 1000 * 60 * 30),
+    effect: async (m) => PillEffects.GiveRole(m, "Wizard", 1000 * 60 * 30),
   },
   {
     name: "Speed Down",
@@ -193,8 +193,8 @@ export const pills: Array<Pill> = [
     icon: "🌟",
     description: "You find yourself in a stra̺̫͢n͖̣̮̪͖̥g̛̣̘e̪ p͉̯l҉͕̻̞̺̙̜̻̀̕ͅà̢̹̞̠c̢̗̻͖̩̀͟͠è̸̛̫͇̝̖̮͈͎̘̠̲͔̕",
     effect: async (m) => {
-      PillEffects.hideAllChannels(m, 1000 * 30);
-      setTimeout(() => PillEffects.revealChannel(process.env.CHANNEL_ERROR as string, m, 1000 * 30), 1000 * 2);
+      PillEffects.HideAllChannels(m, 1000 * 30);
+      setTimeout(() => PillEffects.RevealChannel(process.env.CHANNEL_ERROR as string, m, 1000 * 30), 1000 * 2);
     },
   },
   {
@@ -226,7 +226,7 @@ export const pills: Array<Pill> = [
     icon: "👶",
     description: "You feel emasculated...",
     effect: async (m) => {
-      PillEffects.setNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
+      PillEffects.SetNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
       return await StatManager.AdjustStat(m, "size", -1);
     },
   },
@@ -235,7 +235,7 @@ export const pills: Array<Pill> = [
     icon: "👨",
     description: "You feel great!",
     effect: async (m) => {
-      PillEffects.setNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
+      PillEffects.SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
       return await StatManager.AdjustStat(m, "size", 1);
     },
   },
@@ -249,14 +249,14 @@ export const pills: Array<Pill> = [
     name: "Power Pill",
     icon: "🕹️",
     description: "You feel POWERFUL!",
-    effect: async (m) => PillEffects.setNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10),
+    effect: async (m) => PillEffects.SetNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10),
   },
   {
     name: "Re-Lax",
     icon: "💩",
     description: "You feel queasy...",
     effect: async (m) => {
-      PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
+      PillEffects.GiveRole(m, "Stinky", 1000 * 60 * 30);
       return await StatManager.AdjustStat(m, "poop", 5);
     },
   },
@@ -264,15 +264,15 @@ export const pills: Array<Pill> = [
     name: "Retro Vision",
     icon: "👾",
     description: "You feel nostalgic...",
-    effect: async (m) => PillEffects.revealChannel(process.env.CHANNEL_LEGACY as string, m, 1000 * 60 * 5),
+    effect: async (m) => PillEffects.RevealChannel(process.env.CHANNEL_LEGACY as string, m, 1000 * 60 * 5),
   },
   {
     name: "???",
     icon: "🌽",
     description: "Where'd you go?",
     effect: async (m) => {
-      PillEffects.hideAllChannels(m, 1000 * 30);
-      setTimeout(() => PillEffects.revealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
+      PillEffects.HideAllChannels(m, 1000 * 30);
+      setTimeout(() => PillEffects.RevealChannel(process.env.CHANNEL_SECRET as string, m, 1000 * 30), 1000 * 2);
     },
   },
   {
@@ -325,7 +325,7 @@ export const pills: Array<Pill> = [
     icon: "💩",
     description: "You feel like using the bathroom...",
     effect: async (m) => {
-      PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
+      PillEffects.GiveRole(m, "Stinky", 1000 * 60 * 30);
       return await StatManager.AdjustStat(m, "poop", 5);
     },
   },
@@ -361,6 +361,6 @@ export const pills: Array<Pill> = [
   },
 ];
 
-export const GetRandomPill = (): Pill => {
-  return pills[Math.floor(Math.random() * pills.length)];
+export const GetRandomPill = (): IPillData => {
+  return pillData[Math.floor(Math.random() * pillData.length)];
 };

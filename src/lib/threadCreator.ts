@@ -1,31 +1,31 @@
 import { Message, MessageEmbed, StartThreadOptions } from "discord.js";
-import { delay, removeMarkdown, removeUrls } from "./util";
+import { Delay, RemoveMarkdown, RemoveURLs } from "./util";
 
-export async function createThreads(msg: Message): Promise<void> {
+export async function CreateSpecialThreads(msg: Message): Promise<void> {
   switch (msg.channel.id) {
     case process.env.CHANNEL_RECRUIT:
-      manageRecruit(msg);
+      ManageRecruit(msg);
       break;
     case process.env.CHANNEL_PROMO:
-      managePromo(msg);
+      ManagePromo(msg);
       break;
     case process.env.CHANNEL_RESOURCES:
-      manageResources(msg);
+      ManageResources(msg);
       break;
   }
 }
 
-const managePromo = async (msg: Message): Promise<void> => {
+const ManagePromo = async (msg: Message): Promise<void> => {
   // scanning temp message
   const embed = new MessageEmbed().setTitle("Scanning...").setDescription("Hang on a sec...");
   msg
     .reply({ embeds: [embed] })
     .then(async (reply: Message) => {
-      await delay(4000);
+      await Delay(4000);
       reply.delete();
     })
     .catch(console.log);
-  await delay(4000);
+  await Delay(4000);
 
   // analyze
   msg.channel.messages
@@ -49,7 +49,7 @@ const managePromo = async (msg: Message): Promise<void> => {
         await message
           .reply("Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**.")
           .then((reply: Message) => {
-            return delay(10000).then(() => {
+            return Delay(10000).then(() => {
               message.delete();
               reply.delete();
             });
@@ -60,28 +60,28 @@ const managePromo = async (msg: Message): Promise<void> => {
     .catch(console.log);
 };
 
-const manageResources = async (msg: Message): Promise<void> => {
-  if (msg.embeds.length == 0 && !msg.content.includes("```") && !msg.content.match(/https?:\/\//)) return;
+const ManageResources = async (msg: Message): Promise<void> => {
+  if (msg.embeds.length === 0 && !msg.content.includes("```") && !msg.content.match(/https?:\/\//)) return;
 
   let title = msg.cleanContent;
   title = title.split("\n")[0];
   title = title.replace(/```(.|\n)*?```/g, "");
   title = title.replace(/\s+/g, " ");
-  title = removeUrls(title);
+  title = RemoveURLs(title);
   title.trim();
-  if (title.length == 0 || title.length > 100) title = `${msg.author.username}'s resource`;
-  title = removeMarkdown(title);
+  if (title.length === 0 || title.length > 100) title = `${msg.author.username}'s resource`;
+  title = RemoveMarkdown(title);
 
   msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
   console.log(`${msg.author} started resources thread ${title}`);
 };
 
-const manageRecruit = async (msg: Message): Promise<void> => {
+const ManageRecruit = async (msg: Message): Promise<void> => {
   let title: string = msg.cleanContent;
   title = title.split("\n")[0];
-  title = removeUrls(title);
-  title = removeMarkdown(title);
-  if (title.length == 0 || title.length > 100) title = `${msg.author.username}'s recruitment thread`;
+  title = RemoveURLs(title);
+  title = RemoveMarkdown(title);
+  if (title.length === 0 || title.length > 100) title = `${msg.author.username}'s recruitment thread`;
 
   msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
   console.log(`${msg.author} started recruit thread ${title}`);

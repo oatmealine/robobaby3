@@ -1,6 +1,4 @@
 import { TextChannel, VoiceState } from "discord.js";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 module.exports = {
   name: "voiceStateUpdate",

@@ -1,20 +1,20 @@
 import { CooldownManager } from "../cooldown";
 
-export interface ContainerData {
-  possibleContents: () => ContainerLoot;
+export interface IContainerData {
+  possibleContents: () => IContainerLoot;
   cost: { [key: string]: number };
   cooldown?: CooldownManager;
   buttonText: string;
   infinite?: boolean;
 }
 
-interface ContainerLoot {
+interface IContainerLoot {
   coins?: number;
   bombs?: number;
   keys?: number;
 }
 
-export const containerData: { [key: string]: ContainerData } = {
+export const containerData: { [key: string]: IContainerData } = {
   common: {
     possibleContents: () => {
       return { coins: Math.ceil(Math.random() * 3), bombs: Math.round(Math.random() * 0.75), keys: Math.round(Math.random() * 0.75) };

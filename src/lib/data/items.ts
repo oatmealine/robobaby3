@@ -1,8 +1,8 @@
 import { GuildMember } from "discord.js";
 import { CooldownManager } from "../cooldown";
-import { giveRole } from "../util";
+import { GiveRole } from "../util";
 
-interface Item {
+interface IItemData {
   name: string;
   description: string;
   color: string;
@@ -11,14 +11,14 @@ interface Item {
   effect: (member: GuildMember) => Promise<unknown>;
 }
 
-export const itemData: { [key: string]: Item } = {
+export const itemData: { [key: string]: IItemData } = {
   spelunker: {
     name: "Spelunker Hat",
     description: "See through doors.",
     color: "#d4ffb5",
     cost: 150,
     unique: true,
-    effect: async (member: GuildMember) => giveRole(member, "Spelunker"),
+    effect: async (member: GuildMember) => GiveRole(member, "Spelunker"),
   },
   undefined: {
     name: "Undefined",
@@ -26,7 +26,7 @@ export const itemData: { [key: string]: Item } = {
     color: "#cb0000",
     cost: 200,
     unique: true,
-    effect: async (member: GuildMember) => giveRole(member, "Error"),
+    effect: async (member: GuildMember) => GiveRole(member, "Error"),
   },
   midas: {
     name: "Midas Touch",
@@ -34,7 +34,7 @@ export const itemData: { [key: string]: Item } = {
     color: "#d7a237",
     cost: 250,
     unique: true,
-    effect: async (member: GuildMember) => giveRole(member, "Golden God"),
+    effect: async (member: GuildMember) => GiveRole(member, "Golden God"),
   },
   godhead: {
     name: "Godhead",
@@ -42,7 +42,7 @@ export const itemData: { [key: string]: Item } = {
     color: "#bbbbbb",
     cost: 350,
     unique: true,
-    effect: async (member: GuildMember) => giveRole(member, "Godhead"),
+    effect: async (member: GuildMember) => GiveRole(member, "Godhead"),
   },
   pillBottle: {
     name: "Mom's Bottle of Pills",
@@ -58,6 +58,6 @@ export const itemData: { [key: string]: Item } = {
     color: "#dbe7fb",
     cost: 50,
     unique: true,
-    effect: async (member: GuildMember) => giveRole(member, "Inner Eye"),
+    effect: async (member: GuildMember) => GiveRole(member, "Inner Eye"),
   },
 };
