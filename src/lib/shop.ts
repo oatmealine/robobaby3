@@ -44,11 +44,13 @@ const buyProduct = async (interaction: ButtonInteraction) => {
 
   // validate
   const itemsKey = `items:${member.id}`;
-  const memberItems = await redis.lRange(itemsKey, 0, -1);
-  if (memberItems.includes(productId)) {
-    interaction.reply({ content: `You already own **${product.name}**.`, files: imageFiles, ephemeral: true });
-    console.log(`${member.user.tag} already owns ${product.name}`);
-    return;
+  if (product.unique) {
+    const memberItems = await redis.lRange(itemsKey, 0, -1);
+    if (memberItems.includes(productId)) {
+      interaction.reply({ content: `You already own **${product.name}**.`, files: imageFiles, ephemeral: true });
+      console.log(`${member.user.tag} already owns ${product.name}`);
+      return;
+    }
   }
   const coins = await GetMemberStat(member, "coins");
   if (coins < product.cost) {
@@ -61,7 +63,7 @@ const buyProduct = async (interaction: ButtonInteraction) => {
   // complete purchase
   await AdjustMemberStat(member, "coins", -product.cost);
   await product.effect(member).catch(console.log);
-  redis.rPush(itemsKey, productId);
+  if (product.unique) redis.rPush(itemsKey, productId);
 
   // response
   const statsEmbed = await GetMemberStatsEmbed(member, ["coins"]);
