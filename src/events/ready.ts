@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Collection } from "discord.js";
 import { connectToRedis } from "../lib/redis";
-import { InitializeChests } from "../lib/chest";
+import { InitializeContainers } from "../lib/containerManager";
 import { InitializeStats } from "../lib/stats";
 import { InitializeItems } from "../lib/items";
 import path from "path";
@@ -25,7 +25,7 @@ module.exports = {
     connectToRedis();
 
     InitializeStats(client);
-    InitializeChests(client);
+    InitializeContainers(client);
     InitializeItems(client);
   },
 };
