@@ -3,11 +3,8 @@ import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, Messa
 import { botColor } from "../lib/util";
 import { GetRandomPill } from "../lib/data/pills";
 import { MemberStats } from "../lib/data/stats";
-import { AdjustMemberStat, GetMemberStatsEmbed, StatChange } from "../lib/memberStats";
 import { CooldownManager } from "../lib/cooldown";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pluralize = require("pluralize");
+import { StatChange, StatManager } from "../lib/stats";
 
 const pillCd = new CooldownManager("pill", 1000 * 60 * 60 * 10);
 
@@ -35,7 +32,7 @@ module.exports = {
       const change = await pill.effect(member);
       if (Array.isArray(change)) affectedStats = change;
     }
-    await AdjustMemberStat(member, "pills", 1);
+    await StatManager.AdjustStat(member, "pills", 1);
 
     // pill embed
     const title = `${pill.icon} » ${pill.name}`;
@@ -45,11 +42,11 @@ module.exports = {
     const pillEmbed = new MessageEmbed().setTitle(title).setDescription(desc).setColor(botColor);
 
     // stats button
-    const statsEmbed = await GetMemberStatsEmbed(member);
+    const statsEmbed = await StatManager.GetEmbed(member);
     const row = new MessageActionRow();
 
     if (isChatChannel) {
-      const button = new MessageButton().setCustomId(member.id).setLabel(`View ${member.displayName}'s stats`).setStyle("SECONDARY");
+      const button = StatManager.CreateButton(member.id, "view", `View ${member.displayName}'s stats`, "SECONDARY");
       row.addComponents(button);
     }
 

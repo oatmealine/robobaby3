@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
-import { items } from "../lib/data/items";
-import { addProduct } from "../lib/shop";
+import { CommandInteraction, TextChannel } from "discord.js";
+import { ItemManager } from "../lib/items";
+import { itemData } from "../lib/data/items";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,14 +10,15 @@ module.exports = {
     .setDefaultPermission(false)
     .addStringOption((option) => {
       option.setName("product").setDescription("The product to add.").setRequired(true);
-      for (const choice of Object.keys(items)) option.addChoice(choice, choice);
+      for (const choice of Object.keys(itemData)) option.addChoice(choice, choice);
       return option;
     }),
 
   async execute(interaction: CommandInteraction) {
     const product = interaction.options.getString("product") as string;
+    const channel = interaction.client.channels.cache.get(process.env.CHANNEL_SHOP as string) as TextChannel;
 
-    addProduct(interaction.client, product);
+    ItemManager.Create(channel, product);
     interaction.reply({ content: "Added.", ephemeral: true });
   },
 };

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, TextChannel } from "discord.js";
+import { ChestManager } from "../lib/chest";
 import { chests } from "../lib/data/chests";
-import { spawnChest } from "../lib/chest";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,7 +19,7 @@ module.exports = {
     const type = interaction.options.getString("type") as string;
     const channel = interaction.options.getChannel("channel") as TextChannel;
 
-    spawnChest(interaction.client, type, channel);
+    ChestManager.Create(channel, type);
     interaction.reply({ content: "Spawned a chest.", ephemeral: true });
   },
 };

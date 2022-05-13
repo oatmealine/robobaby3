@@ -1,7 +1,7 @@
 import { GuildMember } from "discord.js";
 import { CooldownManager } from "../cooldown";
-import { AdjustMemberStat, GetMemberStat, SetMemberStat } from "../memberStats";
 import { PillEffects } from "../pills";
+import { StatManager } from "../stats";
 import { GetRandomStatName, MemberStats } from "./stats";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -35,23 +35,23 @@ export const pills: Array<Pill> = [
     name: "Bad Trip",
     icon: "😈",
     description: "You don't feel so good...",
-    effect: async (m) => await AdjustMemberStat(m, "health", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "health", -1),
   },
   {
     name: "Balls of Steel",
     icon: "💙",
     description: "Extra protection!",
-    effect: async (m) => await AdjustMemberStat(m, "health", 2),
+    effect: async (m) => await StatManager.AdjustStat(m, "health", 2),
   },
   {
     name: "Bombs Are Key",
     icon: "💣🔑",
     description: "Extra protection!",
     effect: async (m) => {
-      const bombs = await GetMemberStat(m, "bombs");
-      const keys = await GetMemberStat(m, "keys");
-      await SetMemberStat(m, "bombs", keys);
-      await SetMemberStat(m, "keys", bombs);
+      const bombs = await StatManager.GetStat(m, "bombs");
+      const keys = await StatManager.GetStat(m, "keys");
+      await StatManager.SetStat(m, "bombs", keys);
+      await StatManager.SetStat(m, "keys", bombs);
 
       return [
         { stat: "bombs", value: bombs < keys ? 1 : -1 },
@@ -65,32 +65,32 @@ export const pills: Array<Pill> = [
     description: "That got messy...",
     effect: async (m) => {
       PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
-      return await AdjustMemberStat(m, "poop", 5);
+      return await StatManager.AdjustStat(m, "poop", 5);
     },
   },
   {
     name: "Full Health",
     icon: "💖",
     description: "You feel fantastic!",
-    effect: async (m) => await SetMemberStat(m, "health", MemberStats["health"].maxValue),
+    effect: async (m) => await StatManager.SetStat(m, "health", MemberStats["health"].maxValue),
   },
   {
     name: "Health Down",
     icon: "❤️⬇️",
     description: "Ouch...",
-    effect: async (m) => await AdjustMemberStat(m, "health", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "health", -1),
   },
   {
     name: "Health Up",
     icon: "❤️⬆️",
     description: "You feel good!",
-    effect: async (m) => await AdjustMemberStat(m, "health", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "health", 1),
   },
   {
     name: "Hematemesis",
     icon: "💕",
     description: "You feel empty...",
-    effect: async (m) => await SetMemberStat(m, "health", 1 + Math.floor(Math.random() * MemberStats["health"].maxValue)),
+    effect: async (m) => await StatManager.SetStat(m, "health", 1 + Math.floor(Math.random() * MemberStats["health"].maxValue)),
   },
   {
     name: "I Can See Forever",
@@ -114,13 +114,13 @@ export const pills: Array<Pill> = [
     name: "Luck Down",
     icon: "🍀⬇️",
     description: "You feel unlucky...",
-    effect: async (m) => await AdjustMemberStat(m, "luck", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "luck", -1),
   },
   {
     name: "Luck Up",
     icon: "🍀⬆️",
     description: "You feel like buying a scratcher!",
-    effect: async (m) => await AdjustMemberStat(m, "luck", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "luck", 1),
   },
   {
     name: "Paralysis",
@@ -138,25 +138,25 @@ export const pills: Array<Pill> = [
     name: "Puberty",
     icon: "👦",
     description: "You feel sticky...",
-    effect: async (m) => await AdjustMemberStat(m, "age", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "age", 1),
   },
   {
     name: "Pretty Fly",
     icon: "🪰",
     description: "You feel protected!",
-    effect: async (m) => await AdjustMemberStat(m, "prettyFlies", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "prettyFlies", 1),
   },
   {
     name: "Range Down",
     icon: "🎯⬇️",
     description: "You can't see very far...",
-    effect: async (m) => await AdjustMemberStat(m, "range", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "range", -1),
   },
   {
     name: "Range Up",
     icon: "🎯⬆️",
     description: "You can see for miles!",
-    effect: async (m) => await AdjustMemberStat(m, "range", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "range", 1),
   },
   {
     name: "R U a Wizard?",
@@ -168,25 +168,25 @@ export const pills: Array<Pill> = [
     name: "Speed Down",
     icon: "👢⬇️",
     description: "You feel slow...",
-    effect: async (m) => await AdjustMemberStat(m, "speed", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "speed", -1),
   },
   {
     name: "Speed Up",
     icon: "👢⬆️",
     description: "You feel lightning quick!",
-    effect: async (m) => await AdjustMemberStat(m, "speed", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "speed", 1),
   },
   {
     name: "Tears Down",
     icon: "😭⬇️",
     description: "You feel happy...",
-    effect: async (m) => await AdjustMemberStat(m, "tears", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "tears", -1),
   },
   {
     name: "Tears Up",
     icon: "😭⬆️",
     description: "You feel sad!",
-    effect: async (m) => await AdjustMemberStat(m, "tears", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "tears", 1),
   },
   {
     name: "Telepills",
@@ -207,19 +207,19 @@ export const pills: Array<Pill> = [
     name: "Friends Till The End!",
     icon: "🙏",
     description: "You feel loved!",
-    effect: async (m) => await AdjustMemberStat(m, "flies", 12),
+    effect: async (m) => await StatManager.AdjustStat(m, "flies", 12),
   },
   {
     name: "Infested!",
     icon: "🕷️",
     description: "You feel terrified!",
-    effect: async (m) => await AdjustMemberStat(m, "spiders", Math.ceil(Math.random() * 8)),
+    effect: async (m) => await StatManager.AdjustStat(m, "spiders", Math.ceil(Math.random() * 8)),
   },
   {
     name: "Infested?",
     icon: "🕸️",
     description: "You feel terrified?",
-    effect: async (m) => await AdjustMemberStat(m, "spiders", Math.ceil(Math.random() * 3)),
+    effect: async (m) => await StatManager.AdjustStat(m, "spiders", Math.ceil(Math.random() * 3)),
   },
   {
     name: "One Makes You Small",
@@ -227,7 +227,7 @@ export const pills: Array<Pill> = [
     description: "You feel emasculated...",
     effect: async (m) => {
       PillEffects.setNickname(m, `${tinytext(m.displayName)}`, 1000 * 60 * 10);
-      return await AdjustMemberStat(m, "size", -1);
+      return await StatManager.AdjustStat(m, "size", -1);
     },
   },
   {
@@ -236,7 +236,7 @@ export const pills: Array<Pill> = [
     description: "You feel great!",
     effect: async (m) => {
       PillEffects.setNickname(m, m.displayName.toUpperCase(), 1000 * 60 * 10);
-      return await AdjustMemberStat(m, "size", 1);
+      return await StatManager.AdjustStat(m, "size", 1);
     },
   },
   {
@@ -257,7 +257,7 @@ export const pills: Array<Pill> = [
     description: "You feel queasy...",
     effect: async (m) => {
       PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
-      return await AdjustMemberStat(m, "poop", 5);
+      return await StatManager.AdjustStat(m, "poop", 5);
     },
   },
   {
@@ -279,19 +279,19 @@ export const pills: Array<Pill> = [
     name: "Feels like I'm walking on sunshine!",
     icon: "🌞",
     description: "You feel AMAZING!",
-    effect: async (m) => await AdjustMemberStat(m, "hype", 2),
+    effect: async (m) => await StatManager.AdjustStat(m, "hype", 2),
   },
   {
     name: "Gulp!",
     icon: "🍸",
     description: "You feel full!",
-    effect: async (m) => await AdjustMemberStat(m, GetRandomStatName(true), 1),
+    effect: async (m) => await StatManager.AdjustStat(m, GetRandomStatName(true), 1),
   },
   {
     name: "Horf!",
     icon: "🧨",
     description: "You feel stronger!",
-    effect: async (m) => await AdjustMemberStat(m, "damage", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "damage", 1),
   },
   {
     name: "I'm Drowsy...",
@@ -299,20 +299,20 @@ export const pills: Array<Pill> = [
     description: "You feel like taking a nap...",
     effect: async (m) => {
       m.timeout(1000 * 30);
-      return await AdjustMemberStat(m, "hype", -1);
+      return await StatManager.AdjustStat(m, "hype", -1);
     },
   },
   {
     name: "I'm Excited!!!",
     icon: "😀",
     description: "You're on top of the freaking world!",
-    effect: async (m) => await AdjustMemberStat(m, "hype", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "hype", 1),
   },
   {
     name: "Something's wrong...",
     icon: "😵‍💫",
     description: "You feel like that color isn't quite right...",
-    effect: async (m) => await AdjustMemberStat(m, "poop", 2),
+    effect: async (m) => await StatManager.AdjustStat(m, "poop", 2),
   },
   {
     name: "Vurp!",
@@ -326,7 +326,7 @@ export const pills: Array<Pill> = [
     description: "You feel like using the bathroom...",
     effect: async (m) => {
       PillEffects.giveRole(m, "Stinky", 1000 * 60 * 30);
-      return await AdjustMemberStat(m, "poop", 5);
+      return await StatManager.AdjustStat(m, "poop", 5);
     },
   },
   {
@@ -339,8 +339,8 @@ export const pills: Array<Pill> = [
       do secondaryStat = GetRandomStatName(true);
       while (primaryStat === secondaryStat);
 
-      AdjustMemberStat(m, primaryStat, 1);
-      await AdjustMemberStat(m, secondaryStat, -1);
+      StatManager.AdjustStat(m, primaryStat, 1);
+      await StatManager.AdjustStat(m, secondaryStat, -1);
       return [
         { stat: primaryStat, value: 1 },
         { stat: secondaryStat, value: -1 },
@@ -351,13 +351,13 @@ export const pills: Array<Pill> = [
     name: "Shot Speed Down",
     icon: "🚿⬇️",
     description: "You feel like your shot speed went down...",
-    effect: async (m) => await AdjustMemberStat(m, "shotSpeed", -1),
+    effect: async (m) => await StatManager.AdjustStat(m, "shotSpeed", -1),
   },
   {
     name: "Shot Speed Up",
     icon: "🚿⬆️",
     description: "You feel like your shot speed went up!",
-    effect: async (m) => await AdjustMemberStat(m, "shotSpeed", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "shotSpeed", 1),
   },
 ];
 

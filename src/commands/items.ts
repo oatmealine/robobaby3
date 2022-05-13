@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import { GetMemberItems } from "../lib/memberStats";
+import { ItemManager } from "../lib/items";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
     const user = interaction.options.getUser("member");
     const target = interaction.guild?.members.cache.get(user?.id || "") || member;
 
-    const items = await GetMemberItems(target);
+    const items = await ItemManager.GetMemberItems(target);
 
     if (items.length === 0) {
       interaction.reply({ content: `${target} has no items.`, ephemeral: true });

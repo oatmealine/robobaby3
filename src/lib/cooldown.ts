@@ -12,6 +12,7 @@ export class CooldownManager {
   }
 
   GetRemainingTime = async (member: GuildMember): Promise<number> => {
+    if (process.env.NODE_ENV === "development") return 0;
     const elapsed = Date.now() - (await this.GetLastUsed(member));
     return this.cooldown - elapsed;
   };

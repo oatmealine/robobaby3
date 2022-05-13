@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Collection } from "discord.js";
 import { connectToRedis } from "../lib/redis";
-import { initializeChestGenerator } from "../lib/chest";
-import { initializeShop } from "../lib/shop";
-import { initializeStats } from "../lib/memberStats";
+import { InitializeChests } from "../lib/chest";
+import { InitializeStats } from "../lib/stats";
+import { InitializeItems } from "../lib/items";
 import path from "path";
 import fs = require("node:fs");
 
@@ -24,9 +24,9 @@ module.exports = {
     loadCommands(client);
     connectToRedis();
 
-    initializeStats(client);
-    initializeChestGenerator(client);
-    initializeShop(client);
+    InitializeStats(client);
+    InitializeChests(client);
+    InitializeItems(client);
   },
 };
 

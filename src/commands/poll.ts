@@ -15,7 +15,6 @@ module.exports = {
     .addNumberOption((option) => option.setName("duration").setDescription("Duration of the poll in minutes (max: 60)").setRequired(true)),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
-    const channel = interaction.channel;
     const votes: { [key: string]: Array<string> } = {};
     const voters: Array<string> = [];
     const title = interaction.options.getString("title") as string;

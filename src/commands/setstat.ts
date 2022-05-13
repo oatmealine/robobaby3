@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { SetMemberStat } from "../lib/memberStats";
+import { StatManager } from "../lib/stats";
 import { MemberStats } from "../lib/data/stats";
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
     const user = interaction.options.getUser("member");
     const target = interaction.guild?.members.cache.get(user?.id || "") || member;
 
-    SetMemberStat(target, stat, interaction.options.getNumber("value") as number);
+    StatManager.SetStat(target, stat, interaction.options.getNumber("value") as number);
     interaction.reply({ content: "Set.", ephemeral: true });
   },
 };

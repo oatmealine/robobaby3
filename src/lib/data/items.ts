@@ -11,7 +11,7 @@ interface Item {
   effect: (member: GuildMember) => Promise<unknown>;
 }
 
-export const items: { [key: string]: Item } = {
+export const itemData: { [key: string]: Item } = {
   spelunker: {
     name: "Spelunker Hat",
     description: "See through doors.",

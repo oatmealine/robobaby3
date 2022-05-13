@@ -1,15 +1,15 @@
 import { CooldownManager } from "../cooldown";
 
+export interface ChestData {
+  possibleContents: () => ChestLoot;
+  cost: { [key: string]: number };
+  cooldown?: CooldownManager;
+}
+
 interface ChestLoot {
   coins?: number;
   bombs?: number;
   keys?: number;
-}
-
-interface ChestData {
-  possibleContents: () => ChestLoot;
-  cost: { [key: string]: number };
-  cooldown?: CooldownManager;
 }
 
 export const chests: { [key: string]: ChestData } = {

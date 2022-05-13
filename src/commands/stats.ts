@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember } from "discord.js";
-import { GetMemberStatsEmbed } from "../lib/memberStats";
+import { StatManager } from "../lib/stats";
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
     const user = interaction.options.getUser("member");
     const target = interaction.guild?.members.cache.get(user?.id || "") || member;
 
-    const embed = await GetMemberStatsEmbed(target);
+    const embed = await StatManager.GetEmbed(target);
     interaction.reply({ embeds: [embed], ephemeral: true });
     console.log(`${member.user.tag} viewed ${target.user.tag}'s stats`);
   },
