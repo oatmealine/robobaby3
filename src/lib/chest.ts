@@ -4,16 +4,21 @@ import { MemberStats } from "./data/stats";
 import { AdjustMemberStat, GetMemberStat, GetMemberStatsEmbed } from "./memberStats";
 import { botColor } from "./util";
 
-const chestChannels = [process.env.CHANNEL_CHAT as string, process.env.CHANNEL_SECRET as string, process.env.CHANNEL_ERROR as string];
+const chestChannels = [
+  process.env.CHANNEL_CHAT as string,
+  process.env.CHANNEL_CHESTS as string,
+  process.env.CHANNEL_SECRET as string,
+  process.env.CHANNEL_ERROR as string,
+];
 
 export const initializeChestGenerator = (client: Client) => {
-  const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
+  const channel = client.channels.cache.get(process.env.CHANNEL_CHESTS as string) as TextChannel;
   setInterval(() => {
-    if (Math.random() < 0.04) {
-      if (Math.random() > 0.3) spawnChest(client, "common", channel);
+    if (Math.random() < 0.01) {
+      if (Math.random() > 0.2) spawnChest(client, "common", channel);
       else spawnChest(client, Math.random() < 0.5 ? "gold" : "stone", channel);
     }
-  }, 1000 * 60 * 9);
+  }, 1000 * 60);
 
   for (const channelId of chestChannels) createChestButtonCollector(client, channelId);
 };
