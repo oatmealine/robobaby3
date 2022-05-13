@@ -76,9 +76,9 @@ const openChest = async (i: ButtonInteraction, chestType: string) => {
     if (value === 0) continue;
     const stat = MemberStats[key];
     embed.addField(stat.name, `${stat.icon} x **${value}**`, true);
-    AdjustMemberStat(member, key, value);
+    await AdjustMemberStat(member, key, value);
   }
-  const statsEmbed = await GetMemberStatsEmbed(member);
+  const statsEmbed = await GetMemberStatsEmbed(member, ["coins", "bombs", "keys"]);
   i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
   console.log(`Chest (${chestType}) opened by ${member.displayName}`);
 };

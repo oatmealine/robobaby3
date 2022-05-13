@@ -35,13 +35,20 @@ export const AdjustMemberStat = async (member: GuildMember, stat: string, amount
   return value != origValue ? [{ stat: stat, value: amount }] : [];
 };
 
-export const GetMemberStatsEmbed = async (member: GuildMember): Promise<MessageEmbed> => {
-  const embed = new MessageEmbed().setAuthor({ name: `${member.displayName}'s stats`, iconURL: member.user.displayAvatarURL() }).setColor(member.displayColor);
+export const GetMemberStatsEmbed = async (member: GuildMember, stats?: Array<string>): Promise<MessageEmbed> => {
+  const embed = new MessageEmbed().setAuthor({ name: member.displayName, iconURL: member.user.displayAvatarURL() }).setColor(member.displayColor);
   for await (const [name, statData] of Object.entries(MemberStats)) {
+    if (stats && !stats.includes(name)) continue;
     const stat = await GetMemberStat(member, name);
 
     const statValue = statData.maxValue < 20 ? `${statData.icon} **${stat}** / ${statData.maxValue}` : `${statData.icon} x **${stat}**`;
     embed.addField(statData.name, statValue, true);
   }
   return embed;
+};
+
+export const GetMemberItems = async (member: GuildMember) => {
+  const itemsKey = `items:${member.id}`;
+  const memberItems = await redis.lRange(itemsKey, 0, -1);
+  return memberItems;
 };

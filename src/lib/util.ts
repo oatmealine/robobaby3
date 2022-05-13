@@ -1,4 +1,4 @@
-import { Guild, GuildEmoji } from "discord.js";
+import { Guild, GuildEmoji, GuildMember, Role } from "discord.js";
 
 export const botColor = "#475acf";
 
@@ -27,4 +27,9 @@ export const removeMarkdown = (text: string): string => {
 
 export const removePunctuation = (text: string): string => {
   return text.replace(/[^\w\s']|_/g, "");
+};
+
+export const giveRole = (member: GuildMember, roleName: string): void => {
+  const role = member.guild.roles.cache.find((r) => r.name === roleName) as Role;
+  member.roles.add(role).catch(console.log);
 };
