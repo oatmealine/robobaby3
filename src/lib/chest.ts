@@ -9,7 +9,7 @@ const chestChannels = [process.env.CHANNEL_CHAT as string, process.env.CHANNEL_S
 export const initializeChestGenerator = (client: Client) => {
   const channel = client.channels.cache.get(process.env.CHANNEL_CHAT as string) as TextChannel;
   setInterval(() => {
-    if (Math.random() < 0.02) {
+    if (Math.random() < 0.04) {
       if (Math.random() > 0.3) spawnChest(client, "common", channel);
       else spawnChest(client, Math.random() < 0.5 ? "gold" : "stone", channel);
     }
