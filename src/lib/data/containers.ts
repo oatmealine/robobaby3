@@ -17,7 +17,7 @@ interface IContainerLoot {
 export const containerData: { [key: string]: IContainerData } = {
   common: {
     possibleContents: () => {
-      return { coins: Math.ceil(Math.random() * 3), bombs: Math.round(Math.random() * 0.75), keys: Math.round(Math.random() * 0.75) };
+      return { coins: Math.ceil(Math.random() * 2), bombs: Math.round(Math.random() * 0.7), keys: Math.round(Math.random() * 0.7) };
     },
     cost: {},
     cooldown: new CooldownManager("commonChest", 1000 * 60 * 60 * 4),
@@ -32,14 +32,14 @@ export const containerData: { [key: string]: IContainerData } = {
   },
   stone: {
     possibleContents: () => {
-      return { coins: Math.round(Math.random() * 6 + 4), keys: Math.round(Math.random() * 0.7), bombs: Math.round(Math.random() * 0.7) };
+      return { coins: Math.round(Math.random() * 6 + 4), keys: Math.round(Math.random() * 0.65), bombs: Math.round(Math.random() * 0.65) };
     },
     cost: { bombs: 1 },
     buttonText: "Bomb",
   },
   slots: {
     possibleContents: () => {
-      return { coins: Math.ceil(Math.random() * 2), keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
+      return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
     },
     cost: {},
     cooldown: new CooldownManager("slots", 1000 * 60 * 60 * 24),
