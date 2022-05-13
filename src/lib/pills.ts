@@ -12,7 +12,7 @@ export class PillEffects {
       msg.delete().catch(console.log);
     });
     setTimeout(() => {
-      channel.permissionOverwrites.edit(member, { VIEW_CHANNEL: false }).catch(console.log);
+      channel.permissionOverwrites.delete(member).catch(console.log);
     }, duration);
   };
 
