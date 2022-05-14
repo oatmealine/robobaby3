@@ -94,7 +94,7 @@ export class ContainerManager extends InteractiveElementManager {
   static StartGenerator(client: Client) {
     const channel = this.GetChestChannel(client);
     setInterval(() => {
-      if (Math.random() < 0.0075) {
+      if (Math.random() < 0.009) {
         this.CreateBatch(client, Math.ceil(Math.random() * 5));
 
         const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
