@@ -96,7 +96,7 @@ export const InitializeContainers = (client: Client) => {
     process.env.CHANNEL_ARCADE as string,
   ]);
 
-  const channel = client.channels.cache.get(process.env.CHANNEL_containerS as string) as TextChannel;
+  const channel = client.channels.cache.get(process.env.CHANNEL_CHESTS as string) as TextChannel;
   setInterval(() => {
     if (Math.random() < 0.0075) {
       if (Math.random() > 0.15) ContainerManager.Create(channel, "common");
