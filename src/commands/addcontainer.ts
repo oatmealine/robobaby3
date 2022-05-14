@@ -17,9 +17,8 @@ module.exports = {
 
   async execute(interaction: CommandInteraction) {
     const type = interaction.options.getString("type") as string;
-    const channel = interaction.options.getChannel("channel") as TextChannel;
 
-    ContainerManager.Create(channel, type);
+    ContainerManager.Create(interaction.channel as TextChannel, type);
     interaction.reply({ content: "Spawned a container.", ephemeral: true });
   },
 };
