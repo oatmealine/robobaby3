@@ -1,9 +1,10 @@
-import { Message } from "discord.js";
+import { GuildMember, Message } from "discord.js";
 import { SendMessage } from "./message";
 import { Delay, GetRandomEmoji, RemoveMarkdown } from "./util";
 import { redis } from "./redis";
 
 import vision from "@google-cloud/vision";
+import { CooldownManager } from "./cooldown";
 const visionClient = new vision.ImageAnnotatorClient();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -12,6 +13,7 @@ const cleverbot = new cb({
   key: process.env.CLEVERBOT_KEY,
 });
 
+const cd = new CooldownManager("robochat", 1000 * 4);
 const defaultResponses = ["i'm robo-baby", "no", "what?", "?", "i don't understand", "ok", "okay", "sure", "nice", "lol", "wow", "lmao", "same", "k", "ty"];
 
 export const RoboChat = async (message: Message) => {
@@ -28,17 +30,22 @@ export const RoboChat = async (message: Message) => {
   input = await ConvertImagesToText(input, message);
 
   // run cleverbot
-  const contextKey = `robochat:context:${message.author.id}`;
-  const context = (await redis.get(contextKey)) || "";
   let output: string = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 
-  const res = await cleverbot.query(input, { cs: context }).catch(console.log);
-  if (res) {
-    output = res.output.toLowerCase();
-    if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
-    if (output.includes("cleverbot")) output = output.replace("cleverbot", "robo-baby");
+  const cdLeft = await cd.GetRemainingTime(message.member as GuildMember);
+  if (cdLeft <= 0) {
+    const contextKey = `robochat:context:${message.author.id}`;
+    const context = cdLeft > -1000 * 60 * 60 ? (await redis.get(contextKey)) || "" : "";
+    cd.Trigger(message.member as GuildMember);
 
-    redis.set(contextKey, res.cs);
+    const res = await cleverbot.query(input, { cs: context }).catch(console.log);
+    if (res) {
+      output = res.output.toLowerCase();
+      if (output.endsWith(".") && !output.endsWith("...")) output = output.slice(0, -1);
+      if (output.includes("cleverbot")) output = output.replace("cleverbot", "robo-baby");
+
+      redis.set(contextKey, res.cs);
+    }
   }
 
   // duplication punctuation
