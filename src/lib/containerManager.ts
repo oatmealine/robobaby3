@@ -1,16 +1,20 @@
 import { ButtonInteraction, Client, Message, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js";
 import { containerData, IContainerData } from "./data/containers";
 import { statData } from "./data/stats";
-import { InteractiveElementManager } from "./interactiveElement";
+import { IElementData, InteractiveElementManager } from "./interactiveElement";
 import { StatManager } from "./statManager";
 import { botColor } from "./util";
 
 export class ContainerManager extends InteractiveElementManager {
   protected static elementName = "container";
 
+  static Initialize(client: Client, data: IElementData, validChannels: string[]) {
+    super.Initialize(client, data, validChannels);
+    this.StartGenerator(client);
+  }
+
   static Create(channel: TextChannel, id: string) {
     const container = ContainerManager.data[id] as IContainerData;
-    const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
 
     const row = new MessageActionRow();
     for (const [action, data] of Object.entries(container.actions)) {
@@ -23,9 +27,7 @@ export class ContainerManager extends InteractiveElementManager {
 
       row.addComponents(ContainerManager.CreateButton(id, action, hasCost ? `${data.label} (${costString})` : data.label, hasCost ? "PRIMARY" : "SUCCESS"));
     }
-    channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] }).then((msg) => {
-      if (!container.infinite) msg.reply(`${role}`).then((msg) => msg.delete());
-    });
+    channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] });
     console.log(`Container (${id}) spawned`);
   }
 
@@ -85,6 +87,27 @@ export class ContainerManager extends InteractiveElementManager {
       console.log(`Container (${id}) opened by ${member.displayName}`);
     }
   }
+
+  static StartGenerator(client: Client) {
+    const channel = this.GetChestChannel(client);
+    setInterval(() => {
+      if (Math.random() < 0.0075) {
+        this.CreateBatch(client, Math.ceil(Math.random() * 5));
+
+        const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
+        channel.send(`${role}`).then((msg) => msg.delete());
+      }
+    }, 1000 * 1);
+  }
+
+  static CreateBatch(client: Client, amount: number) {
+    for (let i = 0; i < amount; i++) {
+      if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "common");
+      else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "gold" : "stone");
+    }
+  }
+
+  static GetChestChannel = (client: Client) => client.channels.cache.get(process.env.CHANNEL_CHESTS as string) as TextChannel;
 }
 
 export const InitializeContainers = (client: Client) => {
@@ -95,12 +118,4 @@ export const InitializeContainers = (client: Client) => {
     process.env.CHANNEL_ERROR as string,
     process.env.CHANNEL_ARCADE as string,
   ]);
-
-  const channel = client.channels.cache.get(process.env.CHANNEL_CHESTS as string) as TextChannel;
-  setInterval(() => {
-    if (Math.random() < 0.0075) {
-      if (Math.random() > 0.15) ContainerManager.Create(channel, "common");
-      else ContainerManager.Create(channel, Math.random() < 0.5 ? "gold" : "stone");
-    }
-  }, 1000 * 60);
 };
