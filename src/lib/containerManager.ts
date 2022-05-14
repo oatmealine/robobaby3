@@ -53,13 +53,15 @@ export class ContainerManager extends InteractiveElementManager {
     }
 
     // validate
-    for await (const [stat, cost] of Object.entries(actionData.cost)) {
-      if ((await StatManager.GetStat(member, stat)) < cost) {
-        i.reply({ content: "You can't afford that.", ephemeral: true });
-        console.log(`${member.user.tag} can't afford container ${id}`);
-        return;
+    if (actionData.cost) {
+      for await (const [stat, cost] of Object.entries(actionData.cost)) {
+        if ((await StatManager.GetStat(member, stat)) < cost) {
+          i.reply({ content: "You can't afford that.", ephemeral: true });
+          console.log(`${member.user.tag} can't afford container ${id}`);
+          return;
+        }
+        StatManager.AdjustStat(member, stat, -cost);
       }
-      StatManager.AdjustStat(member, stat, -cost);
     }
 
     // open container
