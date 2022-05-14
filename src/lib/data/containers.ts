@@ -21,7 +21,7 @@ export interface ILoot {
 
 export const containerData: { [key: string]: IContainerData } = {
   common: {
-    cooldown: new CooldownManager("commonChest", 1000 * 60 * 60 * 4),
+    cooldown: new CooldownManager("commonChest", 1000 * 60 * 60 * 2),
     actions: {
       open: {
         label: "Open",
