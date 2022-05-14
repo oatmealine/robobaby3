@@ -22,7 +22,7 @@ export class CooldownManager {
   GetTimeString = (time: number): string => {
     const seconds = Math.floor(time / 1000);
     const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
+    const hours = Math.round(minutes / 60);
 
     if (hours > 0) return `${hours} ${pluralize("hour", hours)}`;
     else if (minutes > 0) return `${minutes} ${pluralize("minute", minutes)}`;
