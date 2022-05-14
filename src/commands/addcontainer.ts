@@ -12,8 +12,7 @@ module.exports = {
       option.setName("type").setDescription("The type of container to spawn.").setRequired(true);
       for (const choice of Object.keys(containerData)) option.addChoice(choice, choice);
       return option;
-    })
-    .addChannelOption((option) => option.setName("channel").setDescription("The channel to spawn the container in.").setRequired(true)),
+    }),
 
   async execute(interaction: CommandInteraction) {
     const type = interaction.options.getString("type") as string;

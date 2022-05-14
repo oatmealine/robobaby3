@@ -3,7 +3,7 @@ import { containerData, IContainerData } from "./data/containers";
 import { statData } from "./data/stats";
 import { IElementData, InteractiveElementManager } from "./interactiveElement";
 import { StatManager } from "./statManager";
-import { botColor } from "./util";
+import { botColor, Delay } from "./util";
 
 export class ContainerManager extends InteractiveElementManager {
   protected static elementName = "container";
@@ -102,8 +102,9 @@ export class ContainerManager extends InteractiveElementManager {
     }, 1000 * 60);
   }
 
-  static CreateBatch(client: Client, amount: number) {
+  static async CreateBatch(client: Client, amount: number) {
     for (let i = 0; i < amount; i++) {
+      await Delay(1000);
       if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "common");
       else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "gold" : "stone");
     }
