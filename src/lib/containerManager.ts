@@ -94,21 +94,14 @@ export class ContainerManager extends InteractiveElementManager {
   static StartGenerator(client: Client) {
     const channel = this.GetChestChannel(client);
     setInterval(() => {
-      if (Math.random() < 0.015) {
-        this.CreateBatch(client, Math.ceil(Math.random() * 5));
+      if (Math.random() < 0.02) {
+        if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "common");
+        else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "gold" : "stone");
 
         const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
         channel.send(`${role}`).then((msg) => msg.delete());
       }
     }, 1000 * 60);
-  }
-
-  static async CreateBatch(client: Client, amount: number) {
-    for (let i = 0; i < amount; i++) {
-      await Delay(1000);
-      if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "common");
-      else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "gold" : "stone");
-    }
   }
 
   static GetChestChannel = (client: Client) => client.channels.cache.get(process.env.CHANNEL_CHESTS as string) as TextChannel;
