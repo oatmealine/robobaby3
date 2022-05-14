@@ -50,7 +50,6 @@ export class ContainerManager extends InteractiveElementManager {
         });
         return;
       }
-      container.cooldown?.Trigger(member);
     }
 
     // validate
@@ -74,6 +73,7 @@ export class ContainerManager extends InteractiveElementManager {
       const statsRow = new MessageActionRow().addComponents(StatManager.CreateButton(member.id, "view", `View ${member.displayName}'s stats`, "SECONDARY"));
       msg.edit({ files: [`./images/containers/${id}/open.png`], components: [row, statsRow] }).catch(console.log);
     }
+    container.cooldown?.Trigger(member);
 
     // get loot
     const loot = actionData.effect(i);
