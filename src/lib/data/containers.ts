@@ -62,7 +62,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Use",
         cost: {},
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.55), bombs: Math.round(Math.random() * 0.55) };
+          return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.575), bombs: Math.round(Math.random() * 0.525) };
         },
       },
       blowUp: {
