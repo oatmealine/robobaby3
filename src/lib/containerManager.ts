@@ -97,7 +97,7 @@ export class ContainerManager extends InteractiveElementManager {
         const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
         channel.send(`${role}`).then((msg) => msg.delete());
       }
-    }, 1000 * 1);
+    }, 1000 * 60);
   }
 
   static CreateBatch(client: Client, amount: number) {
