@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ButtonInteraction, Client, MessageButton, MessageButtonStyleResolvable, TextChannel } from "discord.js";
+import weighted from "weighted";
 
 export interface IElementData {
   [key: string]: unknown;
@@ -26,6 +27,11 @@ export abstract class InteractiveElementManager {
         this.Use(i as ButtonInteraction, i.customId.split("-")[1], i.customId.split("-")[2]);
       });
     }
+  }
+
+  static CreateFromPool(channel: TextChannel, pool: { [key: string]: number }) {
+    const item = weighted.select(pool) as string;
+    this.Create(channel, item);
   }
 
   static CreateButton(id: string, action: string, label: string, style: MessageButtonStyleResolvable) {

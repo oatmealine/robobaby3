@@ -1,5 +1,5 @@
 import { ButtonInteraction, Client, Message, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js";
-import { containerData, IContainerData } from "./data/containers";
+import { containerData, containerSpawnPool, IContainerData } from "./data/containers";
 import { statData } from "./data/stats";
 import { IElementData, InteractiveElementManager } from "./interactiveElement";
 import { StatManager } from "./statManager";
@@ -57,7 +57,7 @@ export class ContainerManager extends InteractiveElementManager {
       for await (const [stat, cost] of Object.entries(actionData.cost)) {
         if ((await StatManager.GetStat(member, stat)) < cost) {
           i.reply({ content: "You can't afford that.", ephemeral: true });
-          console.log(`${member.user.tag} can't afford container ${id}`);
+          console.log(`${member.user.tag} can't afford container ${id} (${action})`);
           return;
         }
         StatManager.AdjustStat(member, stat, -cost);
@@ -87,7 +87,7 @@ export class ContainerManager extends InteractiveElementManager {
       }
       const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
       i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
-      console.log(`Container (${id}) opened by ${member.displayName}`);
+      console.log(`Container (${id}) [${action}] opened by ${member.displayName}`);
     }
   }
 
@@ -95,8 +95,7 @@ export class ContainerManager extends InteractiveElementManager {
     const channel = this.GetChestChannel(client);
     setInterval(() => {
       if (Math.random() < 0.025) {
-        if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "gold");
-        else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "common" : "stone");
+        this.CreateFromPool(channel, containerSpawnPool);
 
         const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
         channel.send(`${role}`).then((msg) => msg.delete());

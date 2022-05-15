@@ -19,7 +19,17 @@ export interface ILoot {
   keys?: number;
 }
 
+export const containerSpawnPool = {
+  gold: 24,
+  common: 1,
+  stone: 1,
+  poopNormal: 3,
+  poopGold: 2,
+  poopCorn: 3,
+};
+
 export const containerData: { [key: string]: IContainerData } = {
+  // chests
   common: {
     actions: {
       open: {
@@ -53,6 +63,48 @@ export const containerData: { [key: string]: IContainerData } = {
       },
     },
   },
+  // poops
+  poopNormal: {
+    actions: {
+      destroy: {
+        label: "Destroy",
+        cost: {},
+        effect: () => {
+          return { coins: 1 };
+        },
+      },
+    },
+  },
+  poopGold: {
+    actions: {
+      destroy: {
+        label: "Salvage",
+        cost: {},
+        effect: () => {
+          return { coins: Math.round(Math.random()) * 2 + 2 };
+        },
+      },
+    },
+  },
+  poopCorn: {
+    actions: {
+      destroy: {
+        label: "Destroy",
+        cost: {},
+        effect: () => {
+          return { coins: 1 };
+        },
+      },
+      eat: {
+        label: "Eat",
+        cost: { health: 1 },
+        effect: () => {
+          return { coins: 2 };
+        },
+      },
+    },
+  },
+  // arcades
   slots: {
     infinite: true,
     cooldown: new CooldownManager("slots", 1000 * 60 * 60 * 20),
