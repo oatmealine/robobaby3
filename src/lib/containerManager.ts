@@ -33,8 +33,8 @@ export class ContainerManager extends InteractiveElementManager {
 
   protected static async Use(i: ButtonInteraction, action: string, id: string) {
     const container = ContainerManager.data[id] as IContainerData;
+    if (!container || !container.actions) return;
     const actionData = container.actions[action];
-    if (!actionData || !container) return;
 
     const member = await i.guild?.members.fetch(i.member?.user.id as string);
     if (!member) return;
