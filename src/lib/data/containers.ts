@@ -20,7 +20,7 @@ export interface ILoot {
 }
 
 export const containerSpawnPool = {
-  gold: 24,
+  gold: 22,
   common: 1,
   stone: 1,
   poopNormal: 3,
@@ -30,7 +30,8 @@ export const containerSpawnPool = {
 
 export const containerData: { [key: string]: IContainerData } = {
   // chests
-  common: {
+  chestCommon: {
+    cooldown: new CooldownManager("chestCommon", 1000 * 60 * 5),
     actions: {
       open: {
         label: "Open",
@@ -41,7 +42,8 @@ export const containerData: { [key: string]: IContainerData } = {
       },
     },
   },
-  gold: {
+  chestGold: {
+    cooldown: new CooldownManager("chestGold", 1000 * 60 * 5),
     actions: {
       unlock: {
         label: "Unlock",
@@ -52,7 +54,8 @@ export const containerData: { [key: string]: IContainerData } = {
       },
     },
   },
-  stone: {
+  chestStone: {
+    cooldown: new CooldownManager("chestStone", 1000 * 60 * 5),
     actions: {
       blowUp: {
         label: "Blow Up",
@@ -70,7 +73,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Destroy",
         cost: {},
         effect: () => {
-          return { coins: 1 };
+          return Math.random() > 0.3 ? { coins: 1 } : { bombs: 1 };
         },
       },
     },
@@ -92,7 +95,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Destroy",
         cost: {},
         effect: () => {
-          return { coins: 1 };
+          return { coins: 1, bombs: Math.round(Math.random()) };
         },
       },
       eat: {
@@ -120,7 +123,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Blow Up",
         cost: { bombs: 1 },
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 4) + 3, keys: Math.round(Math.random() * 3) + 3, bombs: Math.round(Math.random() * 0.55) };
+          return { coins: Math.ceil(Math.random() * 4) + 5, bombs: Math.round(Math.random() * 0.7) };
         },
       },
     },
