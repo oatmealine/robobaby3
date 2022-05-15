@@ -291,7 +291,7 @@ export const pillData: { [key: string]: IPillData } = {
     name: "Horf!",
     icon: "🧨",
     description: "You feel stronger!",
-    effect: async (m) => await StatManager.AdjustStat(m, "damage", 1),
+    effect: async (m) => await StatManager.AdjustStat(m, "bombs", 1),
   },
   drowsy: {
     name: "I'm Drowsy...",
