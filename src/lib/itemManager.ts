@@ -20,11 +20,13 @@ export class ItemManager extends InteractiveElementManager {
     const imageData = await imgur.upload({ image: tempUrl, type: "url" });
     const imageUrl = imageData.data.link;
 
+    const footer = `🪙 ${product.cost}${!product.unique ? " • ♾️" : ""}`;
+
     // publish item
     const embed = new MessageEmbed()
       .setTitle(product.name)
       .setDescription(product.description)
-      .setFooter({ text: `🪙 ${product.cost}` })
+      .setFooter({ text: footer })
       .setThumbnail(imageUrl)
       .setColor(product.color as ColorResolvable);
     const row = new MessageActionRow().addComponents(ItemManager.CreateButton(id, "buy", `Purchase ${product.name}`, "SUCCESS"));
