@@ -9,7 +9,7 @@ import { IStatChange, StatManager } from "../lib/statManager";
 const pillCd = new CooldownManager("pill", 1000 * 60 * 60 * 10);
 
 module.exports = {
-  data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill."),
+  data: new SlashCommandBuilder().setName("pill").setDescription("💊 Eat a random pill. (Cooldown: 10 hours)"),
 
   async execute(interaction: CommandInteraction, member: GuildMember) {
     const isChatChannel = interaction.channel?.id === process.env.CHANNEL_CHAT;
