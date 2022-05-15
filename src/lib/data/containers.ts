@@ -21,13 +21,12 @@ export interface ILoot {
 
 export const containerData: { [key: string]: IContainerData } = {
   common: {
-    cooldown: new CooldownManager("commonChest", 1000 * 60 * 60 * 2),
     actions: {
       open: {
         label: "Open",
         cost: {},
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 2), keys: Math.round(Math.random() * 0.55), bombs: Math.round(Math.random() * 0.55) };
+          return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.55) };
         },
       },
     },
@@ -38,7 +37,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Unlock",
         cost: { keys: 1 },
         effect: () => {
-          return { coins: Math.round(Math.random() * 4) + 6, bombs: Math.round(Math.random() * 0.6) };
+          return { coins: Math.ceil(Math.random() * 3), bombs: Math.round(Math.random() * 0.6) };
         },
       },
     },
@@ -49,7 +48,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Blow Up",
         cost: { bombs: 1 },
         effect: () => {
-          return { coins: Math.round(Math.random() * 4) + 4, keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
+          return { coins: Math.round(Math.random() * 4) + 2, keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
         },
       },
     },
@@ -60,16 +59,16 @@ export const containerData: { [key: string]: IContainerData } = {
     actions: {
       use: {
         label: "Use",
-        cost: {},
+        cost: { coins: 1 },
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 3), keys: Math.round(Math.random() * 0.575), bombs: Math.round(Math.random() * 0.525) };
+          return { coins: Math.ceil(Math.random() * 4), keys: Math.round(Math.random() * 2) + 2 };
         },
       },
       blowUp: {
         label: "Blow Up",
         cost: { bombs: 1 },
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 3) + 3, keys: Math.round(Math.random() * 0.65) };
+          return { coins: Math.ceil(Math.random() * 4) + 3, keys: Math.round(Math.random() * 3) + 3, bombs: Math.round(Math.random() * 0.55) };
         },
       },
     },

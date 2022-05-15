@@ -3,7 +3,7 @@ import { containerData, IContainerData } from "./data/containers";
 import { statData } from "./data/stats";
 import { IElementData, InteractiveElementManager } from "./interactiveElement";
 import { StatManager } from "./statManager";
-import { botColor, Delay } from "./util";
+import { botColor } from "./util";
 
 export class ContainerManager extends InteractiveElementManager {
   protected static elementName = "container";
@@ -94,9 +94,9 @@ export class ContainerManager extends InteractiveElementManager {
   static StartGenerator(client: Client) {
     const channel = this.GetChestChannel(client);
     setInterval(() => {
-      if (Math.random() < 0.02) {
-        if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "common");
-        else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "gold" : "stone");
+      if (Math.random() < 0.025) {
+        if (Math.random() > 0.05) ContainerManager.Create(this.GetChestChannel(client), "gold");
+        else ContainerManager.Create(this.GetChestChannel(client), Math.random() < 0.5 ? "common" : "stone");
 
         const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
         channel.send(`${role}`).then((msg) => msg.delete());
