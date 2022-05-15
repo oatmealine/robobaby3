@@ -127,20 +127,20 @@ export const statData: { [key: string]: IStatData } = {
     icon: "🪙",
     minValue: 0,
     maxValue: 999,
-    defaultValue: 0,
+    defaultValue: 1,
   },
   bombs: {
     name: "Bombs",
     icon: "💣",
     minValue: 0,
-    maxValue: 99,
+    maxValue: 10,
     defaultValue: 0,
   },
   keys: {
     name: "Keys",
     icon: "🔑",
     minValue: 0,
-    maxValue: 99,
+    maxValue: 10,
     defaultValue: 0,
   },
 };
