@@ -61,7 +61,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Blow Up",
         cost: { bombs: 1 },
         effect: () => {
-          return { coins: Math.round(Math.random() * 4) + 2, keys: Math.round(Math.random() * 0.6), bombs: Math.round(Math.random() * 0.6) };
+          return { coins: Math.round(Math.random() * 4) + 2, keys: Math.round(Math.random() * 2), bombs: Math.round(Math.random() * 0.65) };
         },
       },
     },
@@ -123,7 +123,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Blow Up",
         cost: { bombs: 1 },
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 4) + 5, bombs: Math.round(Math.random() * 0.7) };
+          return { coins: Math.ceil(Math.random() * 4) + 5, bombs: Math.round(Math.random() * 0.65) };
         },
       },
     },
