@@ -14,5 +14,5 @@ export class Statistics {
     });
   }
 
-  static GetKey = (options: IStatisticOptions) => `stats:${options.category.join(":")}`;
+  static GetKey = (options: IStatisticOptions) => `statistics:${options.category.join(":")}`;
 }
