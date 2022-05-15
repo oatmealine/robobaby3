@@ -20,9 +20,9 @@ export interface ILoot {
 }
 
 export const containerSpawnPool = {
-  gold: 22,
-  common: 1,
-  stone: 1,
+  chestGold: 22,
+  chestCommon: 1,
+  chestStone: 1,
   poopNormal: 3,
   poopGold: 2,
   poopCorn: 3,
