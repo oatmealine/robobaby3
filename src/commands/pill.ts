@@ -5,6 +5,7 @@ import { GetRandomPill } from "../lib/data/pills";
 import { statData } from "../lib/data/stats";
 import { CooldownManager } from "../lib/cooldown";
 import { IStatChange, StatManager } from "../lib/statManager";
+import { ItemManager } from "../lib/itemManager";
 
 const pillCd = new CooldownManager("pill", 1000 * 60 * 60 * 10);
 
@@ -26,7 +27,7 @@ module.exports = {
     pillCd.Trigger(member);
 
     // eat pill
-    const pill = GetRandomPill();
+    const pill = GetRandomPill(await ItemManager.HasItem(member, "phd"));
     let affectedStats: Array<IStatChange> = [];
     if (pill.effect) {
       const change = await pill.effect(member);

@@ -60,4 +60,12 @@ export const itemData: { [key: string]: IItemData } = {
     unique: true,
     effect: async (member: GuildMember) => GiveRole(member, "Inner Eye"),
   },
+  phd: {
+    name: "PhD",
+    description: "Better pills!",
+    color: "#b07575",
+    cost: 200,
+    unique: true,
+    effect: async () => null,
+  },
 };

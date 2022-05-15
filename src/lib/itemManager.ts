@@ -18,6 +18,7 @@ export class ItemManager extends InteractiveElementManager {
     tempMsg.delete();
 
     const imageData = await imgur.upload({ image: tempUrl, type: "url" });
+    if (!imageData.success) return;
     const imageUrl = imageData.data.link;
 
     const footer = `🪙 ${product.cost}${!product.unique ? " • ♾️" : ""}`;
@@ -70,10 +71,18 @@ export class ItemManager extends InteractiveElementManager {
     console.log(`${member.user.tag} purchased ${item.name}`);
   }
 
-  static async GetMemberItems(member: GuildMember) {
-    const itemsKey = `items:${member.id}`;
-    const memberItems = await redis.lRange(itemsKey, 0, -1);
-    return memberItems;
+  static async GetItems(member: GuildMember) {
+    const items = await redis.lRange(`items:${member.id}`, 0, -1);
+    return items;
+  }
+
+  static async HasItem(member: GuildMember, itemId: string) {
+    const items = await this.GetItems(member);
+    return items.includes(itemId);
+  }
+
+  static RemoveItem(member: GuildMember, itemId: string) {
+    redis.lRem(`items:${member.id}`, 0, itemId);
   }
 }
 

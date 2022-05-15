@@ -12,7 +12,7 @@ module.exports = {
     const user = interaction.options.getUser("member");
     const target = interaction.guild?.members.cache.get(user?.id || "") || member;
 
-    const items = await ItemManager.GetMemberItems(target);
+    const items = await ItemManager.GetItems(target);
 
     if (items.length === 0) {
       interaction.reply({ content: `${target} has no items.`, ephemeral: true });
