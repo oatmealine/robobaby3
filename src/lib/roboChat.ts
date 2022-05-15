@@ -36,7 +36,6 @@ export const RoboChat = async (message: Message) => {
   if (cdLeft <= 0) {
     const contextKey = `robochat:context:${message.author.id}`;
     const context = cdLeft > -1000 * 60 * 60 ? (await redis.get(contextKey)) || "" : "";
-    cd.Trigger(message.member as GuildMember);
 
     const res = await cleverbot.query(input, { cs: context }).catch(console.log);
     if (res) {
@@ -47,6 +46,7 @@ export const RoboChat = async (message: Message) => {
       redis.set(contextKey, res.cs);
     }
   }
+  cd.Trigger(message.member as GuildMember);
 
   // duplication punctuation
   ["?", "!"].forEach((punctuation) => {
