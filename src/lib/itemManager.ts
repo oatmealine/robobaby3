@@ -5,6 +5,7 @@ import { InteractiveElementManager } from "./interactiveElement";
 import { LogEvent } from "./log";
 import { StatManager } from "./statManager";
 import { redis } from "./redis";
+import { Statistics } from "./statistics";
 
 export class ItemManager extends InteractiveElementManager {
   protected static elementName = "item";
@@ -33,6 +34,7 @@ export class ItemManager extends InteractiveElementManager {
     const row = new MessageActionRow().addComponents(ItemManager.CreateButton(id, "buy", `Purchase ${product.name}`, "SUCCESS"));
     channel.send({ embeds: [embed], components: [row] });
   }
+
   protected static async Use(i: ButtonInteraction, action: string, id: string) {
     const item = itemData[id];
     if (!item) return;
@@ -69,6 +71,7 @@ export class ItemManager extends InteractiveElementManager {
 
     LogEvent(`${member} purchased ${item.name}`);
     console.log(`${member.user.tag} purchased ${item.name}`);
+    Statistics.Increment({ category: [this.elementName, action, id] });
   }
 
   static async GetItems(member: GuildMember) {

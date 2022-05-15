@@ -6,6 +6,7 @@ import { statData } from "../lib/data/stats";
 import { CooldownManager } from "../lib/cooldown";
 import { IStatChange, StatManager } from "../lib/statManager";
 import { ItemManager } from "../lib/itemManager";
+import { Statistics } from "../lib/statistics";
 
 const pillCd = new CooldownManager("pill", 1000 * 60 * 60 * 10);
 
@@ -59,5 +60,6 @@ module.exports = {
     });
     interaction.followUp({ embeds: [statsEmbed], ephemeral: true });
     console.log(`${member.user.tag} ate a pill: ${pill.name}`);
+    Statistics.Increment({ category: ["pills", "consumed"] });
   },
 };

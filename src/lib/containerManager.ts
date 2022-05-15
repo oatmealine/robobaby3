@@ -2,6 +2,7 @@ import { ButtonInteraction, Client, Message, MessageActionRow, MessageButton, Me
 import { containerData, containerSpawnPool, IContainerData } from "./data/containers";
 import { statData } from "./data/stats";
 import { IElementData, InteractiveElementManager } from "./interactiveElement";
+import { Statistics } from "./statistics";
 import { StatManager } from "./statManager";
 import { botColor } from "./util";
 
@@ -29,6 +30,7 @@ export class ContainerManager extends InteractiveElementManager {
     }
     channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] });
     console.log(`Container (${id}) spawned`);
+    Statistics.Increment({ category: ["containers", "spawned", id] });
   }
 
   protected static async Use(i: ButtonInteraction, action: string, id: string) {
@@ -88,6 +90,7 @@ export class ContainerManager extends InteractiveElementManager {
       const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
       i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
       console.log(`Container (${id}) [${action}] opened by ${member.displayName}`);
+      Statistics.Increment({ category: [this.elementName, action, id] });
     }
   }
 
