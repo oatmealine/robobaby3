@@ -111,6 +111,7 @@ module.exports = {
         .setDescription(`**${target.displayName}:** ${offendingMessage.content}\n\n[View message](${offendingMessage.url})`)
         .setColor(target.displayColor);
 
+      interaction.reply({ content: "Warned the user.", ephemeral: true });
       await offendingMessage.reply({ embeds: [warningEmbed] });
       target.send({ embeds: [alertEmbed, messageEmbed] }).catch(() => {
         interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true }).catch(console.log);
