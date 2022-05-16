@@ -6,6 +6,8 @@ import { Statistics } from "./statistics";
 import { StatManager } from "./statManager";
 import { botColor } from "./util";
 
+const generateChance = 0.04;
+
 export class ContainerManager extends InteractiveElementManager {
   protected static elementName = "container";
 
@@ -97,7 +99,7 @@ export class ContainerManager extends InteractiveElementManager {
   static StartGenerator(client: Client) {
     const channel = this.GetChestChannel(client);
     setInterval(() => {
-      if (Math.random() < 0.03) {
+      if (Math.random() < generateChance) {
         this.CreateFromPool(channel, containerSpawnPool);
 
         const role = channel.guild?.roles.cache.find((r) => r.name === "Inner Eye");
