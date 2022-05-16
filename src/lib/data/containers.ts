@@ -20,12 +20,12 @@ export interface ILoot {
 }
 
 export const containerSpawnPool = {
-  chestGold: 22,
-  chestCommon: 1,
-  chestStone: 1,
+  chestGold: 32,
+  chestStone: 3,
   poopNormal: 3,
-  poopGold: 2,
   poopCorn: 3,
+  poopGold: 2,
+  chestCommon: 1,
 };
 
 export const containerData: { [key: string]: IContainerData } = {
