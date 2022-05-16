@@ -31,7 +31,7 @@ export const containerSpawnPool = {
 export const containerData: { [key: string]: IContainerData } = {
   // chests
   chestCommon: {
-    cooldown: new CooldownManager("chestCommon", 1000 * 60 * 5),
+    cooldown: new CooldownManager("chestCommon", 1000 * 60 * 2),
     actions: {
       open: {
         label: "Open",
@@ -43,7 +43,7 @@ export const containerData: { [key: string]: IContainerData } = {
     },
   },
   chestGold: {
-    cooldown: new CooldownManager("chestGold", 1000 * 60 * 5),
+    cooldown: new CooldownManager("chestGold", 1000 * 60 * 2),
     actions: {
       unlock: {
         label: "Unlock",
@@ -55,7 +55,7 @@ export const containerData: { [key: string]: IContainerData } = {
     },
   },
   chestStone: {
-    cooldown: new CooldownManager("chestStone", 1000 * 60 * 5),
+    cooldown: new CooldownManager("chestStone", 1000 * 60 * 2),
     actions: {
       blowUp: {
         label: "Blow Up",
