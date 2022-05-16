@@ -90,9 +90,20 @@ export class ContainerManager extends InteractiveElementManager {
         await StatManager.AdjustStat(member, key, value);
       }
       const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
-      i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
+      await i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
       console.log(`Container (${id}) [${action}] opened by ${member.displayName}`);
       Statistics.Increment({ category: [this.elementName, action, id] });
+
+      // lucky coin
+      StatManager.GetStat(member, "luck").then(async (luck) => {
+        const luckStat = statData["luck"];
+        if (Math.random() < (luck * 0.25) / luckStat.maxValue) {
+          await StatManager.AdjustStat(member, "coins", 1);
+
+          const coinEmbed = await StatManager.GetEmbed(member, ["coins"]);
+          i.followUp({ content: `You found an **extra coin**. Lucky! ${luckStat.icon}`, embeds: [coinEmbed], ephemeral: true });
+        }
+      });
     }
   }
 
