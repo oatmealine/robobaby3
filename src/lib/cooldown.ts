@@ -23,7 +23,9 @@ export class CooldownManager {
     const seconds = Math.floor(time / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.round(minutes / 60);
+    const days = Math.round(hours / 24);
 
+    if (days > 0) return `${days} ${pluralize("day", days)}`;
     if (hours > 0) return `${hours} ${pluralize("hour", hours)}`;
     else if (minutes > 0) return `${minutes} ${pluralize("minute", minutes)}`;
     return `${seconds} ${pluralize("second", seconds)}`;
