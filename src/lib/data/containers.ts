@@ -128,4 +128,17 @@ export const containerData: { [key: string]: IContainerData } = {
       },
     },
   },
+  bombDisp: {
+    infinite: true,
+    cooldown: new CooldownManager("bombDisp", 1000 * 60 * 60 * 24 * 7),
+    actions: {
+      use: {
+        label: "Use",
+        cost: {},
+        effect: () => {
+          return { bombs: 1 };
+        },
+      },
+    },
+  },
 };
