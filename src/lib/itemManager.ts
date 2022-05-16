@@ -31,7 +31,7 @@ export class ItemManager extends InteractiveElementManager {
       .setFooter({ text: footer })
       .setThumbnail(imageUrl)
       .setColor(product.color as ColorResolvable);
-    const row = new MessageActionRow().addComponents(ItemManager.CreateButton(id, "buy", `Purchase ${product.name}`, "SUCCESS"));
+    const row = new MessageActionRow().addComponents(ItemManager.CreateButton(id, "buy", `Purchase ${product.name}`, "PRIMARY", "🪙"));
     channel.send({ embeds: [embed], components: [row] });
   }
 
