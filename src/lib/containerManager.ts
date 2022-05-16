@@ -81,14 +81,18 @@ export class ContainerManager extends InteractiveElementManager {
 
     // get loot
     const loot = actionData.effect(i);
-    if (loot && Object.keys(loot).length > 0) {
+    if (loot) {
       const embed = new MessageEmbed().setTitle("You obtained").setColor(botColor);
+      let containsLoot = false;
       for (const [key, value] of Object.entries(loot)) {
         if (value === 0) continue;
+        containsLoot = true;
         const stat = statData[key];
         embed.addField(stat.name, `${stat.icon} x **${value}**`, true);
         await StatManager.AdjustStat(member, key, value);
       }
+      if (!containsLoot) embed.addField("Nothing", "☹️");
+
       const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
       await i.reply({ embeds: [embed, statsEmbed], ephemeral: true }).catch(console.log);
       console.log(`Container (${id}) [${action}] opened by ${member.displayName}`);
