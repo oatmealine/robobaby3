@@ -81,7 +81,7 @@ export class ContainerManager extends InteractiveElementManager {
 
     // get loot
     const loot = actionData.effect(i);
-    if (loot) {
+    if (loot && Object.keys(loot).length > 0) {
       const embed = new MessageEmbed().setTitle("You obtained").setColor(botColor);
       for (const [key, value] of Object.entries(loot)) {
         if (value === 0) continue;
@@ -104,6 +104,9 @@ export class ContainerManager extends InteractiveElementManager {
           i.followUp({ content: `You found an **extra coin**. Lucky! ${luckStat.icon}`, embeds: [coinEmbed], ephemeral: true });
         }
       });
+    } else {
+      const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
+      i.reply({ content: "There was nothing inside ☹️", embeds: [statsEmbed], ephemeral: true });
     }
   }
 

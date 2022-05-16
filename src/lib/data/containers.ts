@@ -143,13 +143,13 @@ export const containerData: { [key: string]: IContainerData } = {
   },
   chestEternal: {
     infinite: true,
-    cooldown: new CooldownManager("chestEternal", 1000 * 60 * 60),
+    cooldown: new CooldownManager("chestEternal", 1000 * 60 * 60 * 4),
     actions: {
       unlock: {
         label: "Unlock",
         cost: { keys: 1 },
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 2.15) };
+          return { coins: Math.round(Math.random() * 2.65), keys: Math.round(Math.random() * 0.525), bombs: Math.round(Math.random() * 0.525) };
         },
       },
     },
