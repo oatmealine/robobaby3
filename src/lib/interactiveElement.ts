@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ButtonInteraction, Client, MessageButton, MessageButtonStyleResolvable, TextChannel } from "discord.js";
+import { ButtonInteraction, Client, EmojiIdentifierResolvable, MessageButton, MessageButtonStyleResolvable, TextChannel } from "discord.js";
 import weighted from "weighted";
 
 export interface IElementData {
@@ -34,8 +34,12 @@ export abstract class InteractiveElementManager {
     this.Create(channel, item);
   }
 
-  static CreateButton(id: string, action: string, label: string, style: MessageButtonStyleResolvable) {
-    return new MessageButton().setCustomId(`${this.elementName}-${action}-${id}`).setLabel(label).setStyle(style);
+  static CreateButton(id: string, action: string, label: string, style: MessageButtonStyleResolvable, emoji?: EmojiIdentifierResolvable) {
+    return new MessageButton()
+      .setCustomId(`${this.elementName}-${action}-${id}`)
+      .setLabel(label)
+      .setStyle(style)
+      .setEmoji(emoji || "");
   }
 
   protected static async Use(i: ButtonInteraction, action: string, id: string) {

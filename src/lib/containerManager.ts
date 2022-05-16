@@ -22,13 +22,13 @@ export class ContainerManager extends InteractiveElementManager {
     const row = new MessageActionRow();
     for (const [action, data] of Object.entries(container.actions)) {
       const hasCost = Object.keys(data.cost).length > 0;
-      const costString = hasCost
+      const emoji = hasCost
         ? Object.keys(data.cost)
             .map((stat) => statData[stat].icon)
             .join("")
         : "";
 
-      row.addComponents(ContainerManager.CreateButton(id, action, hasCost ? `${data.label} (${costString})` : data.label, hasCost ? "PRIMARY" : "SUCCESS"));
+      row.addComponents(ContainerManager.CreateButton(id, action, data.label, hasCost ? "PRIMARY" : "SUCCESS", emoji));
     }
     channel.send({ files: [`./images/containers/${id}/closed.png`], components: [row] });
     console.log(`Container (${id}) spawned`);
@@ -74,7 +74,7 @@ export class ContainerManager extends InteractiveElementManager {
       const row = new MessageActionRow().addComponents(
         new MessageButton().setCustomId("nope").setLabel(`Claimed by ${member.displayName}`).setStyle("DANGER").setDisabled(true)
       );
-      const statsRow = new MessageActionRow().addComponents(StatManager.CreateButton(member.id, "view", `View ${member.displayName}'s stats`, "SECONDARY"));
+      const statsRow = new MessageActionRow().addComponents(StatManager.CreateButton(member.id, "view", "View Stats", "SECONDARY", "🔭"));
       msg.edit({ files: [`./images/containers/${id}/open.png`], components: [row, statsRow] }).catch(console.log);
     }
     container.cooldown?.Trigger(member);

@@ -15,10 +15,10 @@ export class PillEffects {
 
   static HideAllChannels = (member: GuildMember, duration: number) => {
     setTimeout(async () => {
-      member.guild.channels.cache.each(async (c) => {
+      member.guild.channels.cache.each((c) => {
         if (c.type === "GUILD_TEXT" || c.type === "GUILD_VOICE") c.permissionOverwrites.create(member, { VIEW_CHANNEL: false }).catch(console.log);
       });
-    }, 1000 * 2);
+    }, 2000);
     setTimeout(async () => {
       member.guild.channels.cache.each((c) => {
         if (c.type === "GUILD_TEXT" || c.type === "GUILD_VOICE") c.permissionOverwrites.delete(member).catch(console.log);

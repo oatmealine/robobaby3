@@ -48,7 +48,7 @@ module.exports = {
     const row = new MessageActionRow();
 
     if (isChatChannel) {
-      const button = StatManager.CreateButton(member.id, "view", `View ${member.displayName}'s stats`, "SECONDARY");
+      const button = StatManager.CreateButton(member.id, "view", "View Stats", "SECONDARY", "🔭");
       row.addComponents(button);
     }
 
