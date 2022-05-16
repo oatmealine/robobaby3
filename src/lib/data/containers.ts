@@ -116,7 +116,7 @@ export const containerData: { [key: string]: IContainerData } = {
         label: "Use",
         cost: { coins: 1 },
         effect: () => {
-          return { coins: Math.ceil(Math.random() * 4), keys: Math.round(Math.random() * 2) + 2 };
+          return { coins: Math.ceil(Math.random() * 4), keys: Math.round(Math.random() * 1) + 2 };
         },
       },
       blowUp: {
@@ -137,6 +137,19 @@ export const containerData: { [key: string]: IContainerData } = {
         cost: {},
         effect: () => {
           return { bombs: 1 };
+        },
+      },
+    },
+  },
+  chestEternal: {
+    infinite: true,
+    cooldown: new CooldownManager("chestEternal", 1000 * 60 * 60),
+    actions: {
+      unlock: {
+        label: "Unlock",
+        cost: { keys: 1 },
+        effect: () => {
+          return { coins: Math.ceil(Math.random() * 2.15) };
         },
       },
     },
