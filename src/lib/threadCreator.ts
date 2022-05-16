@@ -44,7 +44,7 @@ const ManagePromo = async (msg: Message): Promise<void> => {
           opts = { ...opts, name: embed.title.replace(" - Modding of Isaac", ""), reason: "Modding of Isaac thread" };
 
         message.startThread(opts).catch(console.log);
-        console.log(`${message.author} started promotion thread ${opts.name}`);
+        console.log(`${message.author.tag} started promotion thread ${opts.name}`);
       } else {
         await message
           .reply("Please post a link to a mod you've created on **Steam Workshop** or **Modding of Isaac**.")
@@ -73,7 +73,7 @@ const ManageResources = async (msg: Message): Promise<void> => {
   title = RemoveMarkdown(title);
 
   msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
-  console.log(`${msg.author} started resources thread ${title}`);
+  console.log(`${msg.author.tag} started resources thread ${title}`);
 };
 
 const ManageRecruit = async (msg: Message): Promise<void> => {
@@ -84,5 +84,5 @@ const ManageRecruit = async (msg: Message): Promise<void> => {
   if (title.length === 0 || title.length > 100) title = `${msg.author.username}'s recruitment thread`;
 
   msg.startThread({ name: title, autoArchiveDuration: "MAX" }).catch(console.log);
-  console.log(`${msg.author} started recruit thread ${title}`);
+  console.log(`${msg.author.tag} started recruit thread ${title}`);
 };
