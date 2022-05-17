@@ -43,26 +43,8 @@ module.exports = {
       return;
     }
 
-    // apply punishments
     const warnings = parseInt((await redis.get(`warnings:${target.id}`)) || "0") + 1;
     const applyPunishment = interaction.options.getBoolean("punish");
-    if (applyPunishment) {
-      switch (warnings) {
-        case 1:
-          target.timeout(1000 * 60 * 60, "Warning #1");
-          break;
-        case 2:
-          target.timeout(1000 * 60 * 60 * 24, "Warning #2");
-          break;
-        case 3:
-          target.timeout(1000 * 60 * 60 * 24 * 3, "Warning #3");
-          break;
-        case 4:
-          target.ban({ days: 0, reason: "Warning #4" });
-          redis.del(`warnings:${target.id}`);
-          break;
-      }
-    }
 
     // publicly shame
     const warningEmbed = new MessageEmbed()
@@ -82,7 +64,6 @@ module.exports = {
       .setTitle(`Reason: \`${reason}\``)
       .setDescription(`**Warning:** \`${warnings}/4\`\n\n${applyPunishment ? "A punishment has been applied. " : ""}Please read our rules carefully.`)
       .setColor(botColor);
-    redis.set(`warnings:${target.id}`, warnings);
 
     // if message supplied
     if (messageIdData) {
@@ -111,7 +92,7 @@ module.exports = {
         .setDescription(`**${target.displayName}:** ${offendingMessage.content}\n\n[View message](${offendingMessage.url})`)
         .setColor(target.displayColor);
 
-      interaction.reply({ content: "Warned the user.", ephemeral: true });
+      await interaction.reply({ content: "Warned the user.", ephemeral: true });
       await offendingMessage.reply({ embeds: [warningEmbed] });
       target.send({ embeds: [alertEmbed, messageEmbed] }).catch(() => {
         interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true }).catch(console.log);
@@ -123,6 +104,26 @@ module.exports = {
         interaction.followUp({ content: "Couldn't DM the user.", ephemeral: true }).catch(console.log);
       });
     }
+
+    // apply punishments
+    if (applyPunishment) {
+      switch (warnings) {
+        case 1:
+          target.timeout(1000 * 60 * 60, "Warning #1");
+          break;
+        case 2:
+          target.timeout(1000 * 60 * 60 * 24, "Warning #2");
+          break;
+        case 3:
+          target.timeout(1000 * 60 * 60 * 24 * 3, "Warning #3");
+          break;
+        case 4:
+          target.ban({ days: 0, reason: "Warning #4" });
+          redis.del(`warnings:${target.id}`);
+          break;
+      }
+    }
+    redis.set(`warnings:${target.id}`, warnings);
 
     LogEvent(`${member} warned ${target} for \`${reason}\` (${warnings}/4)`);
   },
