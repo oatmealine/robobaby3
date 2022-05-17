@@ -111,6 +111,7 @@ export class ContainerManager extends InteractiveElementManager {
     } else {
       const statsEmbed = await StatManager.GetEmbed(member, ["coins", "bombs", "keys"]);
       i.reply({ content: "There was nothing inside ☹️", embeds: [statsEmbed], ephemeral: true });
+      Statistics.Increment({ category: ["luckyCoin"] });
     }
   }
 
