@@ -45,6 +45,8 @@ export const RemoveInvites = (message: Message): boolean => {
 };
 
 export const LogEdits = (oldMessage: Message, newMessage: Message) => {
+  if (oldMessage.content === newMessage.content) return;
+
   const diff = Diff.diffWords(oldMessage.content.replace(/`/g, ""), newMessage.content.replace(/`/g, ""));
   let output = "";
 
